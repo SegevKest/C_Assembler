@@ -3,7 +3,7 @@
 #define __SYMBOL_H
 
 
-typedef struct symbolNode symbolTable;
+typedef struct symbolNode symbolList;
 
 
 
