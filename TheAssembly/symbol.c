@@ -70,8 +70,8 @@ symbolList* insertNewSymbol(symbolList* symbolTable, char symbolName[], int valu
 
 }
 
-// this method checks if a symbol is already in the symbol table - return true if yes, false if no
-int isSymbolAlreadyExist(symbolList* symbolTable, char symbolName[]) {
+// this method checks if a symbol is already in the symbol table - return the pointer if yes, null if no
+symbolList* isSymbolAlreadyExist(symbolList* symbolTable, char symbolName[]) {
 
 	symbolList *ptr = symbolTable;
 	int namesAreEqual, foundMatch = FALSE;
@@ -85,10 +85,19 @@ int isSymbolAlreadyExist(symbolList* symbolTable, char symbolName[]) {
 			ptr = ptr->nextSymbol;
 	}
 
-	return foundMatch;
+	return ptr;
 }
 
+// this function will check if this symbol needs an update to its values - if yes - will update it
+int shoudAddValueAddrsOffset(symbolList* symbolTable) {
 
+
+}
+
+// the method will print the stymbol to machine code format - binary
+void printToMachineCode(symbolList* symbolTable) {
+
+}
 // Operations:
 // 1. Add new Symbol - adding symbol name, value, attributes + calculate the Base address and Offset in method
 // 2. Add new attribute to existing symbol
