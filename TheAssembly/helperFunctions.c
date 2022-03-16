@@ -1,4 +1,10 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include<string.h>
 
+
+#define TRUE 1
+#define FALSE 0
 
 
 //get the index of the character in the array of chars
@@ -36,13 +42,17 @@ int findTheIndexOfTheActionInTable(char* stringToCheck) {
 		startOfActionName = returnIndexOfChar(actionTable[i], ':');
 		endOfActionName = returnIndexOfChar(actionTable[i], ',');
 
-		// Get the name of the current ation from the table - put in currActionToCompare
-		strcpy(currActionToCompare, (actionTable[i] + startOfActionName + 1), endOfActionName - startOfActionName);
+	
 
-		strcmp
+		// Get the name of the current ation from the table - put in currActionToCompare
+		strcpy(currActionToCompare, (char*)(actionTable[i] + startOfActionName + 1), endOfActionName - startOfActionName);
+
+		/*strcmp*/
 
 
 
 	}
 
 }
+
+

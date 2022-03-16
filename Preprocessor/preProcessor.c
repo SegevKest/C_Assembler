@@ -23,55 +23,55 @@
 
 
 
-int main(int argc , char *argv[]){
-
-    // int validArgs = FALSE, validInput = TRUE;
-
-    // validArgs = checkForValidArgs(argc);
-
-    // if (!validArgs)
-    //     validInput = FALSE;
-   
-    // if (validInput) {
-
-
-    // }
-
-    // else 
-    //     exit(TRUE);
-
-
-	macroTable* start = NULL;
-	int ch;
-	char name[NAME_LENGTH];
-
-	do
-	{
-		printf("\n\n\n1. Insert Last\n2. Display\n3.Exit\n");
-		printf("\nEnter your choice: ");
-		scanf("%d", &ch);
-
-
-
-		switch (ch)
-		{
-		case 1: {
-			insert_NewMacroName(&start, "Segev");
-			break;
-		}
-		case 2:
-			displayMacroTable(start);
-			break;
-		case 3:
-			exit(0);
-		default:
-			printf("\n\nInvalid choice: Please try again.\n");
-		}
-	} while (1);
-
-
-
-}
+//int main(int argc , char *argv[]){
+//
+//    // int validArgs = FALSE, validInput = TRUE;
+//
+//    // validArgs = checkForValidArgs(argc);
+//
+//    // if (!validArgs)
+//    //     validInput = FALSE;
+//   
+//    // if (validInput) {
+//
+//
+//    // }
+//
+//    // else 
+//    //     exit(TRUE);
+//
+//
+//	macroTable* start = NULL;
+//	int ch;
+//	char name[NAME_LENGTH];
+//
+//	do
+//	{
+//		printf("\n\n\n1. Insert Last\n2. Display\n3.Exit\n");
+//		printf("\nEnter your choice: ");
+//		scanf("%d", &ch);
+//
+//
+//
+//		switch (ch)
+//		{
+//		case 1: {
+//			insert_NewMacroName(&start, "Segev");
+//			break;
+//		}
+//		case 2:
+//			displayMacroTable(start);
+//			break;
+//		case 3:
+//			exit(0);
+//		default:
+//			printf("\n\nInvalid choice: Please try again.\n");
+//		}
+//	} while (1);
+//
+//
+//
+//}
 
 // Validate if the number of arguments received from the 
 int checkForValidArgs(int argc){

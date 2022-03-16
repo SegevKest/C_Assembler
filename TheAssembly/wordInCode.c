@@ -30,14 +30,42 @@ typedef struct wordInCode
 // allocate memory of a new word
 machineCode* createWordInMemory() {
 
-	return (machineCode*)malloc(sizeof(machineCode);
+	return (machineCode*)malloc(sizeof(machineCode));
 }
+
+
+
+// Initialize the word array with all 0 values- for the Opcode word
+void initializeCodeWord(machineCode* machCode) {
+
+	//int i;
+
+	//for (i = 0; i<WORD_LENGTH; i++)
+		//machCode->wordBinary[i] = 0;
+
+	memset(machCode->wordBinary, 0, WORD_LENGTH);
+}
+
+// Initialize the word array with all -1 value- for regular word - with funct, addresses and registers
+void initializeWithNotCompletedCodeWord(machineCode* machCode) {
+
+	int i;
+
+	/*for (i = 0; i < WORD_LENGTH - 1; i++)
+		machCode->wordBinary[i] = -1;*/
+
+	memset(machCode->wordBinary, (-1), WORD_LENGTH);
+
+	// Change cell 19 to 0 - always
+	machCode->wordBinary[0] = 0;
+}
+
 
 // -----Open
 // Add a new OpCode word - with the turned bit - initialize the word with all 0
-machineCode* insertNewOpCodeWord() {
+machineCode* insertNewOpCodeWord(machineCode* machCode) {
 
-	machineCode newWord = createWordInMemory();
+	machineCode* newWord = createWordInMemory();
 	initializeCodeWord(newWord);
 
 	machineCode* pNewWord;
@@ -54,7 +82,10 @@ machineCode* insertNewOpCodeWord() {
 		return pNewWord;
 	}
 	else
+	{
 		printf("Not enoght memory - error in Insert new OPCODE");
+		return NULL;
+	}
 }
 
 
@@ -62,7 +93,7 @@ machineCode* insertNewOpCodeWord() {
 // Add a new FullCodeWord - with funct - register and adress (Destination + origin)
 machineCode* insertNewFullCodeWord() {
 
-	machineCode newWord = createWordInMemory();
+	machineCode* newWord = createWordInMemory();
 	initializeWithNotCompletedCodeWord(newWord);	
 
 	machineCode* pNewWord;
@@ -80,7 +111,10 @@ machineCode* insertNewFullCodeWord() {
 		return pNewWord;
 	}
 	else
+	{
 		printf("Not enoght memory - error in Insert new OPCODE");
+		return NULL;
+	}
 }
 
 // -----Open
@@ -162,27 +196,7 @@ void updateCodeWordARECells(machineCode* machCode, char areValueForWord) {
 	}
 }
 
-// Initialize the word array with all 0 values- for the Opcode word
-void initializeCodeWord(machineCode* machCode) {
 
-	int i;
-
-	for (i = 0; i<WORD_LENGTH; i++)
-		(*machCode).wordBinary[i] = 0;
-
-}
-
-// Initialize the word array with all -1 value- for regular word - with funct, addresses and registers
-void initializeWithNotCompletedCodeWord(machineCode* machCode) {
-
-	int i;
-
-	for (i = 0; i < WORD_LENGTH - 1; i++)
-		(*machCode).wordBinary[i] = -1;
-
-	// Change cell 19 to 0 - always
-	(*machCode).wordBinary[i] = 0;
-}
 
 // This function checks if the full word in memory contains non fill value- and change the value accordingly
 void checkForWordFullyCompleted(machineCode* machCode) {

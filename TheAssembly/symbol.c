@@ -7,6 +7,7 @@
 
 #define SYMBOL_MAX_LENGTH 31
 #define OFFSET_CALCULATE 16
+#define MAX_ATTRIBUTES_VALUE 6
 
 
 #define TRUE 1
@@ -18,7 +19,7 @@ typedef struct symbolNode
 	int value;
 	int baseAddress;
 	int offset;
-	char* attributes[];
+	char* attributes[MAX_ATTRIBUTES_VALUE];
 
 	struct symbolNode* nextSymbol;
 
@@ -31,16 +32,40 @@ symbolList* createNewSymbol() {
 	return (symbolList*)malloc(sizeof(symbolList));
 }
 
+// this method checks if a symbol is already in the symbol table - return the pointer if yes, null if no
+void isSymbolAlreadyExist(symbolList* symbolTable, char symbolName[], symbolList* ret) {
+
+	symbolList* ptr = NULL;
+	int namesAreEqual;
+
+	ptr = symbolTable;
+
+	while (ptr->nextSymbol && ret) {
+
+		namesAreEqual = strcmp((ptr->symbolName), symbolName);
+		if (!namesAreEqual)		// return 0 if equal
+		{
+			ret = ptr;
+		}
+		else
+		{
+			ptr = ptr->nextSymbol;
+		}
+	}
+}
+
+// ----- Open 
 // Function to create a new symbol from given parameters
 // It will calculate the BaseAddress + Offset and will add it to the new Symbol
 // Then - iterate until end of symbolTable and insert the newSybol at the end 
 symbolList* insertNewSymbol(symbolList* symbolTable, char symbolName[], int valueOfSymbol, char* attribute[]) {
 
 	int symbolExist = FALSE, newSymbolOffset, newSymbolBaseAdd;
-	symbolList newSymbol;
+	symbolList *newSymbol=NULL,*ret=NULL;
 
+	isSymbolAlreadyExist(symbolTable, symbolName, ret);
 
-	if (isSymbolAlreadyExist(&symbolName))
+	if (ret!=NULL)
 		symbolExist = TRUE;
 	else
 		symbolExist = FALSE;
@@ -54,9 +79,9 @@ symbolList* insertNewSymbol(symbolList* symbolTable, char symbolName[], int valu
 			newSymbolOffset = valueOfSymbol % OFFSET_CALCULATE;
 			newSymbolBaseAdd = valueOfSymbol - newSymbolOffset;
 
-			newSymbol.value = valueOfSymbol;
-			newSymbol.baseAddress = newSymbolBaseAdd;
-			newSymbol.offset = newSymbolOffset;
+			newSymbol->value = valueOfSymbol;
+			newSymbol->baseAddress = newSymbolBaseAdd;
+			newSymbol->offset = newSymbolOffset;
 
 		}
 		else
@@ -67,31 +92,14 @@ symbolList* insertNewSymbol(symbolList* symbolTable, char symbolName[], int valu
 		printf("The symbol already exists in the SymbolTable");
 	
 	// copy the symbolName Param to the SymbolName of the new Symbol
-
+	return NULL;
 }
 
-// this method checks if a symbol is already in the symbol table - return the pointer if yes, null if no
-symbolList* isSymbolAlreadyExist(symbolList* symbolTable, char symbolName[]) {
-
-	symbolList *ptr = symbolTable;
-	int namesAreEqual, foundMatch = FALSE;
-
-	while (ptr.nextSymbol != NULL && !foundMatch ) {
-
-		namesAreEqual = strcmp( (ptr.symbolName) , symbolName);
-		if (!namesAreEqual)		// return 0 if equal
-			foundMatch = TRUE;
-		else
-			ptr = ptr->nextSymbol;
-	}
-
-	return ptr;
-}
 
 // this function will check if this symbol needs an update to its values - if yes - will update it
 int shoudAddValueAddrsOffset(symbolList* symbolTable) {
 
-
+	return 0;
 }
 
 // the method will print the stymbol to machine code format - binary

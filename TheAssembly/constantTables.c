@@ -5,37 +5,6 @@
 
 
 
-// return the actionsByOpcode table
-char* returnActionsByOpcodeTable() {
-
-	return actionsOpcodes;
-}
-
-// return the registersValues table
-char* returnRegistersValues() {
-
-	return registersValues;
-}
-
-// return the addressesNewWordsAndValues table
-char* returnAddressesNewWordsAndValuesTable() {
-
-	return addressesNewWordsAndValues;
-}
-
-// return the actionsByOpcode table
-char* returnSavedNamesTable() {
-
-	return savedNamesInProgram;
-}
-
-// return length of the action by Opcode table
-int sizeOfActionsByOpcodeTable() {
-
-	return (sizeof(actionsOpcodes) / sizeof(char*));
-}
-
-
 
 static char *savedNamesInProgram[] = 
 	{
@@ -123,3 +92,36 @@ static char *registersValues[] =
 	"r14:1110",
 	"r15:1111",
 };
+
+
+
+
+// return the actionsByOpcode table
+char** returnActionsByOpcodeTable() {
+
+	return actionsOpcodes;
+}
+
+// return the registersValues table
+char* returnRegistersValues() {
+
+	return registersValues;
+}
+
+// return the addressesNewWordsAndValues table
+char* returnAddressesNewWordsAndValuesTable() {
+
+	return addressesNewWordsAndValues;
+}
+
+// return the actionsByOpcode table
+char* returnSavedNamesTable() {
+
+	return savedNamesInProgram;
+}
+
+// return length of the action by Opcode table
+int sizeOfActionsByOpcodeTable() {
+
+	return (sizeof(actionsOpcodes) / sizeof(char*));
+}
