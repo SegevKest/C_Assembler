@@ -1,10 +1,11 @@
 #pragma once
-#ifndef __WORDINMEMORY_H
-#define __WORDINMEMORY_H
+#ifndef __WORDINCODE_H
+#define __WORDINCODE_H
 
 
 typedef struct wordInCode machineCode;
 
+void insertNewOpCodeWord(machineCode* machCodeTable);
+void insertNewFullCodeWord(machineCode* machCodeTable);
 
-
-#endif //__WORDINMEMORY_H
+#endif //__WORDINCODE_H

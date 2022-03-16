@@ -46,6 +46,7 @@ void initializeCodeWord(machineCode* machCode) {
 	memset(machCode->wordBinary, 0, WORD_LENGTH);
 }
 
+
 // Initialize the word array with all -1 value- for regular word - with funct, addresses and registers
 void initializeWithNotCompletedCodeWord(machineCode* machCode) {
 
@@ -61,25 +62,45 @@ void initializeWithNotCompletedCodeWord(machineCode* machCode) {
 }
 
 
-// -----Open
-// Add a new OpCode word - with the turned bit - initialize the word with all 0
-machineCode* insertNewOpCodeWord(machineCode* machCode) {
-
-	machineCode* newWord = createWordInMemory();
-	initializeCodeWord(newWord);
+// This method will insert a new Word to the end of the current Machine Code Table - after it was built
+void insertNewWordToEndOfTable(machineCode* machCodeTable, machineCode* newMachineCodeWord) {
 
 	machineCode* pNewWord;
 
+	if (machCodeTable == NULL)
+	{
+		// Insert the first MachineCode to the table
+		machCodeTable = newMachineCodeWord;
+		machCodeTable->nextWord = NULL;
+	}
+	else
+	{
+		pNewWord = machCodeTable;
+		while (pNewWord->nextWord != NULL)
+			pNewWord = pNewWord->nextWord;
+
+		pNewWord->nextWord = newMachineCodeWord;
+		pNewWord = pNewWord->nextWord;
+		pNewWord->nextWord = NULL;
+	}
+}
+
+
+// -----Open
+// Add a new OpCode word - with the turned bit - initialize the word with all 0
+void insertNewOpCodeWord(machineCode* machCodeTable) {
+
+	machineCode* newWord = createWordInMemory();
+
 	if (newWord) {
+		initializeCodeWord(newWord);
 
-		pNewWord = newWord;
-
+		// Add all the values to the newWord 
 		// insert the opcode of the action
 		// search the action in the constant table and turn on 
 		// the current bit in the new word - by the value returned from the anaylsis
-		
-		
-		return pNewWord;
+
+		insertNewWordToEndOfTable(machCodeTable , newWord);
 	}
 	else
 	{
@@ -91,16 +112,12 @@ machineCode* insertNewOpCodeWord(machineCode* machCode) {
 
 // -----Open
 // Add a new FullCodeWord - with funct - register and adress (Destination + origin)
-machineCode* insertNewFullCodeWord() {
+void insertNewFullCodeWord(machineCode* machCodeTable) {
 
 	machineCode* newWord = createWordInMemory();
-	initializeWithNotCompletedCodeWord(newWord);	
-
-	machineCode* pNewWord;
 
 	if (newWord) {
-
-		pNewWord = newWord;
+		initializeWithNotCompletedCodeWord(newWord);
 
 		// Insert the funct
 		//Insert Address + register destination
@@ -108,7 +125,7 @@ machineCode* insertNewFullCodeWord() {
 		//Insert the A,R,E letters
 		
 		
-		return pNewWord;
+		insertNewWordToEndOfTable(machCodeTable, newWord);
 	}
 	else
 	{
@@ -116,6 +133,7 @@ machineCode* insertNewFullCodeWord() {
 		return NULL;
 	}
 }
+
 
 // -----Open
 // the function get the word Pointer + gets the action itself - add,mov ext.
@@ -139,8 +157,9 @@ void updateFunctValue(machineCode* machCode, char* actionNameFromLine) {
 // Origin - Register + address - will be signaled in 'O'
 // Destination - Register + address will be signaled in 'D'
 
+
 // registerCode will be 4 digit 
-void registersAdresses(char directionFlag, char* registerCode, char* adrCode) {
+void registersAdresses(machineCode* machCode, char directionFlag, char* registerCode, char* adrCode) {
 
 	int regIndex, adrIndex;
 
@@ -171,7 +190,6 @@ void registersAdresses(char directionFlag, char* registerCode, char* adrCode) {
 
 
 
-
 // The function gets the pointer to the word + the char to enter - A,R,E and turn on bit in the relevant cells in word
 void updateCodeWordARECells(machineCode* machCode, char areValueForWord) {
 
@@ -180,15 +198,15 @@ void updateCodeWordARECells(machineCode* machCode, char areValueForWord) {
 	switch (areValueForWord)
 	{
 	case 'A':
-		(*machCode).wordBinary[18] = turnedBit;
+		machCode->wordBinary[18] = turnedBit;
 		break;
 
 	case 'R':
-		(*machCode).wordBinary[17] = turnedBit;
+		machCode->wordBinary[17] = turnedBit;
 		break;
 
 	case 'E':
-		(*machCode).wordBinary[16] = turnedBit;
+		machCode->wordBinary[16] = turnedBit;
 		break;
 
 	default:
@@ -204,13 +222,15 @@ void checkForWordFullyCompleted(machineCode* machCode) {
 	int i;
 
 	for (i = 0; i < WORD_LENGTH; i++)
-		if ((*machCode).wordBinary[i] == -1) {
-			(*machCode).isCompleted = FALSE;
+		if (machCode->wordBinary[i] == -1) {
+			machCode->isCompleted = FALSE;
 			return;
 		}
 			
-	(*machCode).isCompleted = TRUE;
+	machCode->isCompleted = TRUE;
 }
+
+
 
 // Cleans the word from the memory
 void deleteWordFromMemory(machineCode* machCode) {
