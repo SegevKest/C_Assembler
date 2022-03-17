@@ -43,22 +43,22 @@ static char *actionsByBinary[] =
 // name:NameOfAction,opcode:opcodeValue, funct:functOfAction
 static char *actionsOpcodes[] =
 {
-	"name:mov,opcode:0",
-	"name:cmp,opcode:1",
-	"name:add,opcode:2,funct:1010",
-	"name:sub,opcode:2,funct:1011",
-	"name:lea,opcode:4",
-	"name:clr,opcode:5,funct:1010",
-	"name:not,opcode:5,funct:1011",
-	"name:inc,opcode:5,funct:1100",
-	"name:dec,opcode:5,funct:1101",
-	"name:jmp,opcode:9,funct:1010",
-	"name:bne,opcode:9,funct:1011",
-	"name:jsr,opcode:9,funct:1100",
-	"name:red,opcode:12",
-	"name:prn,opcode:13",
-	"name:rts,opcode:14",
-	"name:stop,opcode:15"
+	"mov,opcode:0",
+	"cmp,opcode:1",
+	"add,opcode:2,funct:1010",
+	"sub,opcode:2,funct:1011",
+	"lea,opcode:4",
+	"clr,opcode:5,funct:1010",
+	"not,opcode:5,funct:1011",
+	"inc,opcode:5,funct:1100",
+	"dec,opcode:5,funct:1101",
+	"jmp,opcode:9,funct:1010",
+	"bne,opcode:9,funct:1011",
+	"jsr,opcode:9,funct:1100",
+	"red,opcode:12",
+	"prn,opcode:13",
+	"rts,opcode:14",
+	"stop,opcode:15"
 };
 
 

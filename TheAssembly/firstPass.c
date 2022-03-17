@@ -4,6 +4,12 @@
 
 
 
+#include "wordInCode.h"
+#include "symbol.h"
+
+#include "helperFunctions.h"
+
+
 
 int main() {
 
@@ -11,8 +17,11 @@ int main() {
 	//initil
 	int ic = 100 , dc = 0;
 	
-	//machCode machineCodeHead=NULL;
-	//symbolTable symbolHead = NULL;
+	machineCode* machineCodeHead = NULL;
+
+
+
+	symbolList* symbolHead = NULL;
 
 	//Anaylize File
 	//Read file
@@ -24,7 +33,19 @@ int main() {
 	// Get a new Line from the assembly code
 	char line[7] = "inc r6";
 
-	printf("%s\n",line);
+	char* att[] = {
+		".code", ".data"
+		};
+
+
+	/*printf("%s\n",line);
+
+	insertNewSymbol(symbolHead, "Segev", ic, att);
+	displaySymbol(symbolHead);*/
+
+	insertNewOpCodeWord(machineCodeHead, subString(line, 0,4));
+	displayWord(machineCodeHead);
+
 
 
 

@@ -110,3 +110,34 @@ void printToMachineCode(symbolList* symbolTable) {
 // 1. Add new Symbol - adding symbol name, value, attributes + calculate the Base address and Offset in method
 // 2. Add new attribute to existing symbol
 // 3. Search a symbol in SymbolTable - by char array represent the Symbol Name - return true or false
+
+
+
+
+
+
+
+void displaySymbol(symbolList* symbol) {
+
+	symbolList* ptr = symbol;
+
+
+	int i = 1;
+	if (ptr == NULL)
+		printf("\Symbol list is empty.\n");
+	else
+	{
+		printf("\nSr. No.\t\PrgramWordValue\t\tIsCompleted\t\tLink\n");
+
+		while (ptr != NULL)
+		{
+			printf("\n%d.\t \t%d\t \t%s\t \t%d\t %d\n\t %d\n\t %d\n", i, ptr, ptr->baseAddress, ptr->value, ptr->symbolName, ptr->offset,
+				ptr->nextSymbol);
+			ptr = ptr->nextSymbol;
+			i++;
+
+		}
+	}
+	free(ptr);
+
+}

@@ -8,7 +8,7 @@
 
 
 //get the index of the character in the array of chars
-int returnIndexOfChar(char* stringToCheck, char charToFind) {
+int returnFirstIndexOfChar(char* stringToCheck, char charToFind) {
 
 	char* pointerToChar;
 	int index;
@@ -20,39 +20,68 @@ int returnIndexOfChar(char* stringToCheck, char charToFind) {
 	return index;
 }
 
+//get the index of the character in the array of chars
+int returnLastIndexOfChar(char* stringToCheck, char charToFind) {
 
+	char* pointerToChar;
+	int index;
 
-// returns the index of a given action - in the actionByCodeTable
-int findTheIndexOfTheActionInTable(char* stringToCheck) {
+	pointerToChar = strrchr(stringToCheck, charToFind);
 
-	int i, j, startOfActionName, endOfActionName, foundAction = FALSE,
-		lengthOfParamAction = strlen(stringToCheck);
+	index = (int)(pointerToChar - stringToCheck);
 
-	int lengthOfActionsArray = sizeOfActionsByOpcodeTable();
-	char* actionTable = returnActionsByOpcodeTable();
-
-	char currActionToCompare[5];
-
-
-
-	for (i = 0; i < lengthOfActionsArray && !foundAction; i++) {
-
-		j = startOfActionName = endOfActionName = 0;
-
-		startOfActionName = returnIndexOfChar(actionTable[i], ':');
-		endOfActionName = returnIndexOfChar(actionTable[i], ',');
-
-	
-
-		// Get the name of the current ation from the table - put in currActionToCompare
-		strcpy(currActionToCompare, (char*)(actionTable[i] + startOfActionName + 1), endOfActionName - startOfActionName);
-
-		/*strcmp*/
-
-
-
-	}
-
+	return index;
 }
+
+
+// This function gets a string and 2 indexes - return a new String between the 2 indexes
+char* subString(char *sourceString, int strtIndex, int endIndex) {
+
+	int lengthOfDestString = endIndex - strtIndex;
+	char endOfString = '\0';
+
+
+	char* destString = (char*)malloc( sizeof(char) * lengthOfDestString );
+
+
+	if(destString)
+		strncpy(destString, (sourceString + strtIndex), lengthOfDestString);
+
+
+	return destString;
+}
+
+
+//// returns the index of a given action - in the actionByCodeTable
+//int findTheIndexOfTheActionInTable(char* stringToCheck) {
+//
+//	int i, j, startOfActionName, endOfActionName, foundAction = FALSE,
+//		lengthOfParamAction = strlen(stringToCheck);
+//
+//	int lengthOfActionsArray = sizeOfActionsByOpcodeTable();
+//	char* actionTable = returnActionsByOpcodeTable();
+//
+//	char currActionToCompare[5];
+//
+//
+//
+//	for (i = 0; i < lengthOfActionsArray && !foundAction; i++) {
+//
+//		j = startOfActionName = endOfActionName = 0;
+//
+//		
+//
+//	
+//
+//		// Get the name of the current ation from the table - put in currActionToCompare
+//		strcpy(currActionToCompare, (char*)(actionTable[i] + startOfActionName + 1), endOfActionName - startOfActionName);
+//
+//		/*strcmp*/
+//
+//
+//
+//	}
+
+//}
 
 

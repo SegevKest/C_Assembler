@@ -5,10 +5,12 @@
 
 #include "wordInCode.h"
 #include "constantTables.h"
+#include "helperFunctions.h"
 
 
 
 #define WORD_LENGTH 20
+#define NO_OF_ACTIONS 16
 
 #define TRUE 1
 #define FALSE 0
@@ -27,23 +29,35 @@ typedef struct wordInCode
 };
 
 
+
+void initializeCodeWord(machineCode* machCode);
+void initializeWithNotCompletedCodeWord(machineCode* machCode);
+void insertNewWordToEndOfTable(machineCode* machCodeTable, machineCode* newMachineCodeWord);
+void checkForWordFullyCompleted(machineCode* machCode);
+void updateCodeWordARECells(machineCode* machCode, char areValueForWord);
+int getOpcodeAction(char actionName[]);
+char* getFunctOfAction(char actionName[], int opCodeOfAction);
+void insertNewOpCodeWord(machineCode* machCodeTable, char actionName[]);
+void insertNewFullCodeWord(machineCode* machCodeTable);
+
+
+
+
 // allocate memory of a new word
 machineCode* createWordInMemory() {
 
 	return (machineCode*)malloc(sizeof(machineCode));
 }
 
-
-
 // Initialize the word array with all 0 values- for the Opcode word
 void initializeCodeWord(machineCode* machCode) {
 
-	//int i;
+	int i;
 
-	//for (i = 0; i<WORD_LENGTH; i++)
-		//machCode->wordBinary[i] = 0;
+	for (i = 0; i<WORD_LENGTH; i++)
+		machCode->wordBinary[i] = 0;
 
-	memset(machCode->wordBinary, 0, WORD_LENGTH);
+	//memset(machCode->wordBinary, 0, WORD_LENGTH);
 }
 
 
@@ -86,20 +100,117 @@ void insertNewWordToEndOfTable(machineCode* machCodeTable, machineCode* newMachi
 }
 
 
-// -----Open
+// This function checks if the full word in memory contains non fill value- and change the value accordingly
+void checkForWordFullyCompleted(machineCode* machCode) {
+
+	int i;
+
+	for (i = 0; i < WORD_LENGTH; i++)
+		if (machCode->wordBinary[i] == -1) {
+			machCode->isCompleted = FALSE;
+			return;
+		}
+
+	machCode->isCompleted = TRUE;
+}
+
+
+// The function gets the pointer to the word + the char to enter - A,R,E and turn on bit in the relevant cells in word
+void updateCodeWordARECells(machineCode* machCode, char areValueForWord) {
+
+	int turnedBit = 1;
+
+
+	// Binary array fields: 19=0,18=1,17=2,16=3... 1=18,0=19
+	switch (areValueForWord)
+	{
+	case 'A':
+		machCode->wordBinary[1] = turnedBit;
+		break;
+
+	case 'R':
+		machCode->wordBinary[2] = turnedBit;
+		break;
+
+	case 'E':
+		machCode->wordBinary[3] = turnedBit;
+		break;
+
+	default:
+		break;
+	}
+}
+
+
+// This function will turn on the bit of the Opcode Machine word - according to the action relevant opccode
+int getOpcodeAction(char actionName[]) {
+
+	int		i, indexOfFirstComma, indexOfFirstColon, lineLength,
+		cmpResult, bitToTurnOn = -1, lengthOfOpcode, opCodeOfAction;
+
+	char** pToActionsOpCode = returnActionsByOpcodeTable();
+	char* currAction, currActionName, currOpCodeOfAction;
+
+	for (i = 0; i < NO_OF_ACTIONS && bitToTurnOn != (-1); i++) {
+
+		currAction = pToActionsOpCode[i];	// get current action from the table
+
+		//lineLength = strlen(currAction);	// Calculate the curr action length in table
+
+		indexOfFirstComma = returnFirstIndexOfChar(currAction, ',');	// Find the first delimeter index from action name to action data
+		indexOfFirstColon = returnFirstIndexOfChar(currAction, ':');	// Find the first colon index, before the opcode value of action
+
+		currActionName = subString(currAction, 0, indexOfFirstComma + 1);	// Substring the current action name
+		currOpCodeOfAction = subString(currAction, indexOfFirstColon + 1, indexOfFirstColon + 3);	// Substring the opcode of the action from the table - could be 1 or 2 chars
+
+		// Convert the opCode string to integer
+		opCodeOfAction = atoi(currOpCodeOfAction);
+
+		printf("The opcode of %s is %d", actionName, opCodeOfAction);
+
+		// Compare the 2 names of the given action with the current from iteration
+		cmpResult = strcmp(actionName, currActionName);
+
+		if (cmpResult == 0)
+			bitToTurnOn = opCodeOfAction;
+	}
+
+	return bitToTurnOn;
+}
+
+
 // Add a new OpCode word - with the turned bit - initialize the word with all 0
-void insertNewOpCodeWord(machineCode* machCodeTable) {
+void insertNewOpCodeWord(machineCode* machCodeTable, char actionName[]) {
+
+	int bitToTurnOn;
+
+	//TEST
+	printf("Action: %s\n", actionName);
 
 	machineCode* newWord = createWordInMemory();
 
 	if (newWord) {
 		initializeCodeWord(newWord);
 
-		// Add all the values to the newWord 
-		// insert the opcode of the action
-		// search the action in the constant table and turn on 
-		// the current bit in the new word - by the value returned from the anaylsis
+		//Test
+		displayWord(newWord);
 
+		// Turn on Relevant bit in the array in the new word
+		bitToTurnOn = getOpcodeAction(actionName);
+
+		printf("The Returned Opcode is %d", bitToTurnOn);
+
+		if (bitToTurnOn > -1)
+			newWord->wordBinary[WORD_LENGTH - 1 - bitToTurnOn] = 1;
+		else
+		{
+			printf("The Action wasnt found in the constant actions table");
+		}
+
+		// Upadte the A,R,E Values in the new word
+		updateCodeWordARECells(newWord, 'A');
+
+		//Insert to machineCodeTable in the end
 		insertNewWordToEndOfTable(machCodeTable , newWord);
 	}
 	else
@@ -109,6 +220,46 @@ void insertNewOpCodeWord(machineCode* machCodeTable) {
 	}
 }
 
+
+// This function will return the funct value as a string - before the insertion
+char* getFunctOfAction(char actionName[], int opCodeOfAction) {
+
+	int i, foundFunct = FALSE, indexOfLastColon, indexOfFirstComma, lineLength, cmpResult;
+	char* functToReturn;
+
+	char** pToActionsOpCode = returnActionsByOpcodeTable();
+	char* currAction, currActionName, currFunctOfAction;
+
+	if (opCodeOfAction == 2 || opCodeOfAction == 5 || opCodeOfAction == 9) {
+
+		for (i = 0; i < NO_OF_ACTIONS && !foundFunct; i++) {
+
+			currAction = pToActionsOpCode[i];	// get current action from the table
+
+			lineLength = strlen(currAction);	// Calculate the curr action length in table
+
+			indexOfFirstComma = returnFirstIndexOfChar(currAction, ',');	// Find the first delimeter index from action name to action data
+			indexOfLastColon = returnLastIndexOfChar(currAction, ':');	// Find the first colon index, before the opcode value of action
+
+			currActionName = subString(currAction, 0, indexOfFirstComma + 1);	// Substring the current action name
+			currFunctOfAction = subString(currAction, indexOfLastColon + 1, lineLength);	// Substring the Funct
+
+			printf("The Funct value of %s is %d", currAction, currFunctOfAction);
+
+			// Compare the 2 names of the given action with the current from iteration
+			cmpResult = strcmp(actionName, currActionName);
+
+			if (cmpResult == 0)
+				foundFunct = TRUE;
+		}
+
+		return currFunctOfAction;
+	}
+	else {
+		return "0000";
+	}
+
+}
 
 // -----Open
 // Add a new FullCodeWord - with funct - register and adress (Destination + origin)
@@ -138,9 +289,13 @@ void insertNewFullCodeWord(machineCode* machCodeTable) {
 // -----Open
 // the function get the word Pointer + gets the action itself - add,mov ext.
 // this function updates the Funct range inside the wordInCode
-void updateFunctValue(machineCode* machCode, char* actionNameFromLine) {
+void updateFunctValue(machineCode* machCode, char actionName[]) {
 
-	int functIndex = 15;	//modify cells 15-12
+	int functIndex = 4;	//modify cells 4-7
+
+	int opCodeOfAction = getOpcodeAction(actionName);
+
+	
 
 	// get the opcode of the action from the contant table
 	// check if it is - 2,5,9 - enter the funct value to the fields 15-12
@@ -158,6 +313,8 @@ void updateFunctValue(machineCode* machCode, char* actionNameFromLine) {
 // Destination - Register + address will be signaled in 'D'
 
 
+
+// -----Open
 // registerCode will be 4 digit 
 void registersAdresses(machineCode* machCode, char directionFlag, char* registerCode, char* adrCode) {
 
@@ -167,13 +324,13 @@ void registersAdresses(machineCode* machCode, char directionFlag, char* register
 	switch (directionFlag)
 	{
 	case 'O':
-		regIndex = 11;	// 11-8
-		adrIndex = 7;	// 7-6
+		regIndex = 8;	// 8-11
+		adrIndex = 12;	// 12-13
 		break;
 
 	case 'D':
-		regIndex = 5;	// 5-2
-		adrIndex = 1;	// 1-0
+		regIndex = 14;	// 14-17
+		adrIndex = 18;	// 18-19
 		break;
 
 	default:
@@ -190,45 +347,7 @@ void registersAdresses(machineCode* machCode, char directionFlag, char* register
 
 
 
-// The function gets the pointer to the word + the char to enter - A,R,E and turn on bit in the relevant cells in word
-void updateCodeWordARECells(machineCode* machCode, char areValueForWord) {
 
-	int turnedBit = 1;
-
-	switch (areValueForWord)
-	{
-	case 'A':
-		machCode->wordBinary[18] = turnedBit;
-		break;
-
-	case 'R':
-		machCode->wordBinary[17] = turnedBit;
-		break;
-
-	case 'E':
-		machCode->wordBinary[16] = turnedBit;
-		break;
-
-	default:
-		break;
-	}
-}
-
-
-
-// This function checks if the full word in memory contains non fill value- and change the value accordingly
-void checkForWordFullyCompleted(machineCode* machCode) {
-
-	int i;
-
-	for (i = 0; i < WORD_LENGTH; i++)
-		if (machCode->wordBinary[i] == -1) {
-			machCode->isCompleted = FALSE;
-			return;
-		}
-			
-	machCode->isCompleted = TRUE;
-}
 
 
 
@@ -242,3 +361,34 @@ void deleteWordFromMemory(machineCode* machCode) {
 // Print Current Word - in Hexadecimal format
 // 
 // 
+
+
+
+void displayWord(machineCode* machCode) {
+
+	machineCode* ptr = machCode;
+
+
+	int i = 1;
+	if (ptr == NULL)
+		printf("\Word is empty.\n");
+	else
+	{
+		printf("\nSr. No.\t\PrgramWordValue\t\tIsCompleted\t\tLink\n");
+
+		while (ptr != NULL)
+		{
+			printf("\n%d.\t \t%d\t \t%d\t \t%d\t %d\n", i, ptr, ptr->programWordValue, ptr->isCompleted,
+				ptr->nextWord);
+			ptr = ptr->nextWord;
+			i++;
+
+			printf("\Word Code.\n");
+			
+			for (i =0; i< WORD_LENGTH; i++)	
+				printf("\\n%d.\t", ptr->wordBinary[i++]);
+		}
+	}
+	free(ptr);
+
+}

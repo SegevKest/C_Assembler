@@ -5,7 +5,8 @@
 
 typedef struct wordInCode machineCode;
 
-void insertNewOpCodeWord(machineCode* machCodeTable);
+void insertNewOpCodeWord(machineCode* machCodeTable, char actionName[]);
 void insertNewFullCodeWord(machineCode* machCodeTable);
+void displayWord(machineCode* machCode);
 
 #endif //__WORDINCODE_H
