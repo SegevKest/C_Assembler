@@ -52,12 +52,12 @@ machineCode* createWordInMemory() {
 // Initialize the word array with all 0 values- for the Opcode word
 void initializeCodeWord(machineCode* machCode) {
 
-	int i;
+	//int i;
 
-	for (i = 0; i<WORD_LENGTH; i++)
-		machCode->wordBinary[i] = 0;
+	//for (i = 0; i<WORD_LENGTH; i++)
+	//	machCode->wordBinary[i] = 0;
 
-	//memset(machCode->wordBinary, 0, WORD_LENGTH);
+	memset(machCode->wordBinary, 0, WORD_LENGTH);
 }
 
 
@@ -93,6 +93,8 @@ void insertNewWordToEndOfTable(machineCode* machCodeTable, machineCode* newMachi
 		while (pNewWord->nextWord != NULL)
 			pNewWord = pNewWord->nextWord;
 
+		//pNewWord->nextWord = (machineCode *)malloc(sizeof(machineCode));
+		
 		pNewWord->nextWord = newMachineCodeWord;
 		pNewWord = pNewWord->nextWord;
 		pNewWord->nextWord = NULL;
@@ -256,21 +258,49 @@ char* getFunctOfAction(char actionName[], int opCodeOfAction) {
 		return currFunctOfAction;
 	}
 	else {
-		return "0000";
+		return "0000\0";
 	}
 
 }
 
+
+// the function get the word Pointer + gets the action itself - add,mov ext.
+// this function updates the Funct range inside the wordInCode
+void updateFunctValue(machineCode* machCode, char actionName[]) {
+
+
+	char* functOfAction;
+	int functIndex = 4, endFunctIndex = 8, opCodeOfAction;	//modify cells 4-7
+
+
+	opCodeOfAction = getOpcodeAction(actionName);
+
+	functOfAction = getFunctOfAction(actionName, opCodeOfAction);
+
+
+	//Insert the given char to machinecode 4-7'
+	while (functIndex < endFunctIndex)
+	{
+		machCode->wordBinary[functIndex++] = (*functOfAction)++;
+	}
+
+
+
+}
+
+
+
 // -----Open
 // Add a new FullCodeWord - with funct - register and adress (Destination + origin)
-void insertNewFullCodeWord(machineCode* machCodeTable) {
+void insertNewFullCodeWord(machineCode* machCodeTable, char actionName[]) {
 
 	machineCode* newWord = createWordInMemory();
 
 	if (newWord) {
 		initializeWithNotCompletedCodeWord(newWord);
 
-		// Insert the funct
+		updateFunctValue(newWord, actionName);
+
 		//Insert Address + register destination
 		// Insert the Address + register origin
 		//Insert the A,R,E letters
@@ -283,27 +313,6 @@ void insertNewFullCodeWord(machineCode* machCodeTable) {
 		printf("Not enoght memory - error in Insert new OPCODE");
 		return NULL;
 	}
-}
-
-
-// -----Open
-// the function get the word Pointer + gets the action itself - add,mov ext.
-// this function updates the Funct range inside the wordInCode
-void updateFunctValue(machineCode* machCode, char actionName[]) {
-
-	int functIndex = 4;	//modify cells 4-7
-
-	int opCodeOfAction = getOpcodeAction(actionName);
-
-	
-
-	// get the opcode of the action from the contant table
-	// check if it is - 2,5,9 - enter the funct value to the fields 15-12
-	// else	- enter all zeros
-
-
-
-	// modify 
 }
 
 
@@ -338,7 +347,7 @@ void registersAdresses(machineCode* machCode, char directionFlag, char* register
 	}
 
 	// Continue
-	//Enter the register and Addresses codes in the word array.
+	//Enter the register andsAddresses codes in the word array.
 	// get the registerBinaryValue from table
 	// get the adressValue from table
 

@@ -19,6 +19,8 @@ typedef struct symbolNode
 	int value;
 	int baseAddress;
 	int offset;
+	int noOfAttributes;
+
 	char* attributes[MAX_ATTRIBUTES_VALUE];
 
 	struct symbolNode* nextSymbol;
@@ -54,26 +56,39 @@ void isSymbolAlreadyExist(symbolList* symbolTable, char symbolName[], symbolList
 	}
 }
 
-// ----- Open 
 // Function to create a new symbol from given parameters
 // It will calculate the BaseAddress + Offset and will add it to the new Symbol
 // Then - iterate until end of symbolTable and insert the newSybol at the end 
-symbolList* insertNewSymbol(symbolList* symbolTable, char symbolName[], int valueOfSymbol, char* attribute[]) {
+void insertNewSymbolData(symbolList* symbolTable, char symbolNameParam[], int valueOfSymbol, char* attributeParam) {
 
+	int k = 0;
+	for(; k<attributeParam[k]!='\0'; k++)
+		printf("%c,  , ", attributeParam[k]);
+
+	int i, j;
 	int symbolExist = FALSE, newSymbolOffset, newSymbolBaseAdd;
 	symbolList *newSymbol=NULL,*ret=NULL;
 
-	isSymbolAlreadyExist(symbolTable, symbolName, ret);
+	symbolList* pToSymbolinTable = symbolTable;
+
+	isSymbolAlreadyExist(symbolTable, symbolNameParam, ret);
+
+	printf("%s, value   %d, , ", symbolNameParam, valueOfSymbol);
 
 	if (ret!=NULL)
 		symbolExist = TRUE;
 	else
 		symbolExist = FALSE;
+	
 
+	// if the symbol not located on table
 	if (!symbolExist) {
 		newSymbol = createNewSymbol();
 
 		if (newSymbol) {
+
+			// insert the name of the symbol
+			strcpy(newSymbol->symbolName, symbolNameParam);
 
 			//Calculate offset + baseAdress
 			newSymbolOffset = valueOfSymbol % OFFSET_CALCULATE;
@@ -82,22 +97,63 @@ symbolList* insertNewSymbol(symbolList* symbolTable, char symbolName[], int valu
 			newSymbol->value = valueOfSymbol;
 			newSymbol->baseAddress = newSymbolBaseAdd;
 			newSymbol->offset = newSymbolOffset;
+			
+			// Attributes array will be initialized -
+			newSymbol->noOfAttributes = 1;
+			strcpy(newSymbol->attributes[0], attributeParam);
 
+
+
+			// INsert to the existing table at the end
+			while (pToSymbolinTable->nextSymbol != NULL) 
+				pToSymbolinTable = pToSymbolinTable->nextSymbol;
+			
+			pToSymbolinTable->nextSymbol = newSymbol;
+			pToSymbolinTable = pToSymbolinTable->nextSymbol;
+			pToSymbolinTable->nextSymbol = NULL;
+
+			printf("All values fixed - inserted new symbol");
 		}
 		else
 			printf("Not enoght memory - error in Insert new Symbol");
 
 	}
-	else
-		printf("The symbol already exists in the SymbolTable");
+	// located in the table - insert the values received as params to existing 1
+	else    
+	{
+		printf("The symbol already exists in the SymbolTable - insert data");
+		//Calculate offset + baseAdress
+
+		// Will happen only if they change the values from 0 to something else
+		if (valueOfSymbol > 0) {
+
+			newSymbolOffset = valueOfSymbol % OFFSET_CALCULATE;
+			newSymbolBaseAdd = valueOfSymbol - newSymbolOffset;
+
+			ret->value = valueOfSymbol;
+			ret->baseAddress = newSymbolBaseAdd;
+			ret->offset = newSymbolOffset;
+		}
+		if (strlen(attributeParam) > 0)
+		{
+			// Attributes array will be initialized -
+			newSymbol->noOfAttributes++;
+			strcpy(newSymbol->attributes[newSymbol->noOfAttributes - 1], attributeParam);
+		}
+	}
 	
-	// copy the symbolName Param to the SymbolName of the new Symbol
-	return NULL;
+	free(pToSymbolinTable);
+
 }
 
 
 // this function will check if this symbol needs an update to its values - if yes - will update it
 int shoudAddValueAddrsOffset(symbolList* symbolTable) {
+
+	if (symbolTable->value)
+	{
+		
+	}
 
 	return 0;
 }

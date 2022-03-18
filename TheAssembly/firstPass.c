@@ -38,13 +38,13 @@ int main() {
 		};
 
 
-	/*printf("%s\n",line);
+	printf("%s\n",line);
 
-	insertNewSymbol(symbolHead, "Segev", ic, att);
-	displaySymbol(symbolHead);*/
+	insertNewSymbolData(symbolHead, "Segev", ic, "entry");
+	displaySymbol(symbolHead);
 
-	insertNewOpCodeWord(machineCodeHead, subString(line, 0,4));
-	displayWord(machineCodeHead);
+	//insertNewOpCodeWord(machineCodeHead, subString(line, 0,4));
+	//displayWord(machineCodeHead);
 
 
 
