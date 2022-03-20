@@ -17,7 +17,9 @@ int main() {
 	//initil
 	int ic = 100 , dc = 0;
 	
-	machineCode* machineCodeHead = NULL;
+	machineCode* machineCodeActionsHead = NULL; // the linked list for the instructions machine code
+	machineCode* machineCodeDataHead = NULL;	// the linked list for the data lines 
+
 
 
 
@@ -40,9 +42,14 @@ int main() {
 
 	printf("%s\n",line);
 
-	insertNewSymbolData(symbolHead, "Segev", ic, "entry");
-	displaySymbol(symbolHead);
 
+	// Split line from file
+
+	// Symbol Validations
+	/*insertNewSymbolData(symbolHead, "Segev", ic, "entry");
+	displaySymbol(symbolHead);*/
+
+	// Machine code validations
 	//insertNewOpCodeWord(machineCodeHead, subString(line, 0,4));
 	//displayWord(machineCodeHead);
 

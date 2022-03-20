@@ -5,6 +5,13 @@
 
 #define TRUE 1
 #define FALSE 0
+#define MAX_ARGS_NO_INWORD 6
+
+int returnFirstIndexOfChar(char* stringToCheck, char charToFind);
+int returnLastIndexOfChar(char* stringToCheck, char charToFind);
+char* subString(char* sourceString, int strtIndex, int endIndex);
+//int findTheIndexOfTheActionInTable(char* stringToCheck);
+
 
 
 //get the index of the character in the array of chars
@@ -53,43 +60,54 @@ char* subString(char *sourceString, int strtIndex, int endIndex) {
 
 
 //// returns the index of a given action - in the actionByCodeTable
-int findTheIndexOfTheActionInTable(char* stringToCheck) {
+//int findTheIndexOfTheActionInTable(char* stringToCheck) {
+////
+//	int i, j, startOfActionName, endOfActionName, foundAction = FALSE,
+//		lengthOfParamAction = strlen(stringToCheck);
 //
-	int i, j, startOfActionName, endOfActionName, foundAction = FALSE,
-		lengthOfParamAction = strlen(stringToCheck);
+//	int lengthOfActionsArray = sizeOfActionsByOpcodeTable();
+//	char* actionTable = returnActionsByOpcodeTable();
+//
+//	char currActionToCompare[5];
+//
+//
+//
+//	for (i = 0; i < lengthOfActionsArray && !foundAction; i++) {
+//
+//		j = startOfActionName = endOfActionName = 0;
+//
+//		
+//
+//	
+//
+//		// Get the name of the current ation from the table - put in currActionToCompare
+//		strcpy(currActionToCompare, (char*)(actionTable[i] + startOfActionName + 1), endOfActionName - startOfActionName);
+//
+//		/*strcmp*/
+//
+//
+//
+//	}
+//
+//}
 
-	int lengthOfActionsArray = sizeOfActionsByOpcodeTable();
-	char* actionTable = returnActionsByOpcodeTable();
-
-	char currActionToCompare[5];
 
 
 
-	for (i = 0; i < lengthOfActionsArray && !foundAction; i++) {
 
-		j = startOfActionName = endOfActionName = 0;
 
-		
+// functin that will get the line from the file and split it to different strings in a new array
+char* analyzeCodeRow(char* rowFromCode) {
+
 
 	
 
-		// Get the name of the current ation from the table - put in currActionToCompare
-		strcpy(currActionToCompare, (char*)(actionTable[i] + startOfActionName + 1), endOfActionName - startOfActionName);
-
-		/*strcmp*/
-
-
-
-	}
-
 }
 
+// This method will iterate all the string and will return a new string with no spaces
+char* getTrimmedCodeRow(char* rowFromCode) {
 
-
-
-
-
-
+}
 
 
 // Functions related to the handle of arguments
@@ -105,23 +123,3 @@ int findMatchedMiun(char* argmntFromLine) {
 
 }
 
-
-//identify miun 0 exc,
-int isMiunZero(char* argmntFromLine) {
-
-	// the operand will be in format : "#{int}"
-	return *argmntFromLine == '#' ? TRUE : FALSE;
-}
-
-int isMiunOne(char* argmntFromLine) {
-
-	// check if the argument is a Symbol
-
-}
-int isMiunZTwo() {
-
-	// if containa  name of a symbol and concat  [{register}]
-}
-int isMiunThree() {
-
-}

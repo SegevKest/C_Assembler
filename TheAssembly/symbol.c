@@ -37,21 +37,28 @@ symbolList* createNewSymbol() {
 // this method checks if a symbol is already in the symbol table - return the pointer if yes, null if no
 void isSymbolAlreadyExist(symbolList* symbolTable, char symbolName[], symbolList* ret) {
 
-	symbolList* ptr = NULL;
+	symbolList* ptr = symbolTable;
+	char* p;
 	int namesAreEqual;
 
-	ptr = symbolTable;
+	displaySymbol(ptr);
 
-	while (ptr->nextSymbol && ret) {
+	if (symbolTable != NULL) {
 
-		namesAreEqual = strcmp((ptr->symbolName), symbolName);
-		if (!namesAreEqual)		// return 0 if equal
-		{
-			ret = ptr;
-		}
-		else
-		{
-			ptr = ptr->nextSymbol;
+		while (ptr->nextSymbol != NULL && ret) {
+
+			namesAreEqual = strcmp((ptr->symbolName), symbolName);
+
+
+
+			if (!namesAreEqual)		// return 0 if equal
+			{
+				ret = ptr;
+			}
+			else
+			{
+				ptr = ptr->nextSymbol;
+			}
 		}
 	}
 }
@@ -61,9 +68,7 @@ void isSymbolAlreadyExist(symbolList* symbolTable, char symbolName[], symbolList
 // Then - iterate until end of symbolTable and insert the newSybol at the end 
 void insertNewSymbolData(symbolList* symbolTable, char symbolNameParam[], int valueOfSymbol, char* attributeParam) {
 
-	int k = 0;
-	for(; k<attributeParam[k]!='\0'; k++)
-		printf("%c,  , ", attributeParam[k]);
+	printf("%s, val:  %d, , ", symbolNameParam, valueOfSymbol);
 
 	int i, j;
 	int symbolExist = FALSE, newSymbolOffset, newSymbolBaseAdd;
@@ -73,7 +78,7 @@ void insertNewSymbolData(symbolList* symbolTable, char symbolNameParam[], int va
 
 	isSymbolAlreadyExist(symbolTable, symbolNameParam, ret);
 
-	printf("%s, value   %d, , ", symbolNameParam, valueOfSymbol);
+	
 
 	if (ret!=NULL)
 		symbolExist = TRUE;
@@ -87,6 +92,7 @@ void insertNewSymbolData(symbolList* symbolTable, char symbolNameParam[], int va
 
 		if (newSymbol) {
 
+			displaySymbol(newSymbol);
 			// insert the name of the symbol
 			strcpy(newSymbol->symbolName, symbolNameParam);
 
@@ -147,17 +153,6 @@ void insertNewSymbolData(symbolList* symbolTable, char symbolNameParam[], int va
 }
 
 
-// this function will check if this symbol needs an update to its values - if yes - will update it
-int shoudAddValueAddrsOffset(symbolList* symbolTable) {
-
-	if (symbolTable->value)
-	{
-		
-	}
-
-	return 0;
-}
-
 // the method will print the stymbol to machine code format - binary
 void printToMachineCode(symbolList* symbolTable) {
 
@@ -184,15 +179,7 @@ void displaySymbol(symbolList* symbol) {
 	else
 	{
 		printf("\nSr. No.\t\PrgramWordValue\t\tIsCompleted\t\tLink\n");
-
-		while (ptr != NULL)
-		{
-			printf("\n%d.\t \t%d\t \t%s\t \t%d\t %d\n\t %d\n\t %d\n", i, ptr, ptr->baseAddress, ptr->value, ptr->symbolName, ptr->offset,
-				ptr->nextSymbol);
-			ptr = ptr->nextSymbol;
-			i++;
-
-		}
+		printf(" %s \n", ptr->symbolName);
 	}
 	free(ptr);
 

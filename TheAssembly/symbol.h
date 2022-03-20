@@ -5,7 +5,7 @@
 
 typedef struct symbolNode symbolList;
 
-symbolList* insertNewSymbol(symbolList* symbolTable, char symbolName[], int valueOfSymbol, char* attribute[]);
+void insertNewSymbolData(symbolList* symbolTable, char symbolNameParam[], int valueOfSymbol, char* attributeParam);
 void displaySymbol(symbolList* symbol);
 
 
