@@ -6,7 +6,7 @@
 
 #include "wordInCode.h"
 #include "symbol.h"
-
+#include "validations.h"
 #include "helperFunctions.h"
 
 
@@ -40,9 +40,10 @@ int main() {
 		};
 
 
-	printf("%s\n",line);
+	//printf("%s\n",line);
 
-
+	printf("%d\n", isCommentLine("			"));
+	
 	// Split line from file
 
 	// Symbol Validations

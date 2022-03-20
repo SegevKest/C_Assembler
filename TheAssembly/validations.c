@@ -3,6 +3,8 @@
 #include<string.h>
 
 
+#include "helperFunctions.h"
+
 #define TRUE 1
 #define FALSE 0
 
@@ -33,7 +35,12 @@ int isMiunThree(char* argmntFromLine);
 // Check if the current line is a comment - return TRUE if yes, FALSE if not
 int isCommentLine(char* rowFromCode) {
 
-	return 0;
+	char* trimmedRow = getTrimmedCodeRow(rowFromCode);
+
+	if (strlen(trimmedRow) == 0)
+		return TRUE;
+	
+	return FALSE;
 }
 
 // Check if the current line is a WhiteSpaces - return TRUE if yes, FALSE if not
@@ -67,14 +74,17 @@ int isActionLine(char* rowFromCode) {
 
 
 
-// this method will check if the argument is a Symbol or not
-int isSymbolArgmnt(char* argmntFromLine) {
+// this method will check if the argument is a Symbol or not and check its name and 
+int isValidSymbolArgmnt(char* argmntFromLine) {
+
 
 	return FALSE;
 
 }
 
 // Validations necessary
+
+// check if the symbol that was located has a valid name
 int isValidNameOfSymbol(char* symbolFromLine) {
 
 	return FALSE;

@@ -8,6 +8,9 @@ int returnFirstIndexOfChar(char* stringToCheck, char charToFind);
 char* subString(char* sourceString, int strtIndex, int endIndex);
 int returnLastIndexOfChar(char* stringToCheck, char charToFind);
 
+//Trim row
+char* getTrimmedCodeRow(char* rowFromCode);
+
 
 
 #endif //__helperFunctions_H

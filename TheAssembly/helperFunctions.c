@@ -12,13 +12,15 @@ int returnLastIndexOfChar(char* stringToCheck, char charToFind);
 char* subString(char* sourceString, int strtIndex, int endIndex);
 //int findTheIndexOfTheActionInTable(char* stringToCheck);
 
+char* getTrimmedCodeRow(char* rowFromCode);
+
 
 
 //get the index of the character in the array of chars
 int returnFirstIndexOfChar(char* stringToCheck, char charToFind) {
 
 	char* pointerToChar;
-	int index;
+	int index = -1;
 
 	pointerToChar = strchr(stringToCheck, charToFind);
 
@@ -31,7 +33,7 @@ int returnFirstIndexOfChar(char* stringToCheck, char charToFind) {
 int returnLastIndexOfChar(char* stringToCheck, char charToFind) {
 
 	char* pointerToChar;
-	int index;
+	int index = -1;
 
 	pointerToChar = strrchr(stringToCheck, charToFind);
 
@@ -97,15 +99,48 @@ char* subString(char *sourceString, int strtIndex, int endIndex) {
 
 
 // functin that will get the line from the file and split it to different strings in a new array
-char* analyzeCodeRow(char* rowFromCode) {
+char* analyzeCodeRow(char* rowFromCode, int instructCounter, int dataCounter) {
 
+	//check for existing symbol at the sta
+	int indexOfColon = returnFirstIndexOfChar(rowFromCode, ':');
+	char* newSymbolVar = NULL;
 
+	// check if this is a Action line of directive
+	// raise flag of char accordingly 
+	// 
 	
+	// only if found a 
+	if (indexOfColon > 0)
+	{
+		//Has a new Symbol definition inside this row
+		newSymbolVar = subString(rowFromCode,0,indexOfColon);
+		
+		// continue handle the New Symbol Value
+
+	}
 
 }
 
 // This method will iterate all the string and will return a new string with no spaces
 char* getTrimmedCodeRow(char* rowFromCode) {
+
+	char* trimmedRow = strdup(rowFromCode);
+	char* endOfLine;
+	
+	// Run from the prefix of the rowFromCode
+	while (isspace((unsigned char)*trimmedRow))	trimmedRow++;
+	
+	if (*trimmedRow == 0)
+		return trimmedRow;
+
+	endOfLine = trimmedRow + strlen(trimmedRow) - 1;
+
+	// Run from end of the rowFromCode
+	while (endOfLine > trimmedRow && isspace((unsigned char)*endOfLine)) endOfLine--;
+
+	endOfLine[1] = '\0';
+
+	return trimmedRow;
 
 }
 
