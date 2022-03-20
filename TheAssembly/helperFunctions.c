@@ -3,6 +3,10 @@
 #include<string.h>
 
 
+#include "validations.h"
+
+
+
 #define TRUE 1
 #define FALSE 0
 #define MAX_ARGS_NO_INWORD 6
@@ -13,7 +17,6 @@ char* subString(char* sourceString, int strtIndex, int endIndex);
 //int findTheIndexOfTheActionInTable(char* stringToCheck);
 
 char* getTrimmedCodeRow(char* rowFromCode);
-
 
 
 //get the index of the character in the array of chars
@@ -99,25 +102,40 @@ char* subString(char *sourceString, int strtIndex, int endIndex) {
 
 
 // functin that will get the line from the file and split it to different strings in a new array
-char* analyzeCodeRow(char* rowFromCode, int instructCounter, int dataCounter) {
+void analyzeCodeRow(char* rowFromCode, int instructCounter, int dataCounter) {
 
-	//check for existing symbol at the sta
-	int indexOfColon = returnFirstIndexOfChar(rowFromCode, ':');
+
+	char* whiteSpaceLine = FALSE, commentLine = FALSE, rowHasSymbol = FALSE;
+
 	char* newSymbolVar = NULL;
 
 	// check if this is a Action line of directive
-	// raise flag of char accordingly 
-	// 
 	
-	// only if found a 
-	if (indexOfColon > 0)
+	// raise flag of char accordingly 
+	whiteSpaceLine = isWhiteSpacesLine(rowFromCode);
+	commentLine = isCommentLine(rowFromCode);
+
+
+	// if empty row or comment Row - finish this row
+	if (whiteSpaceLine == TRUE || commentLine == TRUE)
+		return;
+
+	rowHasSymbol = isRowContainSymbol(rowFromCode);
+
+
+	if (rowHasSymbol == TRUE)
 	{
-		//Has a new Symbol definition inside this row
-		newSymbolVar = subString(rowFromCode,0,indexOfColon);
-		
-		// continue handle the New Symbol Value
+		// indicate which line is it - action or directive
+
+		// extarct the name of symbol + validation
+		newSymbolVar = subString(rowFromCode, 0, returnFirstIndexOfChar(rowFromCode, ':'));
+	
+		// add new symbol to the list of symbols
+
 
 	}
+	
+	
 
 }
 

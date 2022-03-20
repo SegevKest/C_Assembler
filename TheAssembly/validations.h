@@ -4,6 +4,14 @@
 
 
 int isCommentLine(char* rowFromCode);
+int isWhiteSpacesLine(char* rowFromCode);
+
+int isRowContainSymbol(char* rowFromCode);
+
+int isDirectiveLine(char* rowFromCode);
+int isActionLine(char* rowFromCode);
+
+
 
 
 #endif

@@ -14,7 +14,9 @@ int isCommentLine(char* rowFromCode);
 int isWhiteSpacesLine(char* rowFromCode);
 int isDirectiveLine(char* rowFromCode);
 int isActionLine(char* rowFromCode);
-int isSymbolArgmnt(char* argmntFromLine);
+int isRowContainSymbol(char* rowFromCode);
+int isValidSymbolArgmnt(char* argmntFromLine);
+
 int isValidRegister(char* argmntFromLine);
 int isValidNameOfSymbol(char* symbolFromLine);
 int isValidSeperationBetweenActionAndParam(char* rowFromCode);
@@ -37,42 +39,69 @@ int isCommentLine(char* rowFromCode) {
 
 	char* trimmedRow = getTrimmedCodeRow(rowFromCode);
 
-	if (strlen(trimmedRow) == 0)
+	if (trimmedRow[0] == ';')
 		return TRUE;
-	
+
 	return FALSE;
+
 }
 
 // Check if the current line is a WhiteSpaces - return TRUE if yes, FALSE if not
 int isWhiteSpacesLine(char* rowFromCode) {
 
-	return 0;
+	char* trimmedRow = getTrimmedCodeRow(rowFromCode);
+
+	if (strlen(trimmedRow) == 0)
+		return TRUE;
+
+	return FALSE;
+
 }
 
 
 // Check if the current line is Directive line - return TRUE if yes, FALSE if not
+// This function will return the number of Directive if it is Found - else 0
 int isDirectiveLine(char* rowFromCode) {
 
-	//is .data - line
-	// is .string line
-	//is .entry
-	// is .extern
-	return 0;
+	// 1. '.data' -> 2. '.string' -> 3. '.entry' -> 4. '.extern'
+
+	int directiveNo = 0;
+
+	if ( strstr(rowFromCode, ".data") != NULL)
+		directiveNo = 1;
+	else if (strstr(rowFromCode, ".string") != NULL)
+		directiveNo = 2;
+	else if (strstr(rowFromCode, ".entry") != NULL)
+		directiveNo = 3;
+	else if (strstr(rowFromCode, ".extern") != NULL)
+		directiveNo = 4;
+	
+	return directiveNo;
 }
 
 
 // Check if the current line is Action / Instruct line - return TRUE if yes, FALSE if not
 int isActionLine(char* rowFromCode) {
 
-	//is .data - line
-	// is .string line
-	//is .entry
-	// is .extern
-	return 0;
+	// if this line is not a directive (and not empty or comment ) - this is an Action line
+	if (!isDirectiveLine(rowFromCode))
+		return TRUE;
+
+	return FALSE;
 }
 
 
+int isRowContainSymbol(char* rowFromCode) {
 
+	//check for existing symbol at the sta
+	int indexOfColon = returnFirstIndexOfChar(rowFromCode, ':');
+
+	// only if found a 
+	if (indexOfColon >= 0 && indexOfColon <= strlen(rowFromCode))
+		return TRUE;
+
+	return FALSE;
+}
 
 // this method will check if the argument is a Symbol or not and check its name and 
 int isValidSymbolArgmnt(char* argmntFromLine) {

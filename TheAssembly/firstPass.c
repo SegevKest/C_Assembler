@@ -39,11 +39,12 @@ int main() {
 		".code", ".data"
 		};
 
+	printf("%d\n", isActionLine("	.string	"));
 
 	//printf("%s\n",line);
+	//analyzeCodeRow("SEGEV:		", ic, dc);
 
-	printf("%d\n", isCommentLine("			"));
-	
+
 	// Split line from file
 
 	// Symbol Validations
