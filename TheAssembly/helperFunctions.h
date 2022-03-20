@@ -11,6 +11,7 @@ int returnLastIndexOfChar(char* stringToCheck, char charToFind);
 //Trim row
 char* getTrimmedCodeRow(char* rowFromCode);
 
-void analyzeCodeRow(char* rowFromCode, int instructCounter, int dataCounter);
+void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, machineCode* dataMachineCode, char* rowFromCode, int instructCounter, int dataCounter);
+
 
 #endif //__helperFunctions_H

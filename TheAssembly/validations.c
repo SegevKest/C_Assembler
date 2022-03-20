@@ -4,6 +4,9 @@
 
 
 #include "helperFunctions.h"
+#include "wordInCode.h"
+#include "symbol.h"
+
 
 #define TRUE 1
 #define FALSE 0
@@ -91,6 +94,7 @@ int isActionLine(char* rowFromCode) {
 }
 
 
+// Check if the row of code contains a colon - represnt the end of declaring a symbol
 int isRowContainSymbol(char* rowFromCode) {
 
 	//check for existing symbol at the sta
@@ -102,6 +106,7 @@ int isRowContainSymbol(char* rowFromCode) {
 
 	return FALSE;
 }
+
 
 // this method will check if the argument is a Symbol or not and check its name and 
 int isValidSymbolArgmnt(char* argmntFromLine) {

@@ -17,11 +17,8 @@ int main() {
 	//initil
 	int ic = 100 , dc = 0;
 	
-	machineCode* machineCodeActionsHead = NULL; // the linked list for the instructions machine code
-	machineCode* machineCodeDataHead = NULL;	// the linked list for the data lines 
-
-
-
+	machineCode* actionsMachineCodeHead = NULL; // the linked list for the instructions machine code
+	machineCode* dataMachineCodeHead = NULL;	// the linked list for the data lines 
 
 	symbolList* symbolHead = NULL;
 
@@ -39,13 +36,10 @@ int main() {
 		".code", ".data"
 		};
 
-	printf("%d\n", isActionLine("	.string	"));
+	//printf("%d\n", isActionLine("	.string	"));
 
 	//printf("%s\n",line);
-	//analyzeCodeRow("SEGEV:		", ic, dc);
-
-
-	// Split line from file
+	analyzeCodeRow("SEGEV : .string 	", ic, dc);
 
 	// Symbol Validations
 	/*insertNewSymbolData(symbolHead, "Segev", ic, "entry");

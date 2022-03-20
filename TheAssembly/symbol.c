@@ -49,8 +49,6 @@ void isSymbolAlreadyExist(symbolList* symbolTable, char symbolName[], symbolList
 
 			namesAreEqual = strcmp((ptr->symbolName), symbolName);
 
-
-
 			if (!namesAreEqual)		// return 0 if equal
 			{
 				ret = ptr;

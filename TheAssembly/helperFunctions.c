@@ -4,7 +4,8 @@
 
 
 #include "validations.h"
-
+#include "wordInCode.h"
+#include "symbol.h"
 
 
 #define TRUE 1
@@ -17,6 +18,7 @@ char* subString(char* sourceString, int strtIndex, int endIndex);
 //int findTheIndexOfTheActionInTable(char* stringToCheck);
 
 char* getTrimmedCodeRow(char* rowFromCode);
+void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, machineCode* dataMachineCode, char* rowFromCode, int instructCounter, int dataCounter);
 
 
 //get the index of the character in the array of chars
@@ -44,7 +46,6 @@ int returnLastIndexOfChar(char* stringToCheck, char charToFind) {
 
 	return index;
 }
-
 
 // This function gets a string and 2 indexes - return a new String between the 2 indexes
 char* subString(char *sourceString, int strtIndex, int endIndex) {
@@ -96,48 +97,105 @@ char* subString(char *sourceString, int strtIndex, int endIndex) {
 //
 //}
 
-
-
-
-
-
 // functin that will get the line from the file and split it to different strings in a new array
-void analyzeCodeRow(char* rowFromCode, int instructCounter, int dataCounter) {
+void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, machineCode* dataMachineCode, char* rowFromCode, int instructCounter, int dataCounter) {
 
-
-	char* whiteSpaceLine = FALSE, commentLine = FALSE, rowHasSymbol = FALSE;
-
-	char* newSymbolVar = NULL;
-
-	// check if this is a Action line of directive
+	char* newSymbolName = NULL, newSymbolAttribute;
+	int	whiteSpaceLine , commentLine ,rowHasSymbol , actionRow , directiveRow;
 	
+	whiteSpaceLine = commentLine = rowHasSymbol = actionRow = directiveRow = FALSE;
+
 	// raise flag of char accordingly 
 	whiteSpaceLine = isWhiteSpacesLine(rowFromCode);
 	commentLine = isCommentLine(rowFromCode);
-
 
 	// if empty row or comment Row - finish this row
 	if (whiteSpaceLine == TRUE || commentLine == TRUE)
 		return;
 
+	if (isActionLine(rowFromCode)) {
+		actionRow = TRUE;
+	}
+	else
+		directiveRow = TRUE;
+
+	printf("%d action - %d directive \n Symbol - %d", actionRow, directiveRow, rowHasSymbol);
+
+	// Check If the row has symbol 
 	rowHasSymbol = isRowContainSymbol(rowFromCode);
 
-
+	// if symbol exist - handle it. else - continue with rest of logic for each row
 	if (rowHasSymbol == TRUE)
 	{
+		// extarct the name of symbol 
+		newSymbolName = subString(rowFromCode, 0, returnFirstIndexOfChar(rowFromCode, ':'));
+
 		// indicate which line is it - action or directive
+		// create the new attribute to the symbol by the row 
+		if (actionRow) {
+			newSymbolAttribute = "code";
 
-		// extarct the name of symbol + validation
-		newSymbolVar = subString(rowFromCode, 0, returnFirstIndexOfChar(rowFromCode, ':'));
-	
-		// add new symbol to the list of symbols
+			//Handle symbol scenario
+			handleSymbolScenario(symbolTable, newSymbolName, newSymbolAttribute, instructCounter);
+		}
+		if (directiveRow) {
+			newSymbolAttribute = "data";
 
-
+			//Handle symbol scenario
+			handleSymbolScenario(symbolTable, newSymbolName, newSymbolAttribute, dataCounter);
+		}
 	}
 	
-	
+	// Row without a symbol
+	if (actionRow) {
+		// handle an action row  - method for this
+	}
+	if (directiveRow) {
+		// handle an directive row - method for this
+
+	}
+}
+
+// _------- Open
+// Handle scenraio of row with symbol 
+void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbolAttributes, int symbolValue) {
+
+	symbolList* isSymbolExist = NULL;
+
+	isSymbolAlreadyExist(symbolTable,symbolName, isSymbolExist);
+
+	if (isSymbolExist != NULL)
+	{
+		printf("ERROR: The symbol already exist in the Symbol Table");	
+	}
+	else
+	{
+		//Validations on the symbol
+		// check if the symbolName equals any of the saved words - method
+
+		// insert the new symbol if all validation are valid
+
+	}
+}
+
+
+// _------- Open
+// Handle scenraio of action Row 
+void handleActionRowScenario() {
 
 }
+
+
+// _------- Open
+// Handle scenraio of Directive Row 
+void handleDirectiveRowScenario() {
+
+}
+
+
+
+
+
 
 // This method will iterate all the string and will return a new string with no spaces
 char* getTrimmedCodeRow(char* rowFromCode) {
