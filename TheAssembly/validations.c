@@ -6,12 +6,13 @@
 #include "helperFunctions.h"
 #include "wordInCode.h"
 #include "symbol.h"
+#include "constantTables.h"
 
 
 #define TRUE 1
 #define FALSE 0
-
-
+#define TOTAL_SAVED_NAMES_IN_PROG 36
+#define MAX_LENGTH_OF_SAVE_NAME 9
 
 int isCommentLine(char* rowFromCode);
 int isWhiteSpacesLine(char* rowFromCode);
@@ -107,7 +108,7 @@ int isRowContainSymbol(char* rowFromCode) {
 	return FALSE;
 }
 
-
+// Should remove??
 // this method will check if the argument is a Symbol or not and check its name and 
 int isValidSymbolArgmnt(char* argmntFromLine) {
 
@@ -118,11 +119,34 @@ int isValidSymbolArgmnt(char* argmntFromLine) {
 
 // Validations necessary
 
+//--------open
 // check if the symbol that was located has a valid name
 int isValidNameOfSymbol(char* symbolFromLine) {
 
-	return FALSE;
+	int i, rsltOfCompare=0, foundMatch = FALSE;
+	char** currSavedName = malloc (TOTAL_SAVED_NAMES_IN_PROG * sizeof(char* ));
+	char** savedNamesTable = returnSavedNamesTable();
+
+	for (i = 0; i < TOTAL_SAVED_NAMES_IN_PROG && !foundMatch; i++) {
+		
+		currSavedName[i] = malloc(MAX_LENGTH_OF_SAVE_NAME+1 * sizeof(char));
+		strcpy(currSavedName[i], savedNamesTable[i]);
+		//currSavedName = savedNamesTable[i];
+		rsltOfCompare = strcmp(currSavedName[i], symbolFromLine);
+
+		// if the result is 0 - means there was a match in the saved names
+		if (rsltOfCompare == 0)
+			foundMatch = TRUE;
+
+		/*free(currSavedName[i]);*/
+	}
+	
+	if (foundMatch == TRUE)
+		return FALSE;
+
+	return TRUE;
 }
+
 
 int isValidRegister(char* argmntFromLine) {
 

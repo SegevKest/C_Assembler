@@ -3,7 +3,7 @@
 #include<string.h>
 
 
-
+char** returnActionsByOpcodeTable();
 
 
 static char *savedNamesInProgram[] = 
@@ -115,7 +115,7 @@ char* returnAddressesNewWordsAndValuesTable() {
 }
 
 // return the actionsByOpcode table
-char* returnSavedNamesTable() {
+char** returnSavedNamesTable() {
 
 	return savedNamesInProgram;
 }

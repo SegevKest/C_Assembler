@@ -4,7 +4,8 @@
 
 
 // return the 
-char* returnActionsByOpcodeTable();
+char** returnActionsByOpcodeTable();
+char** returnSavedNamesTable();
 
 int sizeOfActionsByOpcodeTable();
 

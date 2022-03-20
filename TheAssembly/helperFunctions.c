@@ -19,7 +19,7 @@ char* subString(char* sourceString, int strtIndex, int endIndex);
 
 char* getTrimmedCodeRow(char* rowFromCode);
 void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, machineCode* dataMachineCode, char* rowFromCode, int instructCounter, int dataCounter);
-
+void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbolAttributes, int symbolValue);
 
 //get the index of the character in the array of chars
 int returnFirstIndexOfChar(char* stringToCheck, char charToFind) {
@@ -50,14 +50,15 @@ int returnLastIndexOfChar(char* stringToCheck, char charToFind) {
 // This function gets a string and 2 indexes - return a new String between the 2 indexes
 char* subString(char *sourceString, int strtIndex, int endIndex) {
 
-	int lengthOfDestString = endIndex - strtIndex;
+	int lengthOfDestString = endIndex - strtIndex + 1;
 	char endOfString = '\0';
+	char* destString;
 
 
-	char* destString = (char*)malloc( sizeof(char) * lengthOfDestString );
+	destString = (char*)malloc( lengthOfDestString * sizeof(char));
 
 
-	if(destString)
+	if(destString!=NULL)
 		strncpy(destString, (sourceString + strtIndex), lengthOfDestString);
 
 
@@ -119,10 +120,11 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 	else
 		directiveRow = TRUE;
 
-	printf("%d action - %d directive \n Symbol - %d", actionRow, directiveRow, rowHasSymbol);
-
 	// Check If the row has symbol 
 	rowHasSymbol = isRowContainSymbol(rowFromCode);
+
+	printf("%s\n%d action - %d directive \n Symbol - %d", rowFromCode, actionRow, directiveRow, rowHasSymbol);
+
 
 	// if symbol exist - handle it. else - continue with rest of logic for each row
 	if (rowHasSymbol == TRUE)
@@ -134,13 +136,13 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 		// create the new attribute to the symbol by the row 
 		if (actionRow) {
 			newSymbolAttribute = "code";
-
+			printf("\n Action l : %d", rowHasSymbol);
 			//Handle symbol scenario
 			handleSymbolScenario(symbolTable, newSymbolName, newSymbolAttribute, instructCounter);
 		}
 		if (directiveRow) {
 			newSymbolAttribute = "data";
-
+			printf("\n does row has symbol : %d", rowHasSymbol);
 			//Handle symbol scenario
 			handleSymbolScenario(symbolTable, newSymbolName, newSymbolAttribute, dataCounter);
 		}
@@ -162,6 +164,8 @@ void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbo
 
 	symbolList* isSymbolExist = NULL;
 
+	int isValidName;
+
 	isSymbolAlreadyExist(symbolTable,symbolName, isSymbolExist);
 
 	if (isSymbolExist != NULL)
@@ -172,9 +176,15 @@ void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbo
 	{
 		//Validations on the symbol
 		// check if the symbolName equals any of the saved words - method
+		isValidName = isValidNameOfSymbol(symbolName);
 
-		// insert the new symbol if all validation are valid
-
+		if (isValidName == FALSE)	{
+			printf("ERROR: The symbol is named as a saved word");
+		}
+		else	{
+			// insert the new symbol if all validation are valid
+			insertNewSymbolData(symbolTable,symbolName,symbolValue, symbolAttributes);
+		}
 	}
 }
 
@@ -193,7 +203,28 @@ void handleDirectiveRowScenario() {
 }
 
 
+//To handle the .data directive
+void handleDirectiveData() {
 
+}
+
+
+//To handle the .string directive
+void handleDirectiveString() {
+
+}
+
+
+//To handle the .entry directive
+void handleDirectiveEntry() {
+
+}
+
+
+//To handle the .extern directive
+void handleDirectiveExtern() {
+
+}
 
 
 
