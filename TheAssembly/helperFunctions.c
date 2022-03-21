@@ -62,7 +62,7 @@ char* subString(char *sourceString, int strtIndex, int endIndex) {
 
 
 	if(destString!=NULL)
-		strncpy(destString, (sourceString), endIndex - strtIndex);
+		strncpy(destString, (sourceString + strtIndex), endIndex - strtIndex);
 		//strncpy(destString, originString, lengthOfDestString);
 
 
@@ -132,7 +132,7 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 	// Check If the row has symbol 
 	rowHasSymbol = isRowContainSymbol(rowFromCode);
 
-	printf("%s\n%d action - %d directive \n Symbol - %d\n Counters: ic: %d	\t dc:%d", rowFromCode, actionRow, directiveRow, rowHasSymbol, instructCounter, dataCounter);
+	printf("%s\n%d action - %d directive Symbol - %d\n Counters: ic: %d	\t dc:%d", rowFromCode, actionRow, directiveRow, rowHasSymbol, instructCounter, dataCounter);
 
 
 	// if symbol exist - handle it. else - continue with rest of logic for each row
@@ -181,7 +181,7 @@ void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbo
 	}
 	else	{
 		// insert the new symbol if all validation are valid
-		insertNewSymbolData(symbolTable,symbolName, ++symbolValue, symbolAttributes);
+		insertNewSymbolData(symbolTable,symbolName, symbolValue, symbolAttributes);
 	}
 }
 

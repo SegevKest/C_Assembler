@@ -12,7 +12,7 @@ int isValidNameOfSymbol(char* symbolFromLine);
 int isDirectiveLine(char* rowFromCode);
 int isActionLine(char* rowFromCode);
 
-
+int isValidRegister(char* rgstrFromLine);
 
 
 #endif

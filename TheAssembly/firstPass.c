@@ -39,7 +39,9 @@ int main() {
 	//printf("%d\n", isActionLine("	.string	"));
 
 	//printf("%s\n",line);
-	analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, "SEGEV      : .string 	", ic, dc);
+	
+	printf("\n%d",isValidRegister("r"));
+	//analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, "SEGEV      : .string 	", ic, 100);
 
 	// Symbol Validations
 	/*insertNewSymbolData(symbolHead, "Segev", ic, "entry");

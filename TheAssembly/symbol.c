@@ -61,6 +61,8 @@ void isSymbolAlreadyExist(symbolList* symbolTable, char symbolName[], symbolList
 	}
 }
 
+
+// -----Open - issue with inserting
 // Function to create a new symbol from given parameters
 // It will calculate the BaseAddress + Offset and will add it to the new Symbol
 // Then - iterate until end of symbolTable and insert the newSybol at the end 
@@ -75,8 +77,6 @@ void insertNewSymbolData(symbolList* symbolTable, char symbolNameParam[], int va
 	symbolList* pToSymbolinTable = symbolTable;
 
 	isSymbolAlreadyExist(symbolTable, symbolNameParam, ret);
-
-	
 
 	if (ret!=NULL)
 		symbolExist = TRUE;
@@ -104,10 +104,12 @@ void insertNewSymbolData(symbolList* symbolTable, char symbolNameParam[], int va
 			
 			// Attributes array will be initialized -
 			newSymbol->noOfAttributes = 1;
+
+			//The part is not working!!
 			strcpy(newSymbol->attributes[0], attributeParam);
 
 
-
+			//The part is not working!!
 			// INsert to the existing table at the end
 			while (pToSymbolinTable->nextSymbol != NULL) 
 				pToSymbolinTable = pToSymbolinTable->nextSymbol;

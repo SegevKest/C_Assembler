@@ -108,6 +108,7 @@ int isRowContainSymbol(char* rowFromCode) {
 	return FALSE;
 }
 
+
 // Should remove??
 // this method will check if the argument is a Symbol or not and check its name and 
 int isValidSymbolArgmnt(char* argmntFromLine) {
@@ -120,7 +121,6 @@ int isValidSymbolArgmnt(char* argmntFromLine) {
 
 // Validations necessary
 
-//--------open 
 // check if the symbol that was located has a valid name
 int isValidNameOfSymbol(char* symbolFromLine) {
 
@@ -138,8 +138,6 @@ int isValidNameOfSymbol(char* symbolFromLine) {
 		// if the result is 0 - means there was a match in the saved names
 		if (rsltOfCompare == 0)
 			foundMatch = TRUE;
-
-		/*free(currSavedName[i]);*/
 	}
 	
 	if (foundMatch == TRUE)
@@ -149,21 +147,34 @@ int isValidNameOfSymbol(char* symbolFromLine) {
 }
 
 
+// this method will check if this argument is a Register
+int isRegsiter(char* argFromLine) {
+
+	char firstCharOfrgstr = argFromLine[0];
+
+	if (firstCharOfrgstr == 'r')
+		return TRUE;
+	return FALSE;
+}
+
+// Check if this is a valid register
 int isValidRegister(char* rgstrFromLine) {
 
 	// first - check if the argmt is a register
 	char firstCharOfrgstr = rgstrFromLine[0];
-	char* restOfrgstrArg;
+	char* restOfrgstrArg = subString(rgstrFromLine, 1, 3);
 
+	int validRegister = FALSE, strLength, rgstrNo;
 
-	int validRegister = FALSE;
+	strLength = strlen(rgstrFromLine);
+	rgstrNo = atoi(restOfrgstrArg);
 
-	if (firstCharOfrgstr == 'r')
-	// only if true - check if it exist in the contant table
-
+	if (rgstrNo < REGISTERS_NO && rgstrNo >= 0 && strLength > 1)
+		return TRUE;
+	
 	return FALSE;
 }
-
+  
 // the method will check if the seperation of all the arguments are in order
 int isValidSeperationBetweenParams(char* rowFromCode) {
 
