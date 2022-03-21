@@ -11,6 +11,8 @@
 #define TRUE 1
 #define FALSE 0
 #define MAX_ARGS_NO_INWORD 6
+#define MAX_LENGTH_OF_ATTRBIUTE 9
+
 
 int returnFirstIndexOfChar(char* stringToCheck, char charToFind);
 int returnLastIndexOfChar(char* stringToCheck, char charToFind);
@@ -52,15 +54,19 @@ char* subString(char *sourceString, int strtIndex, int endIndex) {
 
 	int lengthOfDestString = endIndex - strtIndex + 1;
 	char endOfString = '\0';
-	char* destString;
+	char* destString, pPrint;
 
 
-	destString = (char*)malloc( lengthOfDestString * sizeof(char));
+	//destString = (char*)malloc( lengthOfDestString * sizeof(char));
+	destString = (char*)calloc(lengthOfDestString, sizeof(char));
 
 
 	if(destString!=NULL)
-		strncpy(destString, (sourceString + strtIndex), lengthOfDestString);
+		strncpy(destString, (sourceString), endIndex - strtIndex);
+		//strncpy(destString, originString, lengthOfDestString);
 
+
+	//printf("\nSubstring: %s", destString);
 
 	return destString;
 }
@@ -101,7 +107,9 @@ char* subString(char *sourceString, int strtIndex, int endIndex) {
 // functin that will get the line from the file and split it to different strings in a new array
 void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, machineCode* dataMachineCode, char* rowFromCode, int instructCounter, int dataCounter) {
 
-	char* newSymbolName = NULL, newSymbolAttribute;
+	char* newSymbolName = NULL;
+	char newSymbolAttribute[MAX_LENGTH_OF_ATTRBIUTE];
+
 	int	whiteSpaceLine , commentLine ,rowHasSymbol , actionRow , directiveRow;
 	
 	whiteSpaceLine = commentLine = rowHasSymbol = actionRow = directiveRow = FALSE;
@@ -109,6 +117,7 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 	// raise flag of char accordingly 
 	whiteSpaceLine = isWhiteSpacesLine(rowFromCode);
 	commentLine = isCommentLine(rowFromCode);
+
 
 	// if empty row or comment Row - finish this row
 	if (whiteSpaceLine == TRUE || commentLine == TRUE)
@@ -123,28 +132,26 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 	// Check If the row has symbol 
 	rowHasSymbol = isRowContainSymbol(rowFromCode);
 
-	printf("%s\n%d action - %d directive \n Symbol - %d", rowFromCode, actionRow, directiveRow, rowHasSymbol);
+	printf("%s\n%d action - %d directive \n Symbol - %d\n Counters: ic: %d	\t dc:%d", rowFromCode, actionRow, directiveRow, rowHasSymbol, instructCounter, dataCounter);
 
 
 	// if symbol exist - handle it. else - continue with rest of logic for each row
 	if (rowHasSymbol == TRUE)
 	{
 		// extarct the name of symbol 
-		newSymbolName = subString(rowFromCode, 0, returnFirstIndexOfChar(rowFromCode, ':'));
+		newSymbolName = getTrimmedCodeRow(subString(rowFromCode, 0, returnFirstIndexOfChar(rowFromCode, ':') ));
 
 		// indicate which line is it - action or directive
 		// create the new attribute to the symbol by the row 
 		if (actionRow) {
-			newSymbolAttribute = "code";
 			printf("\n Action l : %d", rowHasSymbol);
-			//Handle symbol scenario
-			handleSymbolScenario(symbolTable, newSymbolName, newSymbolAttribute, instructCounter);
+			//Handle action scenario
+			handleSymbolScenario(symbolTable, newSymbolName, "code", instructCounter);
 		}
 		if (directiveRow) {
-			newSymbolAttribute = "data";
-			printf("\n does row has symbol : %d", rowHasSymbol);
+			printf("\n Directive : %d", rowHasSymbol);
 			//Handle symbol scenario
-			handleSymbolScenario(symbolTable, newSymbolName, newSymbolAttribute, dataCounter);
+			handleSymbolScenario(symbolTable, newSymbolName, "data", dataCounter);
 		}
 	}
 	
@@ -163,28 +170,18 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbolAttributes, int symbolValue) {
 
 	symbolList* isSymbolExist = NULL;
-
 	int isValidName;
 
-	isSymbolAlreadyExist(symbolTable,symbolName, isSymbolExist);
+	//Validations on the symbol
+	// check if the symbolName equals any of the saved words - method
+	isValidName = isValidNameOfSymbol(symbolName);
 
-	if (isSymbolExist != NULL)
-	{
-		printf("ERROR: The symbol already exist in the Symbol Table");	
+	if (isValidName == FALSE)	{
+		printf("ERROR: The symbol is named as a saved word");
 	}
-	else
-	{
-		//Validations on the symbol
-		// check if the symbolName equals any of the saved words - method
-		isValidName = isValidNameOfSymbol(symbolName);
-
-		if (isValidName == FALSE)	{
-			printf("ERROR: The symbol is named as a saved word");
-		}
-		else	{
-			// insert the new symbol if all validation are valid
-			insertNewSymbolData(symbolTable,symbolName,symbolValue, symbolAttributes);
-		}
+	else	{
+		// insert the new symbol if all validation are valid
+		insertNewSymbolData(symbolTable,symbolName, ++symbolValue, symbolAttributes);
 	}
 }
 

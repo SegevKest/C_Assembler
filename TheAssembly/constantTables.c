@@ -3,6 +3,9 @@
 #include<string.h>
 
 
+
+#define REGISTERS_NO 16
+
 char** returnActionsByOpcodeTable();
 
 

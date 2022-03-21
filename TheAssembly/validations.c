@@ -117,9 +117,10 @@ int isValidSymbolArgmnt(char* argmntFromLine) {
 
 }
 
+
 // Validations necessary
 
-//--------open
+//--------open 
 // check if the symbol that was located has a valid name
 int isValidNameOfSymbol(char* symbolFromLine) {
 
@@ -148,10 +149,16 @@ int isValidNameOfSymbol(char* symbolFromLine) {
 }
 
 
-int isValidRegister(char* argmntFromLine) {
+int isValidRegister(char* rgstrFromLine) {
 
 	// first - check if the argmt is a register
+	char firstCharOfrgstr = rgstrFromLine[0];
+	char* restOfrgstrArg;
 
+
+	int validRegister = FALSE;
+
+	if (firstCharOfrgstr == 'r')
 	// only if true - check if it exist in the contant table
 
 	return FALSE;

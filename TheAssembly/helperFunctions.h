@@ -5,6 +5,9 @@
 #include "wordInCode.h"
 #include "symbol.h"
 
+#define REGISTERS_NO 16
+
+
 // return the 
 int returnFirstIndexOfChar(char* stringToCheck, char charToFind);
 char* subString(char* sourceString, int strtIndex, int endIndex);
