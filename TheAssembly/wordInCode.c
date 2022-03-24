@@ -355,11 +355,6 @@ void registersAdresses(machineCode* machCode, char directionFlag, char* register
 
 
 
-
-
-
-
-
 // Cleans the word from the memory
 void deleteWordFromMemory(machineCode* machCode) {
 	free(machCode);
@@ -368,10 +363,6 @@ void deleteWordFromMemory(machineCode* machCode) {
 
 // Operations:
 // Print Current Word - in Hexadecimal format
-// 
-// 
-
-
 
 void displayWord(machineCode* machCode) {
 

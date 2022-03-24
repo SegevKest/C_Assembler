@@ -105,9 +105,9 @@ void insertNewSymbolData(symbolList* symbolTable, char symbolNameParam[], int va
 			// Attributes array will be initialized -
 			newSymbol->noOfAttributes = 1;
 
+
 			//The part is not working!!
 			strcpy(newSymbol->attributes[0], attributeParam);
-
 
 			//The part is not working!!
 			// INsert to the existing table at the end
@@ -161,12 +161,6 @@ void printToMachineCode(symbolList* symbolTable) {
 // 1. Add new Symbol - adding symbol name, value, attributes + calculate the Base address and Offset in method
 // 2. Add new attribute to existing symbol
 // 3. Search a symbol in SymbolTable - by char array represent the Symbol Name - return true or false
-
-
-
-
-
-
 
 void displaySymbol(symbolList* symbol) {
 

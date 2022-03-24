@@ -104,13 +104,14 @@ char* subString(char *sourceString, int strtIndex, int endIndex) {
 //
 //}
 
+// OPEN ------ MUST !
 // functin that will get the line from the file and split it to different strings in a new array
 void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, machineCode* dataMachineCode, char* rowFromCode, int instructCounter, int dataCounter) {
 
 	char* newSymbolName = NULL;
 	char newSymbolAttribute[MAX_LENGTH_OF_ATTRBIUTE];
 
-	int	whiteSpaceLine , commentLine ,rowHasSymbol , actionRow , directiveRow;
+	int	whiteSpaceLine , commentLine ,rowHasSymbol , actionRow , directiveRow, typeOfDirective;
 	
 	whiteSpaceLine = commentLine = rowHasSymbol = actionRow = directiveRow = FALSE;
 
@@ -123,14 +124,15 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 	if (whiteSpaceLine == TRUE || commentLine == TRUE)
 		return;
 
+	// Check If the row has symbol 
+	rowHasSymbol = isRowContainSymbol(rowFromCode);
+
+
 	if (isActionLine(rowFromCode)) {
 		actionRow = TRUE;
 	}
 	else
 		directiveRow = TRUE;
-
-	// Check If the row has symbol 
-	rowHasSymbol = isRowContainSymbol(rowFromCode);
 
 	printf("%s\n%d action - %d directive Symbol - %d\n Counters: ic: %d	\t dc:%d", rowFromCode, actionRow, directiveRow, rowHasSymbol, instructCounter, dataCounter);
 
@@ -149,20 +151,44 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 			handleSymbolScenario(symbolTable, newSymbolName, "code", instructCounter);
 		}
 		if (directiveRow) {
-			printf("\n Directive : %d", rowHasSymbol);
-			//Handle symbol scenario
-			handleSymbolScenario(symbolTable, newSymbolName, "data", dataCounter);
+			// check what is the value of isDirective line and by that continue flow
+			//1. '.data' -> 2. '.string' -> 3. '.entry' -> 4. '.extern'
+			typeOfDirective = isDirectiveLine(rowFromCode);
+
+			printf("\n Directive : %d,\t typeOfDirective: %d", rowHasSymbol, typeOfDirective);
+
+			if (typeOfDirective == 1 || typeOfDirective == 2) {
+				// Data and String
+
+				//Handle symbol scenario
+				handleSymbolScenario(symbolTable, newSymbolName, "data", dataCounter);
+
+				// identify all the data received - insert code in data machine code
+				// increase the data counter by the number of data arguments reveiced (coded)?
+
+			}
+			else if (typeOfDirective == 4) {	// extern
+
+				//Handle symbol scenario
+				handleSymbolScenario(symbolTable, newSymbolName, "external", 0);
+
+			}
+			// else entry typeOfDirective == 3
+			// Ignore this row and wait for the second PASS
 		}
+
 	}
 	
-	// Row without a symbol
-	if (actionRow) {
-		// handle an action row  - method for this
-	}
 	if (directiveRow) {
 		// handle an directive row - method for this
 
 	}
+
+	// Row without a symbol
+	if (actionRow) {
+		// handle an action row  - method for this
+	}
+	
 }
 
 // _------- Open
@@ -182,6 +208,7 @@ void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbo
 	else	{
 		// insert the new symbol if all validation are valid
 		insertNewSymbolData(symbolTable,symbolName, symbolValue, symbolAttributes);
+
 	}
 }
 
@@ -194,9 +221,19 @@ void handleActionRowScenario() {
 
 
 // _------- Open
+// // 1. '.data' -> 2. '.string' -> 3. '.entry' -> 4. '.extern'
 // Handle scenraio of Directive Row 
-void handleDirectiveRowScenario() {
+void handleDirectiveRowScenario(char* rowFromCode) {
 
+	int directType = 0;
+
+
+	directType = isDirectiveLine(rowFromCode);
+
+	if (directType == 3 || directType == 4) {
+
+
+	}
 }
 
 
