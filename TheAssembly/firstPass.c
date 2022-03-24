@@ -47,7 +47,7 @@ int main() {
 	// 
 	//analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, "SEGEV      : .data7,-57		, +17,,	", ic, 100);
 
-	analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, ".extern 100,-9,-8,199,12,, 144	", ic, 100);
+	analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, ".extern 100,-9,-8,199,12, 144	", ic, 100);
 
 	//analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, "			 .string 	", ic, 100);
 	

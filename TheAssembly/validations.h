@@ -14,8 +14,5 @@ int isActionLine(char* rowFromCode);
 
 int isValidRegister(char* rgstrFromLine);
 
-
-
-int validateRowOfCode(char** arrayOfArgumentFromCode);
-
+int validateRowOfCode(char** arrayOfArgumentFromCode, int lengthOfArr);
 #endif

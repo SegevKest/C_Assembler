@@ -165,15 +165,22 @@ void printToMachineCode(symbolList* symbolTable) {
 void displaySymbol(symbolList* symbol) {
 
 	symbolList* ptr = symbol;
+	symbolList** currSymbolAttr;
 
-
-	int i = 1;
+	int i;
 	if (ptr == NULL)
 		printf("\Symbol list is empty.\n");
 	else
 	{
-		printf("\nSr. No.\t\PrgramWordValue\t\tIsCompleted\t\tLink\n");
-		printf(" %s \n", ptr->symbolName);
+		printf("\nSr. No.\t\symbolName\t\tvalue\t\tOffset\t\tBase\t\t\n");
+		printf("\n%d\t\%s\t\t%d\t\t%d\t\t%d\t\t\n", ptr->symbolName,ptr->value, ptr->offset, ptr->baseAddress);
+		currSymbolAttr = ptr->attributes;
+
+		printf("\nAttirbutes:\n");
+
+		for (i = 0; i < ptr->noOfAttributes; i++) {
+			printf("%s", currSymbolAttr[i]);
+		}
 	}
 	free(ptr);
 

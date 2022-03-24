@@ -25,6 +25,7 @@ int isValidRegister(char* argmntFromLine);
 int isValidNameOfSymbol(char* symbolFromLine);
 int isValidSeperationBetweenActionAndParam(char* rowFromCode);
 int isValidSeperationBetweenParams(char* rowFromCode);
+int validateRowOfCode(char** arrayOfArgumentFromCode, int lengthOfArr);
 
 //Miun Functions
 int isMiunZero(char* argmntFromLine);
@@ -179,19 +180,47 @@ int isValidRegister(char* rgstrFromLine) {
 // the method will check if the seperation of all the arguments are in order
 int isValidSeperationBetweenParams(char* paramFromCode) {
 
-	if (strstr(paramFromCode, ",") != NULL) 
+	if (strstr(paramFromCode, ",") != NULL) {
+		printf("Found not valid seperation between arguments");
 		return FALSE;
+	}
+
+	return TRUE;
 }
 
+// Add more???
 // the method will check if the seperation of all the arguments are in order
 // using tab - return 1
 //using space - return 0
 // not valid - return -1
 int isValidSeperationBetweenActionAndParam(char* paramFromCode) {
 
+	int isContainDirective = isDirectiveLine(paramFromCode);
+
 	// location of action or directive is 0 all the rest are 
+	if (strstr(paramFromCode, ",") != NULL || isContainDirective != 0 ) {
 
-
+		if (isContainDirective == 1 && strlen(paramFromCode) > 6) {
+			printf("The split between the first and second argument was not successfull");
+		}
+		else if ((isContainDirective == 2 || isContainDirective == 4) && strlen(paramFromCode) > 8) {
+			printf("The split between the first and second argument was not successfull");
+		}
+		else if (isContainDirective == 3 && strlen(paramFromCode) > 7) {
+			printf("The split between the first and second argument was not successfull");
+		}
+		else
+		{
+			// Means there was a directive 
+			return TRUE;
+		}
+		return FALSE;
+	}
+	if (strstr(paramFromCode, "\t") != NULL) {
+		printf("The split between the first and second argument was not successfull due TAB ");
+		return FALSE;
+	}
+	return TRUE;
 
 }
 
@@ -214,11 +243,11 @@ int isValidNameOfAction(char* paramFromCode) {
 }	
 
 
-//
+//Apply all validations on all arguments - regarding the syntax
 int validateRowOfCode(char** arrayOfArgumentFromCode, int lengthOfArr) {
 
-	int isDirective = FALSE, isValidActionName = FALSE;
-	//int i = getLengthOfArgsArray(arrayOfArgumentFromCode);
+	int i, isDirective = FALSE, isValidActionName = FALSE, isValidSeparation = FALSE, foundUnValidSeparation = FALSE;
+	//int  = getLengthOfArgsArray(arrayOfArgumentFromCode);
 
 
 	isDirective = isDirectiveLine(arrayOfArgumentFromCode[0]);
@@ -242,13 +271,25 @@ int validateRowOfCode(char** arrayOfArgumentFromCode, int lengthOfArr) {
 		}
 	}
 	// check for valid sepatation of first agrs to other
-
+	isValidSeparation = isValidSeperationBetweenActionAndParam(arrayOfArgumentFromCode[0]);
 	
-	
-	//for()
+	if (isValidSeparation == FALSE)
+		return FALSE;
+
+	// Check every argument
+	for (i = 1; i < lengthOfArr &&  !foundUnValidSeparation; i++) {
+
+		isValidSeparation = isValidSeperationBetweenParams(arrayOfArgumentFromCode[i]);
+		
+		if (isValidSeparation == FALSE)
+			foundUnValidSeparation = TRUE;
+	}
+
+	if (foundUnValidSeparation == TRUE)
+		return FALSE;
 
 
-	return 0;
+	return TRUE;
 
 }
 
