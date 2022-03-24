@@ -47,7 +47,7 @@ int main() {
 	// 
 	//analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, "SEGEV      : .data7,-57		, +17,,	", ic, 100);
 
-	analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, ".data 100,-9,-8,199,12,, 144	", ic, 100);
+	analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, ".extern 100,-9,-8,199,12,, 144	", ic, 100);
 
 	//analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, "			 .string 	", ic, 100);
 	
@@ -57,7 +57,7 @@ int main() {
 	displaySymbol(symbolHead);*/
 
 	// Machine code validations
-	//insertNewOpCodeWord(machineCodeHead, subString(line, 0,4));
+	//insertNewOpCodeWord(actionsMachineCodeHead, subString(line, 0,4));
 	//displayWord(machineCodeHead);
 
 

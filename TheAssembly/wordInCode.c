@@ -53,6 +53,10 @@ machineCode* createWordInMemory() {
 void initializeCodeWord(machineCode* machCode) {
 
 	//int i;
+	machCode->isCompleted = FALSE;
+	machCode->programWordValue = -1;
+
+	machCode->nextWord = (machineCode*)malloc(sizeof(machineCode));
 
 	//for (i = 0; i<WORD_LENGTH; i++)
 	//	machCode->wordBinary[i] = 0;
@@ -64,7 +68,12 @@ void initializeCodeWord(machineCode* machCode) {
 // Initialize the word array with all -1 value- for regular word - with funct, addresses and registers
 void initializeWithNotCompletedCodeWord(machineCode* machCode) {
 
-	int i;
+	//int i;
+
+	machCode->isCompleted = FALSE;
+	machCode->programWordValue = -1;
+
+	machCode->nextWord = (machineCode*)malloc(sizeof(machineCode));
 
 	/*for (i = 0; i < WORD_LENGTH - 1; i++)
 		machCode->wordBinary[i] = -1;*/
@@ -195,7 +204,7 @@ void insertNewOpCodeWord(machineCode* machCodeTable, char actionName[]) {
 		initializeCodeWord(newWord);
 
 		//Test
-		displayWord(newWord);
+		//displayWord(newWord);
 
 		// Turn on Relevant bit in the array in the new word
 		bitToTurnOn = getOpcodeAction(actionName);
@@ -369,7 +378,7 @@ void displayWord(machineCode* machCode) {
 	machineCode* ptr = machCode;
 
 
-	int i = 1;
+	int i = 1,j;
 	if (ptr == NULL)
 		printf("\Word is empty.\n");
 	else
@@ -378,15 +387,14 @@ void displayWord(machineCode* machCode) {
 
 		while (ptr != NULL)
 		{
-			printf("\n%d.\t \t%d\t \t%d\t \t%d\t %d\n", i, ptr, ptr->programWordValue, ptr->isCompleted,
-				ptr->nextWord);
+			printf("\n%d.\t \t%d\t \t%d\t \n", i, ptr->programWordValue, ptr->isCompleted);
 			ptr = ptr->nextWord;
 			i++;
 
 			printf("\Word Code.\n");
 			
-			for (i =0; i< WORD_LENGTH; i++)	
-				printf("\\n%d.\t", ptr->wordBinary[i++]);
+			for (j =0; j< WORD_LENGTH; j++)	
+				printf("%d.\t", j);
 		}
 	}
 	free(ptr);

@@ -177,22 +177,80 @@ int isValidRegister(char* rgstrFromLine) {
   
 
 // the method will check if the seperation of all the arguments are in order
-int isValidSeperationBetweenParams(char** arrayOfParams) {
+int isValidSeperationBetweenParams(char* paramFromCode) {
 
+	if (strstr(paramFromCode, ",") != NULL) 
+		return FALSE;
 }
 
 // the method will check if the seperation of all the arguments are in order
 // using tab - return 1
 //using space - return 0
 // not valid - return -1
-int isValidSeperationBetweenActionAndParam(char** arrayOfParams) {
+int isValidSeperationBetweenActionAndParam(char* paramFromCode) {
 
-	int indexToCutFirstParam;
+	// location of action or directive is 0 all the rest are 
+
 
 
 }
 
+// -----------OPEN
+// Create the new table of relations between action - arg number...
+int isValidParamNumber() {
 
+}
+
+// this method checks if the name of the action argument name is exist
+int isValidNameOfAction(char* paramFromCode) {
+
+	int resultOfOpCodeSearch = getOpcodeAction(paramFromCode);
+
+	if (resultOfOpCodeSearch == -1)
+		return FALSE;	// Didnt find any matched name of action
+
+	return TRUE;		// means that there was a match while searching for the action and found match
+
+}	
+
+
+//
+int validateRowOfCode(char** arrayOfArgumentFromCode, int lengthOfArr) {
+
+	int isDirective = FALSE, isValidActionName = FALSE;
+	//int i = getLengthOfArgsArray(arrayOfArgumentFromCode);
+
+
+	isDirective = isDirectiveLine(arrayOfArgumentFromCode[0]);
+
+	// validation on first Arg - the action or directive
+	if (isDirective == 0) {	// is action
+		isValidActionName = isValidNameOfAction(arrayOfArgumentFromCode[0]);
+		
+		if (isValidActionName == FALSE)
+		{
+			printf("Not a Valid action Name received");
+			return FALSE;
+		}
+	}
+	else        // Check for directive correct name
+	{
+		if (!(isDirective >= 1 && isDirective <= 4))
+		{
+			printf("Not a Valid Directive Name received");
+			return FALSE;
+		}
+	}
+	// check for valid sepatation of first agrs to other
+
+	
+	
+	//for()
+
+
+	return 0;
+
+}
 
 
 // Methods to check the type of the Miun of an argument

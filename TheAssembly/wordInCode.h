@@ -9,4 +9,5 @@ void insertNewOpCodeWord(machineCode* machCodeTable, char actionName[]);
 void insertNewFullCodeWord(machineCode* machCodeTable);
 void displayWord(machineCode* machCode);
 
+int getOpcodeAction(char actionName[]);
 #endif //__WORDINCODE_H

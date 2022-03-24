@@ -6,7 +6,7 @@
 #include "symbol.h"
 
 #define REGISTERS_NO 16
-
+#define MAX_LENGTH_OF_PARAM 12
 
 // return the 
 int returnFirstIndexOfChar(char* stringToCheck, char charToFind);

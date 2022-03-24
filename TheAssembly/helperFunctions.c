@@ -23,7 +23,7 @@ char* subString(char* sourceString, int strtIndex, int endIndex);
 char* getTrimmedCodeRow(char* rowFromCode);
 void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, machineCode* dataMachineCode, char* rowFromCode, int instructCounter, int dataCounter);
 void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbolAttributes, int symbolValue);
-char** buildArrayOfRowParams(char* rowFromCode);
+char** buildArrayOfRowParams(char* rowFromCode, int* lengthOfArr);
 
 
 
@@ -119,22 +119,25 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 	char newSymbolAttribute[MAX_LENGTH_OF_ATTRBIUTE];
 	char** arrayOfArgumentFromCode = NULL;
 
-	int	i, whiteSpaceLine , commentLine ,rowHasSymbol , actionRow , directiveRow, typeOfDirective, commaLocation;
+	int	i, validationFlag, lengthOfArr,
+		whiteSpaceLine , commentLine ,rowHasSymbol , actionRow , directiveRow, typeOfDirective, commaLocation;
 	
 
 
-	whiteSpaceLine = commentLine = rowHasSymbol = actionRow = directiveRow = FALSE;
+	whiteSpaceLine = commentLine = rowHasSymbol = actionRow = directiveRow = lengthOfArr = FALSE;
 
 	// raise flag of char accordingly 
 	whiteSpaceLine = isWhiteSpacesLine(rowFromCode);
 	commentLine = isCommentLine(rowFromCode);
 
+	// Check If the row has symbol 
+	rowHasSymbol = isRowContainSymbol(rowFromCode);
+
+
+
 	// if empty row or comment Row - finish this row
 	if (whiteSpaceLine == TRUE || commentLine == TRUE)
 		return;
-
-	// Check If the row has symbol 
-	rowHasSymbol = isRowContainSymbol(rowFromCode);
 
 	// Cut the row if it contains a symbol - and create the rest of the row
 	if (rowHasSymbol == TRUE)
@@ -159,7 +162,7 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 		directiveRow = TRUE;
 	}
 
-	printf("\n Rest of Code is:%s", restOfRowFromCode);
+	printf("\nCode is:%s", restOfRowFromCode);
 
 	printf("\nAction - %d; Directive - %d ;Symbol - %d\n Counters: ic: %d	\t dc:%d\n ", actionRow, directiveRow, rowHasSymbol, instructCounter, dataCounter);
 
@@ -200,11 +203,17 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 	//	}
 	//}
 
-	
-	arrayOfArgumentFromCode = buildArrayOfRowParams(restOfRowFromCode);
 
-	for (i = 0; i < arrayOfArgumentFromCode[i]!= NULL; i++)
-		printf("\n%s", arrayOfArgumentFromCode[i]);
+	arrayOfArgumentFromCode = buildArrayOfRowParams(restOfRowFromCode, &lengthOfArr);
+
+	// validate the all array
+	//  
+
+	validationFlag = validateRowOfCode(arrayOfArgumentFromCode, lengthOfArr);
+
+	
+	//for (i = 0; 0 <= strlen(arrayOfArgumentFromCode[i]); i++)
+	//	printf("\n%s", arrayOfArgumentFromCode[i]);
 
 	if (directiveRow) {		// handle an directive row 
 		
@@ -218,19 +227,19 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 				handleSymbolScenario(symbolTable, newSymbolName, "data", dataCounter);
 			}
 			else if (typeOfDirective == 4) {	// extern
-				
+
 				handleSymbolScenario(symbolTable, newSymbolName, "external", 0);
 			}
 			// else entry typeOfDirective == 3
 			// Ignore this row and wait for the second PASS
-		}
+		}		
 
-		// Handle the rest of the logic for directive - 
+		// Handle the rest of the logic for directive 
 		if (typeOfDirective == 1 || typeOfDirective == 2) {
 			printf("\n Insert data machine code ");
 
 			// Insert a new data machine code words accordingly
-
+			
 		}
 	}
 	
@@ -242,10 +251,10 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 			printf("\n With Symbol ");
 			//Handle action scenario
 			handleSymbolScenario(symbolTable, newSymbolName, "code", instructCounter);
-
 		}
 		// Handle the rest of the logic for action
 		printf("\n No Symbol ");
+
 
 		// search for valid action name 
 
@@ -284,48 +293,6 @@ void handleActionRowScenario() {
 }
 
 
-// _------- Open
-// // 1. '.data' -> 2. '.string' -> 3. '.entry' -> 4. '.extern'
-// Handle scenraio of Directive Row 
-void handleDirectiveRowScenario(char* rowFromCode) {
-
-	int directType = 0;
-
-
-	directType = isDirectiveLine(rowFromCode);
-
-	if (directType == 3 || directType == 4) {
-
-
-	}
-}
-
-
-//To handle the .data directive
-void handleDirectiveData() {
-
-}
-
-
-//To handle the .string directive
-void handleDirectiveString() {
-
-}
-
-
-//To handle the .entry directive
-void handleDirectiveEntry() {
-
-}
-
-
-//To handle the .extern directive
-void handleDirectiveExtern() {
-
-}
-
-
-
 // This method will iterate all the string and will return a new string with no spaces
 char* getTrimmedCodeRow(char* rowFromCode) {
 
@@ -350,26 +317,12 @@ char* getTrimmedCodeRow(char* rowFromCode) {
 }
 
 
-// Functions related to the handle of arguments
-
-// method that will receive an argument from the action line and will output the kind of miun needed
-// 0 ,1,2,3 - 
-// It will know by the criteria of each miun
-
-int findMatchedMiun(char* argmntFromLine) {
-
-
-
-
-}
-
-
 // Build the array for the parameters of the line 
 // the first cell will be the action or directive
-char** buildArrayOfRowParams(char* rowFromCode) {
+char** buildArrayOfRowParams(char* rowFromCode, int* lengthOfArr) {
 
 	char** arrOfParamsFromCode = (char*)malloc(sizeof(char*) * MAX_ARGS_NO_INWORD);
-	int i , startIndex = 0, endIndex = 0, indexToCutFirstParam, indexToContinueFrom;
+	int i = 1, startIndex = 0, endIndex = 0, indexToCutFirstParam, indexToContinueFrom;
 
 	if (arrOfParamsFromCode != NULL) {
 
@@ -380,7 +333,7 @@ char** buildArrayOfRowParams(char* rowFromCode) {
 
 		startIndex = returnFirstIndexOfChar(rowFromCode, ' ') + 1;
 	
-		for (i = 1; startIndex < strlen(rowFromCode); i++) {
+		for (i; startIndex < strlen(rowFromCode); i++) {
 
 			indexToContinueFrom = returnFirstIndexOfChar(subString(rowFromCode, startIndex, strlen(rowFromCode)), ',');
 
@@ -401,6 +354,54 @@ char** buildArrayOfRowParams(char* rowFromCode) {
 		}
 	}
 
+	*lengthOfArr = i;
+
 	return arrOfParamsFromCode;
+}
+
+
+// Functions related to the handle of arguments
+
+// method that will receive an argument from the action line and will output the kind of miun needed
+// 0 ,1,2,3 - 
+// It will know by the criteria of each miun
+
+int findMatchedMiun(char* argmntFromLine) {
+
+
+
+
+}
+
+
+// _------- Open
+// // 1. '.data' -> 2. '.string' -> 3. '.entry' -> 4. '.extern'
+// Handle scenraio of Directive Row 
+void handleDirectiveRowScenario(char* rowFromCode) {
+
+}
+
+
+//To handle the .data directive
+void handleDirectiveData() {
+
+}
+
+
+//To handle the .string directive
+void handleDirectiveString() {
+
+}
+
+
+//To handle the .entry directive
+void handleDirectiveEntry() {
+
+}
+
+
+//To handle the .extern directive
+void handleDirectiveExtern() {
+
 }
 
