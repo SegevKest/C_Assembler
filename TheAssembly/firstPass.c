@@ -11,6 +11,9 @@
 
 
 
+
+
+
 int main() {
 
 
@@ -40,9 +43,15 @@ int main() {
 
 	//printf("%s\n",line);
 	
-	printf("\n%d",isValidRegister("r"));
-	//analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, "SEGEV      : .string 	", ic, 100);
+	//printf("\n%d",isValidRegister("r"));
+	// 
+	//analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, "SEGEV      : .data7,-57		, +17,,	", ic, 100);
 
+	analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, ".data 100,-9,-8,199,12,, 144	", ic, 100);
+
+	//analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, "			 .string 	", ic, 100);
+	
+	
 	// Symbol Validations
 	/*insertNewSymbolData(symbolHead, "Segev", ic, "entry");
 	displaySymbol(symbolHead);*/

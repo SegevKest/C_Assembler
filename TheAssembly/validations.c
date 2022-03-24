@@ -63,11 +63,11 @@ int isWhiteSpacesLine(char* rowFromCode) {
 }
 
 
+// 1. '.data' -> 2. '.string' -> 3. '.entry' -> 4. '.extern'
 // Check if the current line is Directive line - return TRUE if yes, FALSE if not
 // This function will return the number of Directive if it is Found - else 0
 int isDirectiveLine(char* rowFromCode) {
 
-	// 1. '.data' -> 2. '.string' -> 3. '.entry' -> 4. '.extern'
 
 	int directiveNo = 0;
 
@@ -175,13 +175,20 @@ int isValidRegister(char* rgstrFromLine) {
 	return FALSE;
 }
   
+
 // the method will check if the seperation of all the arguments are in order
-int isValidSeperationBetweenParams(char* rowFromCode) {
+int isValidSeperationBetweenParams(char** arrayOfParams) {
 
 }
 
 // the method will check if the seperation of all the arguments are in order
-int isValidSeperationBetweenActionAndParam(char* rowFromCode) {
+// using tab - return 1
+//using space - return 0
+// not valid - return -1
+int isValidSeperationBetweenActionAndParam(char** arrayOfParams) {
+
+	int indexToCutFirstParam;
+
 
 }
 
@@ -214,6 +221,5 @@ int isMiunThree(char* argmntFromLine) {
 	return FALSE;
 
 }
-
 
 

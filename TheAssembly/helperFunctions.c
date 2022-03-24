@@ -12,6 +12,7 @@
 #define FALSE 0
 #define MAX_ARGS_NO_INWORD 6
 #define MAX_LENGTH_OF_ATTRBIUTE 9
+#define MAX_LENGTH_OF_PARAM 12
 
 
 int returnFirstIndexOfChar(char* stringToCheck, char charToFind);
@@ -22,6 +23,11 @@ char* subString(char* sourceString, int strtIndex, int endIndex);
 char* getTrimmedCodeRow(char* rowFromCode);
 void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, machineCode* dataMachineCode, char* rowFromCode, int instructCounter, int dataCounter);
 void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbolAttributes, int symbolValue);
+char** buildArrayOfRowParams(char* rowFromCode);
+
+
+
+
 
 //get the index of the character in the array of chars
 int returnFirstIndexOfChar(char* stringToCheck, char charToFind) {
@@ -109,16 +115,19 @@ char* subString(char *sourceString, int strtIndex, int endIndex) {
 void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, machineCode* dataMachineCode, char* rowFromCode, int instructCounter, int dataCounter) {
 
 	char* newSymbolName = NULL;
+	char* restOfRowFromCode = NULL;
 	char newSymbolAttribute[MAX_LENGTH_OF_ATTRBIUTE];
+	char** arrayOfArgumentFromCode = NULL;
 
-	int	whiteSpaceLine , commentLine ,rowHasSymbol , actionRow , directiveRow, typeOfDirective;
+	int	i, whiteSpaceLine , commentLine ,rowHasSymbol , actionRow , directiveRow, typeOfDirective, commaLocation;
 	
+
+
 	whiteSpaceLine = commentLine = rowHasSymbol = actionRow = directiveRow = FALSE;
 
 	// raise flag of char accordingly 
 	whiteSpaceLine = isWhiteSpacesLine(rowFromCode);
 	commentLine = isCommentLine(rowFromCode);
-
 
 	// if empty row or comment Row - finish this row
 	if (whiteSpaceLine == TRUE || commentLine == TRUE)
@@ -127,69 +136,124 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 	// Check If the row has symbol 
 	rowHasSymbol = isRowContainSymbol(rowFromCode);
 
+	// Cut the row if it contains a symbol - and create the rest of the row
+	if (rowHasSymbol == TRUE)
+	{
+		commaLocation = returnFirstIndexOfChar(rowFromCode, ':');
+		newSymbolName = getTrimmedCodeRow(subString(rowFromCode, 0, commaLocation));
+		restOfRowFromCode = getTrimmedCodeRow(subString(rowFromCode, commaLocation + 1, strlen(rowFromCode)));
+		printf("\Symbol Name:%s	;", newSymbolName);
 
+	}
+	else
+	{
+		if (rowHasSymbol == FALSE)
+			restOfRowFromCode = getTrimmedCodeRow(rowFromCode);
+	}
+
+	// check type of row
 	if (isActionLine(rowFromCode)) {
 		actionRow = TRUE;
 	}
-	else
+	else {
 		directiveRow = TRUE;
+	}
 
-	printf("%s\n%d action - %d directive Symbol - %d\n Counters: ic: %d	\t dc:%d", rowFromCode, actionRow, directiveRow, rowHasSymbol, instructCounter, dataCounter);
+	printf("\n Rest of Code is:%s", restOfRowFromCode);
 
+	printf("\nAction - %d; Directive - %d ;Symbol - %d\n Counters: ic: %d	\t dc:%d\n ", actionRow, directiveRow, rowHasSymbol, instructCounter, dataCounter);
 
 	// if symbol exist - handle it. else - continue with rest of logic for each row
-	if (rowHasSymbol == TRUE)
-	{
-		// extarct the name of symbol 
-		newSymbolName = getTrimmedCodeRow(subString(rowFromCode, 0, returnFirstIndexOfChar(rowFromCode, ':') ));
+	//if (rowHasSymbol == TRUE)
+	//{
 
-		// indicate which line is it - action or directive
-		// create the new attribute to the symbol by the row 
-		if (actionRow) {
-			printf("\n Action l : %d", rowHasSymbol);
-			//Handle action scenario
-			handleSymbolScenario(symbolTable, newSymbolName, "code", instructCounter);
-		}
-		if (directiveRow) {
-			// check what is the value of isDirective line and by that continue flow
-			//1. '.data' -> 2. '.string' -> 3. '.entry' -> 4. '.extern'
-			typeOfDirective = isDirectiveLine(rowFromCode);
+	//	// indicate which line is it - action or directive
+	//	// create the new attribute to the symbol by the row 
+	//	if (actionRow) {
+	//		printf("\n Action l : %d", rowHasSymbol);
+	//		handleSymbolScenario(symbolTable, newSymbolName, "code", instructCounter);
+	//	}
+	//	if (directiveRow) {
+	//		// check what is the value of isDirective line and by that continue flow
+	//		//1. '.data' -> 2. '.string' -> 3. '.entry' -> 4. '.extern'
+	//		typeOfDirective = isDirectiveLine(rowFromCode);
 
-			printf("\n Directive : %d,\t typeOfDirective: %d", rowHasSymbol, typeOfDirective);
+	//		printf("\n Directive : %d,\t typeOfDirective: %d", rowHasSymbol, typeOfDirective);
 
-			if (typeOfDirective == 1 || typeOfDirective == 2) {
-				// Data and String
+	//		if (typeOfDirective == 1 || typeOfDirective == 2) {
+	//			// Data and String
 
-				//Handle symbol scenario
+	//			//Handle symbol scenario
+	//			handleSymbolScenario(symbolTable, newSymbolName, "data", dataCounter);
+
+	//			// identify all the data received - insert code in data machine code
+	//			// increase the data counter by the number of data arguments reveiced (coded)?
+
+	//		}
+	//		else if (typeOfDirective == 4) {	// extern
+
+	//			//Handle symbol scenario
+	//			handleSymbolScenario(symbolTable, newSymbolName, "external", 0);
+
+	//		}
+
+	//	}
+	//}
+
+	
+	arrayOfArgumentFromCode = buildArrayOfRowParams(restOfRowFromCode);
+
+	for (i = 0; i < arrayOfArgumentFromCode[i]!= NULL; i++)
+		printf("\n%s", arrayOfArgumentFromCode[i]);
+
+	if (directiveRow) {		// handle an directive row 
+		
+		typeOfDirective = isDirectiveLine(rowFromCode);
+		printf("\n Directive line - type	: %d", typeOfDirective);
+
+		if (rowHasSymbol == TRUE) {
+
+			if (typeOfDirective == 1 || typeOfDirective == 2) {		// Data and String symbols
+
 				handleSymbolScenario(symbolTable, newSymbolName, "data", dataCounter);
-
-				// identify all the data received - insert code in data machine code
-				// increase the data counter by the number of data arguments reveiced (coded)?
-
 			}
 			else if (typeOfDirective == 4) {	// extern
-
-				//Handle symbol scenario
+				
 				handleSymbolScenario(symbolTable, newSymbolName, "external", 0);
-
 			}
 			// else entry typeOfDirective == 3
 			// Ignore this row and wait for the second PASS
 		}
 
+		// Handle the rest of the logic for directive - 
+		if (typeOfDirective == 1 || typeOfDirective == 2) {
+			printf("\n Insert data machine code ");
+
+			// Insert a new data machine code words accordingly
+
+		}
 	}
 	
-	if (directiveRow) {
-		// handle an directive row - method for this
+	if (actionRow) { 		// handle an action row
 
-	}
+		printf("\n Action line:");
 
-	// Row without a symbol
-	if (actionRow) {
-		// handle an action row  - method for this
+		if (rowHasSymbol == TRUE) {
+			printf("\n With Symbol ");
+			//Handle action scenario
+			handleSymbolScenario(symbolTable, newSymbolName, "code", instructCounter);
+
+		}
+		// Handle the rest of the logic for action
+		printf("\n No Symbol ");
+
+		// search for valid action name 
+
+
 	}
 	
 }
+
 
 // _------- Open
 // Handle scenraio of row with symbol 
@@ -297,5 +361,46 @@ int findMatchedMiun(char* argmntFromLine) {
 
 
 
+}
+
+
+// Build the array for the parameters of the line 
+// the first cell will be the action or directive
+char** buildArrayOfRowParams(char* rowFromCode) {
+
+	char** arrOfParamsFromCode = (char*)malloc(sizeof(char*) * MAX_ARGS_NO_INWORD);
+	int i , startIndex = 0, endIndex = 0, indexToCutFirstParam, indexToContinueFrom;
+
+	if (arrOfParamsFromCode != NULL) {
+
+		//split between the action / directive to all params
+		arrOfParamsFromCode[0] = (char*)malloc(sizeof(char) * MAX_LENGTH_OF_PARAM);
+
+		strcpy(arrOfParamsFromCode[0], getTrimmedCodeRow(subString(rowFromCode, 0, returnFirstIndexOfChar(rowFromCode, ' '))));
+
+		startIndex = returnFirstIndexOfChar(rowFromCode, ' ') + 1;
+	
+		for (i = 1; startIndex < strlen(rowFromCode); i++) {
+
+			indexToContinueFrom = returnFirstIndexOfChar(subString(rowFromCode, startIndex, strlen(rowFromCode)), ',');
+
+			if (indexToContinueFrom > 0 && indexToContinueFrom < strlen(rowFromCode)) {
+				endIndex = startIndex + indexToContinueFrom;
+			}
+			else
+			{
+				endIndex = strlen(rowFromCode);
+			}
+
+			// Create memory for this element in array
+			arrOfParamsFromCode[i] = (char*)malloc(sizeof(char) * MAX_LENGTH_OF_PARAM);
+
+			strcpy(arrOfParamsFromCode[i], getTrimmedCodeRow(subString(rowFromCode, startIndex, endIndex)));
+
+			startIndex = endIndex + 1;
+		}
+	}
+
+	return arrOfParamsFromCode;
 }
 
