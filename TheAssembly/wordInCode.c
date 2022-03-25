@@ -32,14 +32,14 @@ typedef struct wordInCode
 
 void initializeCodeWord(machineCode* machCode);
 void initializeWithNotCompletedCodeWord(machineCode* machCode);
-void insertNewWordToEndOfTable(machineCode* machCodeTable, machineCode* newMachineCodeWord);
+void insertNewWordToEndOfTable(machineCode** machCodeTable, machineCode* newMachineCodeWord);
 void checkForWordFullyCompleted(machineCode* machCode);
 void updateCodeWordARECells(machineCode* machCode, char areValueForWord);
 int getOpcodeAction(char actionName[]);
 char* getFunctOfAction(char actionName[], int opCodeOfAction);
 void insertNewOpCodeWord(machineCode* machCodeTable, char actionName[]);
 void insertNewFullCodeWord(machineCode* machCodeTable);
-
+void insertNewCodeWordDirectiveValue(machineCode* machCodeTable, char binaryNumber[]);
 
 
 
@@ -88,12 +88,13 @@ void initializeWithNotCompletedCodeWord(machineCode* machCode) {
 // This method will insert a new Word to the end of the current Machine Code Table - after it was built
 void insertNewWordToEndOfTable(machineCode* machCodeTable, machineCode* newMachineCodeWord) {
 
-	machineCode* pNewWord;
+	machineCode* pNewWord = (machineCode*)malloc(sizeof(machineCode));
 
 	if (machCodeTable == NULL)
 	{
 		// Insert the first MachineCode to the table
 		machCodeTable = newMachineCodeWord;
+		 //machCodeTable->nextWord = (machineCode*)malloc(sizeof(machineCode));
 		machCodeTable->nextWord = NULL;
 	}
 	else
@@ -102,12 +103,18 @@ void insertNewWordToEndOfTable(machineCode* machCodeTable, machineCode* newMachi
 		while (pNewWord->nextWord != NULL)
 			pNewWord = pNewWord->nextWord;
 
-		//pNewWord->nextWord = (machineCode *)malloc(sizeof(machineCode));
+
 		
 		pNewWord->nextWord = newMachineCodeWord;
 		pNewWord = pNewWord->nextWord;
+		//pNewWord->nextWord = (machineCode*)malloc(sizeof(machineCode));
 		pNewWord->nextWord = NULL;
 	}
+
+
+	displayWord(machCodeTable);
+
+	free(pNewWord);
 }
 
 
@@ -326,6 +333,36 @@ void insertNewFullCodeWord(machineCode* machCodeTable, char actionName[]) {
 
 
 // -----Open
+// Add a new CodeWord - for string or data values 
+void insertNewCodeWordDirectiveValue(machineCode* machCodeTable, char* binaryNumber, int valueForNewWord) {
+
+	int i, wordIndexToInsert = 4;
+	machineCode* newWord = createWordInMemory();
+
+	if (newWord) {
+		initializeCodeWord(newWord);
+
+		newWord->programWordValue = valueForNewWord;
+
+		// insert the binary number to the array - in order
+		for (i = 0; i < LENGTH_OF_BIN_NUMBER; i++, wordIndexToInsert++) {
+			newWord->wordBinary[wordIndexToInsert] = (binaryNumber[i]-'0');
+			//printf("%d ", newWord->wordBinary[wordIndexToInsert]);
+		}
+		printf("\n");
+		insertNewWordToEndOfTable(machCodeTable, newWord);
+	}
+	else
+	{
+		printf("Not enoght memory - error in Insert new OPCODE");
+		return NULL;
+	}
+
+	free(newWord);
+}
+
+
+// -----Open
 // this function gets Char ('O' or 'D') for indicating which address and register to update
 // Origin - Register + address - will be signaled in 'O'
 // Destination - Register + address will be signaled in 'D'
@@ -388,13 +425,24 @@ void displayWord(machineCode* machCode) {
 		while (ptr != NULL)
 		{
 			printf("\n%d.\t \t%d\t \t%d\t \n", i, ptr->programWordValue, ptr->isCompleted);
-			ptr = ptr->nextWord;
+			
 			i++;
 
 			printf("\Word Code.\n");
 			
-			for (j =0; j< WORD_LENGTH; j++)	
-				printf("%d.\t", j);
+			for (j = 0; j < WORD_LENGTH; j++) {
+				if (j < 10)
+					printf("| %d |", j);
+				else
+					printf("| %d|", j);
+			}
+			printf("\n");
+			for (j = 0; j < WORD_LENGTH; j++) {
+				printf("| %d |", ptr->wordBinary[j]);
+			}
+
+			ptr = ptr->nextWord;
+
 		}
 	}
 	free(ptr);

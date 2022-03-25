@@ -25,7 +25,7 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbolAttributes, int symbolValue);
 char** buildArrayOfRowParams(char* rowFromCode, int* lengthOfArr);
 
-
+char* convertNumberToBinaryString(int numberToConvert);
 
 
 
@@ -75,221 +75,6 @@ char* subString(char *sourceString, int strtIndex, int endIndex) {
 	//printf("\nSubstring: %s", destString);
 
 	return destString;
-}
-
-
-//// returns the index of a given action - in the actionByCodeTable
-//int findTheIndexOfTheActionInTable(char* stringToCheck) {
-////
-//	int i, j, startOfActionName, endOfActionName, foundAction = FALSE,
-//		lengthOfParamAction = strlen(stringToCheck);
-//
-//	int lengthOfActionsArray = sizeOfActionsByOpcodeTable();
-//	char* actionTable = returnActionsByOpcodeTable();
-//
-//	char currActionToCompare[5];
-//
-//
-//
-//	for (i = 0; i < lengthOfActionsArray && !foundAction; i++) {
-//
-//		j = startOfActionName = endOfActionName = 0;
-//
-//		
-//
-//	
-//
-//		// Get the name of the current ation from the table - put in currActionToCompare
-//		strcpy(currActionToCompare, (char*)(actionTable[i] + startOfActionName + 1), endOfActionName - startOfActionName);
-//
-//		/*strcmp*/
-//
-//
-//
-//	}
-//
-//}
-
-// OPEN ------ MUST !
-// functin that will get the line from the file and split it to different strings in a new array
-void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, machineCode* dataMachineCode, char* rowFromCode, int instructCounter, int dataCounter) {
-
-	char* newSymbolName = NULL;
-	char* restOfRowFromCode = NULL;
-	char newSymbolAttribute[MAX_LENGTH_OF_ATTRBIUTE];
-	char** arrayOfArgumentFromCode = NULL;
-
-	int	i, validationFlag, lengthOfArr,
-		whiteSpaceLine , commentLine ,rowHasSymbol , actionRow , directiveRow, typeOfDirective, commaLocation;
-	
-
-
-	whiteSpaceLine = commentLine = rowHasSymbol = actionRow = directiveRow = lengthOfArr = FALSE;
-
-	// raise flag of char accordingly 
-	whiteSpaceLine = isWhiteSpacesLine(rowFromCode);
-	commentLine = isCommentLine(rowFromCode);
-
-	// Check If the row has symbol 
-	rowHasSymbol = isRowContainSymbol(rowFromCode);
-
-
-
-	// if empty row or comment Row - finish this row
-	if (whiteSpaceLine == TRUE || commentLine == TRUE)
-		return;
-
-	// Cut the row if it contains a symbol - and create the rest of the row
-	if (rowHasSymbol == TRUE)
-	{
-		commaLocation = returnFirstIndexOfChar(rowFromCode, ':');
-		newSymbolName = getTrimmedCodeRow(subString(rowFromCode, 0, commaLocation));
-		restOfRowFromCode = getTrimmedCodeRow(subString(rowFromCode, commaLocation + 1, strlen(rowFromCode)));
-		printf("\Symbol Name:%s	;", newSymbolName);
-
-	}
-	else
-	{
-		if (rowHasSymbol == FALSE)
-			restOfRowFromCode = getTrimmedCodeRow(rowFromCode);
-	}
-
-	// check type of row
-	if (isActionLine(rowFromCode)) {
-		actionRow = TRUE;
-	}
-	else {
-		directiveRow = TRUE;
-	}
-
-	printf("\nCode is:%s", restOfRowFromCode);
-
-	printf("\nAction - %d; Directive - %d ;Symbol - %d\n Counters: ic: %d	\t dc:%d\n ", actionRow, directiveRow, rowHasSymbol, instructCounter, dataCounter);
-
-	// if symbol exist - handle it. else - continue with rest of logic for each row
-	//if (rowHasSymbol == TRUE)
-	//{
-
-	//	// indicate which line is it - action or directive
-	//	// create the new attribute to the symbol by the row 
-	//	if (actionRow) {
-	//		printf("\n Action l : %d", rowHasSymbol);
-	//		handleSymbolScenario(symbolTable, newSymbolName, "code", instructCounter);
-	//	}
-	//	if (directiveRow) {
-	//		// check what is the value of isDirective line and by that continue flow
-	//		//1. '.data' -> 2. '.string' -> 3. '.entry' -> 4. '.extern'
-	//		typeOfDirective = isDirectiveLine(rowFromCode);
-
-	//		printf("\n Directive : %d,\t typeOfDirective: %d", rowHasSymbol, typeOfDirective);
-
-	//		if (typeOfDirective == 1 || typeOfDirective == 2) {
-	//			// Data and String
-
-	//			//Handle symbol scenario
-	//			handleSymbolScenario(symbolTable, newSymbolName, "data", dataCounter);
-
-	//			// identify all the data received - insert code in data machine code
-	//			// increase the data counter by the number of data arguments reveiced (coded)?
-
-	//		}
-	//		else if (typeOfDirective == 4) {	// extern
-
-	//			//Handle symbol scenario
-	//			handleSymbolScenario(symbolTable, newSymbolName, "external", 0);
-
-	//		}
-
-	//	}
-	//}
-
-
-	arrayOfArgumentFromCode = buildArrayOfRowParams(restOfRowFromCode, &lengthOfArr);
-
-	// validate the all array
-	//  
-
-	validationFlag = validateRowOfCode(arrayOfArgumentFromCode, lengthOfArr);
-
-	
-	//for (i = 0; 0 <= strlen(arrayOfArgumentFromCode[i]); i++)
-	//	printf("\n%s", arrayOfArgumentFromCode[i]);
-
-	if (directiveRow) {		// handle an directive row 
-		
-		typeOfDirective = isDirectiveLine(rowFromCode);
-		printf("\n Directive line - type	: %d", typeOfDirective);
-
-		if (rowHasSymbol == TRUE) {
-
-			if (typeOfDirective == 1 || typeOfDirective == 2) {		// Data and String symbols
-
-				handleSymbolScenario(symbolTable, newSymbolName, "data", dataCounter);
-			}
-			else if (typeOfDirective == 4) {	// extern
-
-				handleSymbolScenario(symbolTable, newSymbolName, "external", 0);
-			}
-			// else entry typeOfDirective == 3
-			// Ignore this row and wait for the second PASS
-		}		
-
-		// Handle the rest of the logic for directive 
-		if (typeOfDirective == 1 || typeOfDirective == 2) {
-			printf("\n Insert data machine code ");
-
-			// Insert a new data machine code words accordingly
-			
-		}
-	}
-	
-	if (actionRow) { 		// handle an action row
-
-		printf("\n Action line:");
-
-		if (rowHasSymbol == TRUE) {
-			printf("\n With Symbol ");
-			//Handle action scenario
-			handleSymbolScenario(symbolTable, newSymbolName, "code", instructCounter);
-		}
-		// Handle the rest of the logic for action
-		printf("\n No Symbol ");
-
-
-		// search for valid action name 
-
-
-	}
-	
-}
-
-
-// _------- Open
-// Handle scenraio of row with symbol 
-void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbolAttributes, int symbolValue) {
-
-	symbolList* isSymbolExist = NULL;
-	int isValidName;
-
-	//Validations on the symbol
-	// check if the symbolName equals any of the saved words - method
-	isValidName = isValidNameOfSymbol(symbolName);
-
-	if (isValidName == FALSE)	{
-		printf("ERROR: The symbol is named as a saved word");
-	}
-	else	{
-		// insert the new symbol if all validation are valid
-		insertNewSymbolData(symbolTable,symbolName, symbolValue, symbolAttributes);
-
-	}
-}
-
-
-// _------- Open
-// Handle scenraio of action Row 
-void handleActionRowScenario() {
-
 }
 
 
@@ -360,6 +145,67 @@ char** buildArrayOfRowParams(char* rowFromCode, int* lengthOfArr) {
 }
 
 
+//// returns the index of a given action - in the actionByCodeTable
+//int findTheIndexOfTheActionInTable(char* stringToCheck) {
+////
+//	int i, j, startOfActionName, endOfActionName, foundAction = FALSE,
+//		lengthOfParamAction = strlen(stringToCheck);
+//
+//	int lengthOfActionsArray = sizeOfActionsByOpcodeTable();
+//	char* actionTable = returnActionsByOpcodeTable();
+//
+//	char currActionToCompare[5];
+//
+//
+//
+//	for (i = 0; i < lengthOfActionsArray && !foundAction; i++) {
+//
+//		j = startOfActionName = endOfActionName = 0;
+//
+//		
+//
+//	
+//
+//		// Get the name of the current ation from the table - put in currActionToCompare
+//		strcpy(currActionToCompare, (char*)(actionTable[i] + startOfActionName + 1), endOfActionName - startOfActionName);
+//
+//		/*strcmp*/
+//
+//
+//
+//	}
+//
+//}
+
+// _------- Open
+// Handle scenraio of row with symbol 
+void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbolAttributes, int symbolValue) {
+
+	symbolList* isSymbolExist = NULL;
+	int isValidName;
+
+	//Validations on the symbol
+	// check if the symbolName equals any of the saved words - method
+	isValidName = isValidNameOfSymbol(symbolName);
+
+	if (isValidName == FALSE)	{
+		printf("ERROR: The symbol is named as a saved word");
+	}
+	else	{
+		// insert the new symbol if all validation are valid
+		insertNewSymbolData(symbolTable,symbolName, symbolValue, symbolAttributes);
+
+	}
+}
+
+
+// _------- Open
+// Handle scenraio of action Row 
+void handleActionRowScenario(char** arrayOfArgs) {
+
+}
+
+
 // Functions related to the handle of arguments
 
 // method that will receive an argument from the action line and will output the kind of miun needed
@@ -380,19 +226,46 @@ int findMatchedMiun(char* argmntFromLine) {
 void handleDirectiveRowScenario(char* rowFromCode) {
 
 
-
 }
 
 
 //To handle the .data directive
-void handleDirectiveData() {
+void handleDirectiveData(machineCode* dataMachineCode,  char** arrayOfArgs, int lengthOfArr, int* pToDataCounter) {
+
+	int i;
+
+	char* pToBin;
+
+	printf(" Words to insert:\n ");
+
+	// iterate on all the array of arguments just for params and enter each in new Machine code word
+	for (i = 1; i < lengthOfArr; i++) {
+
+		pToBin = malloc(sizeof(char) * LENGTH_OF_BIN_NUMBER);
+
+		// Binary Representation of the number
+		//pToBin = convertNumberToBinaryString(atoi(arrayOfArgs[i]));
+		if (pToBin!=NULL)
+			strcpy(pToBin, convertNumberToBinaryString(atoi(arrayOfArgs[i])));
+		
+		////printf(" %s : %d  \n", arrayOfArgs[i], atoi(arrayOfArgs[i]));
+
+		//insertNewCodeWordDirectiveValue(dataMachineCode, convertNumberToBinaryString(atoi(arrayOfArgs[i])),*pToDataCounter);
+		insertNewCodeWordDirectiveValue(dataMachineCode, pToBin, *pToDataCounter);
+
+		*pToDataCounter = (*pToDataCounter) + 1;
+
+		//free(pToBin);
+	}
+
 
 }
 
 
 //To handle the .string directive
-void handleDirectiveString() {
-
+void handleDirectiveString(char* stringFromCodeArray) {
+	printf("\n String	: %s\n", stringFromCodeArray);
+	
 }
 
 
@@ -410,7 +283,7 @@ void handleDirectiveExtern() {
 
 char* convertNumberToBinaryString(int numberToConvert) {
 
-	char binaryNumber[LENGTH_OF_BIN_NUMBER] = {0 };
+	char binaryNumber[LENGTH_OF_BIN_NUMBER] = { 0 };
 
 	int numberBuff = 0, i, isPositive = TRUE;
 
@@ -445,12 +318,174 @@ char* convertNumberToBinaryString(int numberToConvert) {
 		}
 	}
 
+	//// Print the final binary number as a array of chars
+	//for (i = 0; i < LENGTH_OF_BIN_NUMBER; i++) {
+	//	printf("%c ", binaryNumber[i]);
+	//}
 
-	for (i = 0; i < LENGTH_OF_BIN_NUMBER; i++) {
-		printf("%c ", binaryNumber[i]);
+
+
+	return &binaryNumber;
+}
+
+
+
+// OPEN ------ MUST !
+// functin that will get the line from the file and split it to different strings in a new array
+void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, machineCode* dataMachineCode, char* rowFromCode, int instructCounter, int dataCounter) {
+
+	char* newSymbolName = NULL;
+	char* restOfRowFromCode = NULL;
+	char newSymbolAttribute[MAX_LENGTH_OF_ATTRBIUTE];
+	char** arrayOfArgumentFromCode = NULL;
+
+	int	i, validationFlag, lengthOfArr,
+		whiteSpaceLine, commentLine, rowHasSymbol, actionRow, directiveRow, typeOfDirective, commaLocation;
+
+
+
+	whiteSpaceLine = commentLine = rowHasSymbol = actionRow = directiveRow = lengthOfArr = FALSE;
+
+	// raise flag of char accordingly 
+	whiteSpaceLine = isWhiteSpacesLine(rowFromCode);
+	commentLine = isCommentLine(rowFromCode);
+
+	// Check If the row has symbol 
+	rowHasSymbol = isRowContainSymbol(rowFromCode);
+
+
+	// if empty row or comment Row - finish this row
+	if (whiteSpaceLine == TRUE || commentLine == TRUE)
+		return;
+
+	// Cut the row if it contains a symbol - and create the rest of the row
+	if (rowHasSymbol == TRUE)
+	{
+		commaLocation = returnFirstIndexOfChar(rowFromCode, ':');
+		newSymbolName = getTrimmedCodeRow(subString(rowFromCode, 0, commaLocation));
+		restOfRowFromCode = getTrimmedCodeRow(subString(rowFromCode, commaLocation + 1, strlen(rowFromCode)));
+		printf("\nSymbol Name:%s	;", newSymbolName);
+	}
+	else
+	{
+		if (rowHasSymbol == FALSE)
+			restOfRowFromCode = getTrimmedCodeRow(rowFromCode);
 	}
 
+	// check type of row
+	if (isActionLine(rowFromCode)) {
+		actionRow = TRUE;
+	}
+	else {
+		directiveRow = TRUE;
+	}
+
+	printf("\nCode is:%s", restOfRowFromCode);
+
+	printf("\nAction - %d; Directive - %d ;Symbol - %d\n Counters: ic: %d	\t dc:%d\n ", actionRow, directiveRow, rowHasSymbol, instructCounter, dataCounter);
+	{
+		// if symbol exist - handle it. else - continue with rest of logic for each row
+		//if (rowHasSymbol == TRUE)
+		//{
+
+		//	// indicate which line is it - action or directive
+		//	// create the new attribute to the symbol by the row 
+		//	if (actionRow) {
+		//		printf("\n Action l : %d", rowHasSymbol);
+		//		handleSymbolScenario(symbolTable, newSymbolName, "code", instructCounter);
+		//	}
+		//	if (directiveRow) {
+		//		// check what is the value of isDirective line and by that continue flow
+		//		//1. '.data' -> 2. '.string' -> 3. '.entry' -> 4. '.extern'
+		//		typeOfDirective = isDirectiveLine(rowFromCode);
+
+		//		printf("\n Directive : %d,\t typeOfDirective: %d", rowHasSymbol, typeOfDirective);
+
+		//		if (typeOfDirective == 1 || typeOfDirective == 2) {
+		//			// Data and String
+
+		//			//Handle symbol scenario
+		//			handleSymbolScenario(symbolTable, newSymbolName, "data", dataCounter);
+
+		//			// identify all the data received - insert code in data machine code
+		//			// increase the data counter by the number of data arguments reveiced (coded)?
+
+		//		}
+		//		else if (typeOfDirective == 4) {	// extern
+
+		//			//Handle symbol scenario
+		//			handleSymbolScenario(symbolTable, newSymbolName, "external", 0);
+
+		//		}
+
+		//	}
+		//}
+
+	}
+
+	//Get the array of arguments from the current Row
+	arrayOfArgumentFromCode = buildArrayOfRowParams(restOfRowFromCode, &lengthOfArr);
+
+	// validate the all array
+	validationFlag = validateRowOfCode(arrayOfArgumentFromCode, lengthOfArr);
 
 
-	return binaryNumber;
+	/*for (i = 0; 0 <= strlen(arrayOfArgumentFromCode[i]); i++)
+		printf("\n%s", arrayOfArgumentFromCode[i]);*/
+
+
+	if (directiveRow) {		// handle an directive row 
+
+		typeOfDirective = isDirectiveLine(rowFromCode);
+		printf("\n Directive line - type	: %d", typeOfDirective);
+
+		if (rowHasSymbol == TRUE) {
+
+			if (typeOfDirective == 1 || typeOfDirective == 2) {		// Data and String symbols
+
+				handleSymbolScenario(symbolTable, newSymbolName, "data", dataCounter);
+			}
+			else if (typeOfDirective == 4) {	// extern
+
+				handleSymbolScenario(symbolTable, newSymbolName, "external", 0);
+			}
+			// else entry typeOfDirective == 3
+			// Ignore this row and wait for the second PASS
+		}
+
+		// Handle the rest of the logic for directive 
+		if (typeOfDirective == 1 || typeOfDirective == 2) {
+			
+
+			// Insert a new data machine code words accordingly
+			if (typeOfDirective == 1) {
+				printf("\n Insert data machine code ");
+				handleDirectiveData(dataMachineCode, arrayOfArgumentFromCode, lengthOfArr, &dataCounter);
+			}
+			else {
+				printf("\n Insert String machine code ");
+				handleDirectiveString(arrayOfArgumentFromCode[1]);
+			}
+
+		}
+	}
+
+	if (actionRow) { 		// handle an action row
+
+		printf("\n Action line:");
+
+		if (rowHasSymbol == TRUE) {
+			printf("\n With Symbol ");
+			//Handle action scenario
+			handleSymbolScenario(&symbolTable, newSymbolName, "code", instructCounter);
+		}
+		// Handle the rest of the logic for action
+		printf("\n No Symbol ");
+
+
+		// search for valid action name 
+
+
+	}
 }
+

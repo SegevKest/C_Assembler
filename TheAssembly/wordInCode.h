@@ -10,4 +10,7 @@ void insertNewFullCodeWord(machineCode* machCodeTable);
 void displayWord(machineCode* machCode);
 
 int getOpcodeAction(char actionName[]);
+
+
+void insertNewCodeWordDirectiveValue(machineCode* machCodeTable, char* binaryNumber, int valueForNewWord);
 #endif //__WORDINCODE_H

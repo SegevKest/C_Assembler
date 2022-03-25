@@ -7,6 +7,7 @@
 
 #define REGISTERS_NO 16
 #define MAX_LENGTH_OF_PARAM 12
+#define LENGTH_OF_BIN_NUMBER 16
 
 // return the 
 int returnFirstIndexOfChar(char* stringToCheck, char charToFind);
@@ -19,4 +20,6 @@ void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbo
 void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, machineCode* dataMachineCode, char* rowFromCode, int instructCounter, int dataCounter);
 
 char* convertNumberToBinaryString(int numberToConvert);
+int convertCharToAscii(char chToConvert);
+
 #endif //__helperFunctions_H

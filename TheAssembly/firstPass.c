@@ -18,7 +18,7 @@ int main() {
 
 
 	//initil
-	int ic = 100 , dc = 0;
+	int ic = 100 , dc = 0, i;
 	
 	machineCode* actionsMachineCodeHead = NULL; // the linked list for the instructions machine code
 	machineCode* dataMachineCodeHead = NULL;	// the linked list for the data lines 
@@ -45,9 +45,11 @@ int main() {
 	
 	//printf("\n%d",isValidRegister("r"));
 	// 
-	//analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, "SEGEV      : .data7,-57		, +17,,	", ic, 100);
+	analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, " .data  6,-9,-8,199,12, 144", ic, 100);
 
-	convertNumberToBinaryString(-10);
+
+
+
 	//analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, ".extern 100,-9,-8,199,12, 144	", ic, 100);
 
 	//analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, "			 .string 	", ic, 100);
