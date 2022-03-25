@@ -37,7 +37,7 @@ void checkForWordFullyCompleted(machineCode* machCode);
 void updateCodeWordARECells(machineCode* machCode, char areValueForWord);
 int getOpcodeAction(char actionName[]);
 char* getFunctOfAction(char actionName[], int opCodeOfAction);
-void insertNewOpCodeWord(machineCode* machCodeTable, char actionName[]);
+void insertNewOpCodeWord(machineCode* machCodeTable, char actionName[], int opCodeToTurnOn, int valueOfAction);
 void insertNewFullCodeWord(machineCode* machCodeTable);
 void insertNewCodeWordDirectiveValue(machineCode* machCodeTable, char binaryNumber[], int valueForNewWord);
 
@@ -111,9 +111,6 @@ void insertNewWordToEndOfTable(machineCode* machCodeTable, machineCode* newMachi
 		pNewWord->nextWord = NULL;
 	}
 
-
-	displayWord(machCodeTable);
-
 	free(pNewWord);
 }
 
@@ -167,9 +164,11 @@ int getOpcodeAction(char actionName[]) {
 		cmpResult, bitToTurnOn = -1, lengthOfOpcode, opCodeOfAction;
 
 	char** pToActionsOpCode = returnActionsByOpcodeTable();
-	char* currAction, currActionName, currOpCodeOfAction;
+	char* currAction;
+	char* currActionName;
+	char* currOpCodeOfAction;
 
-	for (i = 0; i < NO_OF_ACTIONS && bitToTurnOn != (-1); i++) {
+	for (i = 0; i < NO_OF_ACTIONS && bitToTurnOn == (-1); i++) {
 
 		currAction = pToActionsOpCode[i];	// get current action from the table
 
@@ -178,13 +177,11 @@ int getOpcodeAction(char actionName[]) {
 		indexOfFirstComma = returnFirstIndexOfChar(currAction, ',');	// Find the first delimeter index from action name to action data
 		indexOfFirstColon = returnFirstIndexOfChar(currAction, ':');	// Find the first colon index, before the opcode value of action
 
-		currActionName = subString(currAction, 0, indexOfFirstComma + 1);	// Substring the current action name
+		currActionName = subString(currAction, 0, indexOfFirstComma );	// Substring the current action name
 		currOpCodeOfAction = subString(currAction, indexOfFirstColon + 1, indexOfFirstColon + 3);	// Substring the opcode of the action from the table - could be 1 or 2 chars
 
 		// Convert the opCode string to integer
 		opCodeOfAction = atoi(currOpCodeOfAction);
-
-		printf("The opcode of %s is %d", actionName, opCodeOfAction);
 
 		// Compare the 2 names of the given action with the current from iteration
 		cmpResult = strcmp(actionName, currActionName);
@@ -198,12 +195,9 @@ int getOpcodeAction(char actionName[]) {
 
 
 // Add a new OpCode word - with the turned bit - initialize the word with all 0
-void insertNewOpCodeWord(machineCode* machCodeTable, char actionName[]) {
+void insertNewOpCodeWord(machineCode* machCodeTable, char actionName[],int opCodeToTurnOn, int valueOfAction) {
 
-	int bitToTurnOn;
-
-	//TEST
-	printf("Action: %s\n", actionName);
+	int bitToTurnOn, i;
 
 	machineCode* newWord = createWordInMemory();
 
@@ -211,12 +205,11 @@ void insertNewOpCodeWord(machineCode* machCodeTable, char actionName[]) {
 		initializeCodeWord(newWord);
 
 		//Test
-		//displayWord(newWord);
-
 		// Turn on Relevant bit in the array in the new word
-		bitToTurnOn = getOpcodeAction(actionName);
-
-		printf("The Returned Opcode is %d", bitToTurnOn);
+		
+ 		newWord->programWordValue = valueOfAction;
+		//bitToTurnOn = getOpcodeAction(actionName);
+		bitToTurnOn = opCodeToTurnOn;
 
 		if (bitToTurnOn > -1)
 			newWord->wordBinary[WORD_LENGTH - 1 - bitToTurnOn] = 1;
@@ -225,11 +218,21 @@ void insertNewOpCodeWord(machineCode* machCodeTable, char actionName[]) {
 			printf("The Action wasnt found in the constant actions table");
 		}
 
+		for (i = 0; i < WORD_LENGTH; i++)
+		{
+			if (newWord->wordBinary[i] != 0 && newWord->wordBinary[i] != 1)
+				newWord->wordBinary[i] = 0;
+		}
+
 		// Upadte the A,R,E Values in the new word
 		updateCodeWordARECells(newWord, 'A');
 
 		//Insert to machineCodeTable in the end
 		insertNewWordToEndOfTable(machCodeTable , newWord);
+
+		newWord->isCompleted = TRUE;
+
+		displayWord(newWord);
 	}
 	else
 	{
@@ -342,15 +345,19 @@ void insertNewCodeWordDirectiveValue(machineCode* machCodeTable, char* binaryNum
 	if (newWord) {
 		initializeCodeWord(newWord);
 
-		newWord->programWordValue = valueForNewWord;
+		newWord->programWordValue = valueForNewWord;	// add new Word value from data counter
+		updateCodeWordARECells(newWord, 'A');	// set the Bit
+
 
 		// insert the binary number to the array - in order
 		for (i = 0; i < LENGTH_OF_BIN_NUMBER; i++, wordIndexToInsert++) {
 			newWord->wordBinary[wordIndexToInsert] = (binaryNumber[i]-'0');
 			//printf("%d ", newWord->wordBinary[wordIndexToInsert]);
 		}
-		printf("\n");
+		//printf("\n");
 		insertNewWordToEndOfTable(machCodeTable, newWord);
+
+		newWord->isCompleted = TRUE;
 	}
 	else
 	{
@@ -431,10 +438,10 @@ void displayWord(machineCode* machCode) {
 			printf("\Word Code.\n");
 			
 			for (j = 0; j < WORD_LENGTH; j++) {
-				if (j < 10)
-					printf("| %d |", j);
+				if (j > 9)
+					printf("| %d |", (WORD_LENGTH-j-1));
 				else
-					printf("| %d|", j);
+					printf("| %d|", (WORD_LENGTH - j-1));
 			}
 			printf("\n");
 			for (j = 0; j < WORD_LENGTH; j++) {

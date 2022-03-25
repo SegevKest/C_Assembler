@@ -199,12 +199,6 @@ void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbo
 }
 
 
-// _------- Open
-// Handle scenraio of action Row 
-void handleActionRowScenario(char** arrayOfArgs) {
-
-}
-
 
 // Functions related to the handle of arguments
 
@@ -247,14 +241,9 @@ void handleDirectiveData(machineCode* dataMachineCode,  char** arrayOfArgs, int 
 		if (pToBin!=NULL)
 			strcpy(pToBin, convertNumberToBinaryString(atoi(arrayOfArgs[i])));
 		
-		////printf(" %s : %d  \n", arrayOfArgs[i], atoi(arrayOfArgs[i]));
-
-		//insertNewCodeWordDirectiveValue(dataMachineCode, convertNumberToBinaryString(atoi(arrayOfArgs[i])),*pToDataCounter);
 		insertNewCodeWordDirectiveValue(dataMachineCode, pToBin, *pToDataCounter);
 
 		*pToDataCounter = (*pToDataCounter) + 1;
-
-		//free(pToBin);
 	}
 
 
@@ -262,7 +251,7 @@ void handleDirectiveData(machineCode* dataMachineCode,  char** arrayOfArgs, int 
 
 
 //To handle the .string directive
-void handleDirectiveString(machineCode* actionsMachineCode, char* stringFromCodeArray, int* pToDataCounter) {
+void handleDirectiveString(machineCode* dataMachineCode, char* stringFromCodeArray, int* pToDataCounter) {
 	
 	int lengthOfStringToEnter, i;
 	char currChar;
@@ -276,8 +265,6 @@ void handleDirectiveString(machineCode* actionsMachineCode, char* stringFromCode
 	
 	strncat(stringToEnter,"\0", 1);
 
-	printf("\n String length %d	: %s\n",lengthOfStringToEnter, stringToEnter);
-
 	for (i = 0; i < lengthOfStringToEnter; i++) {
 
 		currChar = stringToEnter[i];
@@ -287,10 +274,34 @@ void handleDirectiveString(machineCode* actionsMachineCode, char* stringFromCode
 		if (pToBin != NULL)
 			strcpy(pToBin, convertNumberToBinaryString((int)currChar));
 
-		insertNewCodeWordDirectiveValue(actionsMachineCode, pToBin, *pToDataCounter);
+		insertNewCodeWordDirectiveValue(dataMachineCode, pToBin, *pToDataCounter);
 
 		*pToDataCounter = (*pToDataCounter) + 1;
 	}
+
+}
+
+
+// _------- Open
+// Handle scenraio of action Row 
+void handleActionRowScenario(machineCode* actionsMachineCode, char** arrayOfArgs, int* pToActionsCounter) {
+
+	// there are 3 goups of action: 0 args, 1 args, 2 args - those will be the groupFlags
+	
+	int groupOfAction = -1, opCode ;
+
+	opCode = getOpcodeAction(arrayOfArgs[0]);
+	printf("Opcode: %d", opCode);
+
+	// handle the action - first cell of array
+	// apply all validations of the name
+	if (opCode == -1) {
+		printf("ERROR - Not valid Action Entered");
+		return;
+	}
+	insertNewOpCodeWord(actionsMachineCode, arrayOfArgs[0], opCode, *pToActionsCounter);
+
+	(*pToActionsCounter) = (*pToActionsCounter) + 1;
 
 }
 
@@ -482,7 +493,6 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 		// Handle the rest of the logic for directive 
 		if (typeOfDirective == 1 || typeOfDirective == 2) {
 			
-
 			// Insert a new data machine code words accordingly
 			if (typeOfDirective == 1) {
 				printf("\n Insert data machine code ");
@@ -490,7 +500,7 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 			}
 			else {
 				printf("\n Insert String machine code ");
-				handleDirectiveString(actionsMachineCode, arrayOfArgumentFromCode[1], &dataCounter);
+				handleDirectiveString(dataMachineCode, arrayOfArgumentFromCode[1], &dataCounter);
 			}
 
 		}
@@ -507,7 +517,7 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 		}
 		// Handle the rest of the logic for action
 		printf("\n No Symbol ");
-
+		handleActionRowScenario(actionsMachineCode,arrayOfArgumentFromCode, &instructCounter);
 
 		// search for valid action name 
 

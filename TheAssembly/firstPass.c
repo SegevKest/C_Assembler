@@ -39,20 +39,16 @@ int main() {
 		".code", ".data"
 		};
 
-	//printf("%d\n", isActionLine("	.string	"));
-
-	//printf("%s\n",line);
 	
-	//printf("\n%d",isValidRegister("r"));
-	// 
-	analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, " .string \"abcd\" ", ic, 100);
+	analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, "cmp val1,#-6", ic, 100);
 
+	//analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, " .string \"abcd\" ", ic, 100);
 
 
 
 	//analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, ".extern 100,-9,-8,199,12, 144	", ic, 100);
 
-	//analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, "	.data  6,-9,-8,199,12, 144", ic, 100);
+	//analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, "	.data  6,-9,-100,31", ic, 100);
 	
 	
 	// Symbol Validations
