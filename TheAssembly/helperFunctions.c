@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include<string.h>
-
+#include <stdlib.h>
 
 #include "validations.h"
 #include "wordInCode.h"
@@ -13,7 +13,7 @@
 #define MAX_ARGS_NO_INWORD 6
 #define MAX_LENGTH_OF_ATTRBIUTE 9
 #define MAX_LENGTH_OF_PARAM 12
-
+#define LENGTH_OF_BIN_NUMBER 16
 
 int returnFirstIndexOfChar(char* stringToCheck, char charToFind);
 int returnLastIndexOfChar(char* stringToCheck, char charToFind);
@@ -379,6 +379,8 @@ int findMatchedMiun(char* argmntFromLine) {
 // Handle scenraio of Directive Row 
 void handleDirectiveRowScenario(char* rowFromCode) {
 
+
+
 }
 
 
@@ -405,3 +407,50 @@ void handleDirectiveExtern() {
 
 }
 
+
+char* convertNumberToBinaryString(int numberToConvert) {
+
+	char binaryNumber[LENGTH_OF_BIN_NUMBER] = {0 };
+
+	int numberBuff = 0, i, isPositive = TRUE;
+
+
+	//If the number is negative - handle it
+	if (numberToConvert < 0) {
+		isPositive = FALSE;
+		numberToConvert += 1;
+		numberToConvert = abs(numberToConvert);
+	}
+
+	// Calculate the bits as necessary
+	for (i = LENGTH_OF_BIN_NUMBER - 1; i >= 0 && numberToConvert > 0; i--) {
+
+		binaryNumber[i] = (numberToConvert % 2) +'0';
+		numberToConvert = numberToConvert / 2;
+	}
+	
+	// switch all other bits to '0'
+	for (i; i >= 0; i--) {
+		binaryNumber[i] =  '0';
+	}
+
+	// Flip the bits if necessary
+	if (!isPositive) {
+
+		for (i = 0; i < LENGTH_OF_BIN_NUMBER; i++) {
+			if (binaryNumber[i] == '0')
+				binaryNumber[i] = '1';
+			else
+				binaryNumber[i] = '0';
+		}
+	}
+
+
+	for (i = 0; i < LENGTH_OF_BIN_NUMBER; i++) {
+		printf("%c ", binaryNumber[i]);
+	}
+
+
+
+	return binaryNumber;
+}

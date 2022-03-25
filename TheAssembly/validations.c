@@ -243,7 +243,7 @@ int isValidNameOfAction(char* paramFromCode) {
 }	
 
 
-//Apply all validations on all arguments - regarding the syntax
+//Apply and combine all validations on all arguments - regarding the syntax
 int validateRowOfCode(char** arrayOfArgumentFromCode, int lengthOfArr) {
 
 	int i, isDirective = FALSE, isValidActionName = FALSE, isValidSeparation = FALSE, foundUnValidSeparation = FALSE;
