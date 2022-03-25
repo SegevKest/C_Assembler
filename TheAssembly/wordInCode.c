@@ -39,7 +39,7 @@ int getOpcodeAction(char actionName[]);
 char* getFunctOfAction(char actionName[], int opCodeOfAction);
 void insertNewOpCodeWord(machineCode* machCodeTable, char actionName[]);
 void insertNewFullCodeWord(machineCode* machCodeTable);
-void insertNewCodeWordDirectiveValue(machineCode* machCodeTable, char binaryNumber[]);
+void insertNewCodeWordDirectiveValue(machineCode* machCodeTable, char binaryNumber[], int valueForNewWord);
 
 
 

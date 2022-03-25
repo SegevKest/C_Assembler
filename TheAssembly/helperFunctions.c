@@ -244,7 +244,6 @@ void handleDirectiveData(machineCode* dataMachineCode,  char** arrayOfArgs, int 
 		pToBin = malloc(sizeof(char) * LENGTH_OF_BIN_NUMBER);
 
 		// Binary Representation of the number
-		//pToBin = convertNumberToBinaryString(atoi(arrayOfArgs[i]));
 		if (pToBin!=NULL)
 			strcpy(pToBin, convertNumberToBinaryString(atoi(arrayOfArgs[i])));
 		
@@ -263,9 +262,36 @@ void handleDirectiveData(machineCode* dataMachineCode,  char** arrayOfArgs, int 
 
 
 //To handle the .string directive
-void handleDirectiveString(char* stringFromCodeArray) {
-	printf("\n String	: %s\n", stringFromCodeArray);
+void handleDirectiveString(machineCode* actionsMachineCode, char* stringFromCodeArray, int* pToDataCounter) {
 	
+	int lengthOfStringToEnter, i;
+	char currChar;
+	char* stringToEnter;
+	char* pToBin;
+
+	// this is the length due the final char that signals end of string
+	lengthOfStringToEnter = strlen(stringFromCodeArray) - 1;
+	
+	stringToEnter = subString(stringFromCodeArray,1,strlen(stringFromCodeArray)-1);
+	
+	strncat(stringToEnter,"\0", 1);
+
+	printf("\n String length %d	: %s\n",lengthOfStringToEnter, stringToEnter);
+
+	for (i = 0; i < lengthOfStringToEnter; i++) {
+
+		currChar = stringToEnter[i];
+
+		pToBin = malloc(sizeof(char) * LENGTH_OF_BIN_NUMBER);
+
+		if (pToBin != NULL)
+			strcpy(pToBin, convertNumberToBinaryString((int)currChar));
+
+		insertNewCodeWordDirectiveValue(actionsMachineCode, pToBin, *pToDataCounter);
+
+		*pToDataCounter = (*pToDataCounter) + 1;
+	}
+
 }
 
 
@@ -464,7 +490,7 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 			}
 			else {
 				printf("\n Insert String machine code ");
-				handleDirectiveString(arrayOfArgumentFromCode[1]);
+				handleDirectiveString(actionsMachineCode, arrayOfArgumentFromCode[1], &dataCounter);
 			}
 
 		}

@@ -45,14 +45,14 @@ int main() {
 	
 	//printf("\n%d",isValidRegister("r"));
 	// 
-	analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, " .data  6,-9,-8,199,12, 144", ic, 100);
+	analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, " .string \"abcd\" ", ic, 100);
 
 
 
 
 	//analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, ".extern 100,-9,-8,199,12, 144	", ic, 100);
 
-	//analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, "			 .string 	", ic, 100);
+	//analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, "	.data  6,-9,-8,199,12, 144", ic, 100);
 	
 	
 	// Symbol Validations
