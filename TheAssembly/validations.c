@@ -20,7 +20,7 @@ int isDirectiveLine(char* rowFromCode);
 int isActionLine(char* rowFromCode);
 int isRowContainSymbol(char* rowFromCode);
 int isValidSymbolArgmnt(char* argmntFromLine);
-
+int isRegsiter(char* argFromLine);
 int isValidRegister(char* argmntFromLine);
 int isValidNameOfSymbol(char* symbolFromLine);
 int isValidSeperationBetweenActionAndParam(char* rowFromCode);
@@ -224,6 +224,8 @@ int isValidSeperationBetweenActionAndParam(char* paramFromCode) {
 
 }
 
+
+
 // -----------OPEN
 // Create the new table of relations between action - arg number...
 int isValidParamNumber() {
@@ -296,11 +298,18 @@ int validateRowOfCode(char** arrayOfArgumentFromCode, int lengthOfArr) {
 
 // Methods to check the type of the Miun of an argument
 
-//identify miun 0 exc,
+//identify miun 0 exc, - the A,R,E of it will be - A!
 int isMiunZero(char* argmntFromLine) {
 
 	// the operand will be in format : "#{int}"
-	return *argmntFromLine == '#' ? TRUE : FALSE;
+
+	if (strstr(argmntFromLine, '#') != NULL)
+		return TRUE;
+	
+	return FALSE;
+
+
+	//return *argmntFromLine == '#' ? TRUE : FALSE;
 }
 
 int isMiunOne(char* argmntFromLine) {

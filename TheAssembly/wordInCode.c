@@ -218,6 +218,7 @@ void insertNewOpCodeWord(machineCode* machCodeTable, char actionName[],int opCod
 			printf("The Action wasnt found in the constant actions table");
 		}
 
+		// init all other cells to 0
 		for (i = 0; i < WORD_LENGTH; i++)
 		{
 			if (newWord->wordBinary[i] != 0 && newWord->wordBinary[i] != 1)
@@ -300,7 +301,8 @@ void updateFunctValue(machineCode* machCode, char actionName[]) {
 	//Insert the given char to machinecode 4-7'
 	while (functIndex < endFunctIndex)
 	{
-		machCode->wordBinary[functIndex++] = (*functOfAction)++;
+		machCode->wordBinary[functIndex++] = (*functOfAction)-'0';
+		functOfAction++;
 	}
 
 
@@ -311,21 +313,36 @@ void updateFunctValue(machineCode* machCode, char actionName[]) {
 
 // -----Open
 // Add a new FullCodeWord - with funct - register and adress (Destination + origin)
-void insertNewFullCodeWord(machineCode* machCodeTable, char actionName[]) {
+void insertNewFullCodeWord(machineCode* machCodeTable, char actionName[], int valueForNewWord) {
 
+	int i;
 	machineCode* newWord = createWordInMemory();
 
 	if (newWord) {
-		initializeWithNotCompletedCodeWord(newWord);
+		initializeCodeWord(newWord);
 
-		updateFunctValue(newWord, actionName);
+		newWord->programWordValue = valueForNewWord;
+
+		updateFunctValue(newWord, actionName);	// Update the func value inside the word
+
+		updateCodeWordARECells(newWord,'A');
+
 
 		//Insert Address + register destination
 		// Insert the Address + register origin
 		//Insert the A,R,E letters
 		
 		
+		// init all other cells to 0
+		for (i = 0; i < WORD_LENGTH; i++)
+		{
+			if (newWord->wordBinary[i] != 0 && newWord->wordBinary[i] != 1)
+				newWord->wordBinary[i] = 0;
+		}
+
 		insertNewWordToEndOfTable(machCodeTable, newWord);
+
+		displayWord(newWord);
 	}
 	else
 	{

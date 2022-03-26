@@ -12,7 +12,8 @@ int isValidNameOfSymbol(char* symbolFromLine);
 int isDirectiveLine(char* rowFromCode);
 int isActionLine(char* rowFromCode);
 
-int isValidRegister(char* rgstrFromLine);
+int isRegsiter(char* argFromLine);
+int isValidRegister(char* argmntFromLine);
 
 int validateRowOfCode(char** arrayOfArgumentFromCode, int lengthOfArr);
 #endif

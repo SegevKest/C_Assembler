@@ -6,6 +6,7 @@
 #include "validations.h"
 #include "wordInCode.h"
 #include "symbol.h"
+#include "constantTables.h"
 
 
 #define TRUE 1
@@ -282,14 +283,65 @@ void handleDirectiveString(machineCode* dataMachineCode, char* stringFromCodeArr
 }
 
 
+char* getRegisterCode(char* argFromLine) {
+
+	int i, foundRegister = FALSE, indexOfColon, resultCmp;
+
+	char** registerValuesTable = returnRegistersValues();
+	char* currRegisterName = NULL;
+	char* currRegisterRow = malloc(sizeof(char)* 9);
+
+
+	char* regVal = NULL;
+
+	if (isRegsiter(argFromLine) == TRUE) {
+
+		if (isValidRegister(argFromLine) == FALSE) {
+			printf("ERROR - Not valid Register name");
+			return;
+		}
+
+		for (i = 0; i < REGISTERS_NO && !foundRegister; i++) {
+
+			// if the i is smaller than 9 - split by 2 first chars
+			currRegisterRow = registerValuesTable[i];
+			indexOfColon = returnFirstIndexOfChar(currRegisterRow, ':');
+
+			currRegisterName = subString(currRegisterRow, 0, indexOfColon);
+
+	
+			resultCmp = strcmp(currRegisterName, argFromLine);
+
+			if (resultCmp == 0) {
+				foundRegister = TRUE;
+				regVal = subString(currRegisterRow, indexOfColon + 1, strlen(currRegisterRow));
+			}
+
+			// if bigger than 9 - split by 3 chars
+
+
+		}
+
+		free(currRegisterName);
+		free(currRegisterRow);
+
+		return regVal;
+	}
+	else
+		return "0000\0";
+
+}
+
 // _------- Open
 // Handle scenraio of action Row 
-void handleActionRowScenario(machineCode* actionsMachineCode, char** arrayOfArgs, int* pToActionsCounter) {
+void handleActionRowScenario(machineCode* actionsMachineCode, char** arrayOfArgs, int lengthOfArr, int* pToActionsCounter) {
 
 	// there are 3 goups of action: 0 args, 1 args, 2 args - those will be the groupFlags
 	
-	int groupOfAction = -1, opCode ;
+	int i, groupOfAction = -1, opCode, amountOfArgs ;
 
+
+	// Check if the Opcode of this actin is exist
 	opCode = getOpcodeAction(arrayOfArgs[0]);
 	printf("Opcode: %d", opCode);
 
@@ -299,9 +351,90 @@ void handleActionRowScenario(machineCode* actionsMachineCode, char** arrayOfArgs
 		printf("ERROR - Not valid Action Entered");
 		return;
 	}
-	insertNewOpCodeWord(actionsMachineCode, arrayOfArgs[0], opCode, *pToActionsCounter);
 
+	// handle the action in the code
+	insertNewOpCodeWord(actionsMachineCode, arrayOfArgs[0], opCode, *pToActionsCounter);
 	(*pToActionsCounter) = (*pToActionsCounter) + 1;
+
+
+	//handle the argument validations
+	amountOfArgs = lengthOfArr - 1;
+	if (amountOfArgs >= 0) {
+
+		// 2 arguments
+		if (amountOfArgs == 2) {	
+			//Group 2	-- mov,cmp,add,sub,lea
+			// the first argument is origin argument
+			// the second argument is destination argument
+
+			groupOfAction = 2;
+			if (opCode == 0 || opCode == 1 || opCode == 2 || opCode == 4) {
+
+				//check the first argument and get the origin Register + miun of origin code
+
+
+				//check the second argument and get the dest Register + address dest code
+			}
+			else
+			{
+				printf("ERROR: Not valid amount of arguments(%d) for action (OpCode:%d)",amountOfArgs, opCode);
+				return;
+			}
+
+			// insert second word for hole row code
+			insertNewFullCodeWord(actionsMachineCode, arrayOfArgs[i], (*pToActionsCounter));
+		}
+		if (amountOfArgs == 1) {	
+			//Group 1 -- clr, not, inc, dec, jmp, bne, jsr, red, prn
+			// the first argument is the destination argument
+			// 
+			groupOfAction = 1;
+			if (opCode == 5 || opCode == 9 || opCode == 12 || opCode == 13) {
+
+			}
+			else
+			{
+				printf("ERROR: Not valid amount of arguments(%d) for action (OpCode:%d)", amountOfArgs, opCode);
+				return;
+			}
+
+			// insert second word for hole row code
+			insertNewFullCodeWord(actionsMachineCode, arrayOfArgs[i], (*pToActionsCounter));
+		}
+		else
+			groupOfAction = 0;			
+			// Amount of args = 0 - opCode - 14\15.
+			//.rts, stop
+
+		
+	}
+	else
+	{
+		printf("Error while getting the number of arguments ");
+		return;
+	}
+		
+
+
+	// handle the rest of the parameters - from cell 1 to the end of array
+	for (i = 1; i < lengthOfArr; i++) {
+		printf("\nArg: %s\n", arrayOfArgs[i]);
+		
+		if (groupOfAction == 2) {
+
+			if (i == 1) {
+				// origin argument
+
+			}
+			else if (i == 2) {
+				// destination argument
+
+			}
+
+		}
+		
+	}
+	
 
 }
 
@@ -474,7 +607,6 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 	if (directiveRow) {		// handle an directive row 
 
 		typeOfDirective = isDirectiveLine(rowFromCode);
-		printf("\n Directive line - type	: %d", typeOfDirective);
 
 		if (rowHasSymbol == TRUE) {
 
@@ -502,13 +634,10 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 				printf("\n Insert String machine code ");
 				handleDirectiveString(dataMachineCode, arrayOfArgumentFromCode[1], &dataCounter);
 			}
-
 		}
 	}
 
 	if (actionRow) { 		// handle an action row
-
-		printf("\n Action line:");
 
 		if (rowHasSymbol == TRUE) {
 			printf("\n With Symbol ");
@@ -517,9 +646,7 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 		}
 		// Handle the rest of the logic for action
 		printf("\n No Symbol ");
-		handleActionRowScenario(actionsMachineCode,arrayOfArgumentFromCode, &instructCounter);
-
-		// search for valid action name 
+		handleActionRowScenario(actionsMachineCode,arrayOfArgumentFromCode, lengthOfArr, &instructCounter);
 
 
 	}

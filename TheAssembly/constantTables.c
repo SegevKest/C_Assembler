@@ -7,7 +7,7 @@
 #define REGISTERS_NO 16
 
 char** returnActionsByOpcodeTable();
-
+char** returnRegistersValues();
 
 static char *savedNamesInProgram[] = 
 	{
@@ -106,7 +106,7 @@ char** returnActionsByOpcodeTable() {
 }
 
 // return the registersValues table
-char* returnRegistersValues() {
+char** returnRegistersValues() {
 
 	return registersValues;
 }
