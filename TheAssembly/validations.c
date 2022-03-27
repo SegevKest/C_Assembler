@@ -343,7 +343,7 @@ int isMiunZero(char* argmntFromLine) {
 
 	// the operand will be in format : "#{int}"
 
-	if (strstr(argmntFromLine, '#') != NULL)
+	if (strstr(argmntFromLine, "#") != NULL)
 		return TRUE;
 	
 	return FALSE;
@@ -369,8 +369,6 @@ int isMiunOne(char* argmntFromLine, symbolList* symbolTable) {
 
 // if containa  name of a symbol and concat  [{register}]
 int isMiunTwo(char* argmntFromLine, symbolList* symbolTable) {
-
-	
 
 	int indexOfBrace;
 	char* foundSymbol;

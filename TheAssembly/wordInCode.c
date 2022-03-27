@@ -42,6 +42,8 @@ void insertNewOpCodeWord(machineCode* machCodeTable, char actionName[], int opCo
 void insertNewFullCodeWord(machineCode* machCodeTable, symbolList* symbolTable, char** arrayOfArgs, int valueForNewWord, int numOfArgs);
 void insertNewCodeWordDirectiveValue(machineCode* machCodeTable, char binaryNumber[], int valueForNewWord);
 
+void registersAdresses(machineCode* machCode, char directionFlag, char* registerCode, char* adrCode);
+
 
 
 // allocate memory of a new word
@@ -251,7 +253,9 @@ char* getFunctOfAction(char actionName[], int opCodeOfAction) {
 	char* functToReturn;
 
 	char** pToActionsOpCode = returnActionsByOpcodeTable();
-	char* currAction, currActionName, currFunctOfAction;
+	char* currAction;
+	char* currActionName;
+	char* currFunctOfAction;
 
 	if (opCodeOfAction == 2 || opCodeOfAction == 5 || opCodeOfAction == 9) {
 
@@ -264,10 +268,10 @@ char* getFunctOfAction(char actionName[], int opCodeOfAction) {
 			indexOfFirstComma = returnFirstIndexOfChar(currAction, ',');	// Find the first delimeter index from action name to action data
 			indexOfLastColon = returnLastIndexOfChar(currAction, ':');	// Find the first colon index, before the opcode value of action
 
-			currActionName = subString(currAction, 0, indexOfFirstComma + 1);	// Substring the current action name
+			currActionName = subString(currAction, 0, indexOfFirstComma);	// Substring the current action name
 			currFunctOfAction = subString(currAction, indexOfLastColon + 1, lineLength);	// Substring the Funct
 
-			printf("The Funct value of %s is %d", currAction, currFunctOfAction);
+			//printf("\nThe Funct value of %s is %s", currActionName, currFunctOfAction);
 
 			// Compare the 2 names of the given action with the current from iteration
 			cmpResult = strcmp(actionName, currActionName);
@@ -320,8 +324,10 @@ void insertNewFullCodeWord(machineCode* machCodeTable, symbolList* symbolTable, 
 
 	int i, indexOfFirstArg, indexOfScndArg;
 
-	char* firstArgVal = NULL, firstArgMiun = NULL;
-	char* secondArgVal=NULL, secondArgMiun = NULL;
+	char* firstArgVal = NULL;
+	char* firstArgMiun = NULL;
+	char* secondArgVal = NULL;
+	char* secondArgMiun = NULL;
 
 	machineCode* newWord = createWordInMemory();
 	indexOfFirstArg = 1;
@@ -355,7 +361,7 @@ void insertNewFullCodeWord(machineCode* machCodeTable, symbolList* symbolTable, 
 			firstArgVal = "0000\0";
 			secondArgVal = getRegisterCode(arrayOfArgs[indexOfFirstArg]);
 
-			firstArgMiun = "0\0";
+			firstArgMiun = "00\0";
 			secondArgMiun = findMatchedMiun(arrayOfArgs[indexOfFirstArg], symbolTable);
 		}
 
@@ -454,7 +460,7 @@ void registersAdresses(machineCode* machCode, char directionFlag, char* register
 	// insert to relevant cells in word the register code
 	for (currRangeReg = 0; currRangeReg < rangeToInsertReg; currRangeReg++) {
 
-		machCode->wordBinary[regIndex] = registerCode[currRangeReg];
+		machCode->wordBinary[regIndex] = registerCode[currRangeReg] - '0';
 		regIndex++;
 	}
 	printf("Reg index Done at : %d", regIndex);
@@ -462,7 +468,7 @@ void registersAdresses(machineCode* machCode, char directionFlag, char* register
 	// insert to relevant cells in word the Miun code
 	for (currRangeAdr = 0; currRangeAdr < rangeToInsertAdr; currRangeAdr++) {
 
-		machCode->wordBinary[adrIndex] = adrCode[currRangeAdr];
+		machCode->wordBinary[adrIndex] = adrCode[currRangeAdr] - '0';
 		adrIndex++;
 	}
 	printf("Miun index Done at : %d", adrIndex);

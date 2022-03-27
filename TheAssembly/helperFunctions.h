@@ -23,7 +23,7 @@ void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbol
 char* convertNumberToBinaryString(int numberToConvert);
 int convertCharToAscii(char chToConvert);
 char* getRegisterCode(char* argFromLine);
-
+char* findMatchedMiun(char* argmntFromLine, symbolList* symbolTable);
 
 
 

@@ -215,34 +215,32 @@ void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbo
 char* findMatchedMiun(char* argmntFromLine, symbolList* symbolTable) {
 
 	int resultOfMiunChecks;
-	char* miunMethod;
+	char* miunMethod= "";
 
-	resultOfMiunChecks = isMiunZero(argmntFromLine); // Miun 1
+	resultOfMiunChecks = isMiunZero(argmntFromLine); // Miun 0
 
-	if (resultOfMiunChecks == FALSE) {
-		resultOfMiunChecks = isMiunOne(argmntFromLine);
+	if (resultOfMiunChecks == FALSE) {	// miun 3
+		resultOfMiunChecks = isMiunThree(argmntFromLine);
 
-		if (resultOfMiunChecks == FALSE) {
-			resultOfMiunChecks = isMiunTwo(argmntFromLine);
+		if (resultOfMiunChecks == FALSE) {		// miun 2
+			resultOfMiunChecks = isMiunTwo(argmntFromLine, symbolTable);
 
 			if (resultOfMiunChecks == FALSE) {
-				resultOfMiunChecks = isMiunThree(argmntFromLine);
 
-				if (resultOfMiunChecks == TRUE)
-					miunMethod = "11";
+				/*if (resultOfMiunChecks == TRUE)	*/// miun 1 - only if not all miun check were valid
+					return "01\0";
 			}
-			miunMethod= "10";
+			else
+				return "10\0";
 		}
-		miunMethod = "01";
+		else
+			return "11\0";
 	}
 	else
-		miunMethod ="00";
+		return "00\0";
+	
 
-	if (miunMethod == -1) {
-		printf("Error while searching for the Miun Method");
-	}
-
-	return miunMethod;
+	//return miunMethod;
 
 }
 

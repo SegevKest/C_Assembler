@@ -3,6 +3,8 @@
 #define __validations_H
 
 
+#include "symbol.h"
+
 int isCommentLine(char* rowFromCode);
 int isWhiteSpacesLine(char* rowFromCode);
 
