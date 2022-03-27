@@ -335,14 +335,10 @@ void insertNewFullCodeWord(machineCode* machCodeTable, symbolList* symbolTable, 
 		// the first cell is the action
 		updateFunctValue(newWord, arrayOfArgs[0]);	// Update the func value inside the word
 
+		// update ARE cells
 		updateCodeWordARECells(newWord,'A');
 
-
-		//Insert Address + register destination
-		// Insert the Address + register origin
-		//Insert the A,R,E letters
-
-
+		// calculate the values to enter in each of the dest or origin fields
 		if (numOfArgs == 2) 
 		{
 			// find the register code and miun value to insert for both origin and dest
@@ -363,8 +359,13 @@ void insertNewFullCodeWord(machineCode* machCodeTable, symbolList* symbolTable, 
 			secondArgMiun = findMatchedMiun(arrayOfArgs[indexOfFirstArg], symbolTable);
 		}
 
+		// Add the origin register and miun method no.
+		registersAdresses(newWord, 'O', firstArgVal, firstArgMiun);
 
-		
+		// Add the destination register and miun method no.
+		registersAdresses(newWord, 'D', secondArgVal, secondArgMiun);
+
+
 		// init all other cells to 0
 		for (i = 0; i < WORD_LENGTH; i++)
 		{
@@ -372,8 +373,10 @@ void insertNewFullCodeWord(machineCode* machCodeTable, symbolList* symbolTable, 
 				newWord->wordBinary[i] = 0;
 		}
 
+		// insert the new word to the machine code table
 		insertNewWordToEndOfTable(machCodeTable, newWord);
 
+		// TEST
 		displayWord(newWord);
 	}
 	else
@@ -422,15 +425,15 @@ void insertNewCodeWordDirectiveValue(machineCode* machCodeTable, char* binaryNum
 // this function gets Char ('O' or 'D') for indicating which address and register to update
 // Origin - Register + address - will be signaled in 'O'
 // Destination - Register + address will be signaled in 'D'
-
-
-
-// -----Open
 // registerCode will be 4 digit 
 void registersAdresses(machineCode* machCode, char directionFlag, char* registerCode, char* adrCode) {
 
-	int regIndex, adrIndex;
+	int regIndex, adrIndex, rangeToInsertReg,
+		rangeToInsertAdr, currRangeReg , currRangeAdr;
 
+	// amount of cells we iterate to enter each value
+	rangeToInsertAdr = 2;
+	rangeToInsertReg = 4;
 	
 	switch (directionFlag)
 	{
@@ -448,15 +451,21 @@ void registersAdresses(machineCode* machCode, char directionFlag, char* register
 		break;
 	}
 
-	// Continue
-	//Enter the register andsAddresses codes in the word array.
-	// get the registerBinaryValue from table
-	// get the adressValue from table
+	// insert to relevant cells in word the register code
+	for (currRangeReg = 0; currRangeReg < rangeToInsertReg; currRangeReg++) {
 
+		machCode->wordBinary[regIndex] = registerCode[currRangeReg];
+		regIndex++;
+	}
+	printf("Reg index Done at : %d", regIndex);
 
+	// insert to relevant cells in word the Miun code
+	for (currRangeAdr = 0; currRangeAdr < rangeToInsertAdr; currRangeAdr++) {
 
-
-
+		machCode->wordBinary[adrIndex] = adrCode[currRangeAdr];
+		adrIndex++;
+	}
+	printf("Miun index Done at : %d", adrIndex);
 }
 
 

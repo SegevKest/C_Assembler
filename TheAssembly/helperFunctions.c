@@ -246,6 +246,56 @@ char* findMatchedMiun(char* argmntFromLine, symbolList* symbolTable) {
 
 }
 
+// this function receive a argument from the array of arguments and return the Register Code- for inserting to the row.
+char* getRegisterCode(char* argFromLine) {
+
+	int i, foundRegister = FALSE, indexOfColon, resultCmp;
+
+	char** registerValuesTable = returnRegistersValues();
+	char* currRegisterName = NULL;
+	char* currRegisterRow = malloc(sizeof(char) * 9);
+
+
+	char* regVal = NULL;
+
+	if (isRegsiter(argFromLine) == TRUE) {
+
+		if (isValidRegister(argFromLine) == FALSE) {
+			printf("ERROR - Not valid Register name");
+			return;
+		}
+
+		for (i = 0; i < REGISTERS_NO && !foundRegister; i++) {
+
+			// if the i is smaller than 9 - split by 2 first chars
+			currRegisterRow = registerValuesTable[i];
+			indexOfColon = returnFirstIndexOfChar(currRegisterRow, ':');
+
+			currRegisterName = subString(currRegisterRow, 0, indexOfColon);
+
+
+			resultCmp = strcmp(currRegisterName, argFromLine);
+
+			if (resultCmp == 0) {
+				foundRegister = TRUE;
+				regVal = subString(currRegisterRow, indexOfColon + 1, strlen(currRegisterRow));
+			}
+
+			// if bigger than 9 - split by 3 chars
+
+
+		}
+
+		/*	free(currRegisterName);
+			free(currRegisterRow);*/
+
+		return regVal;
+	}
+	else
+		return "0000\0";
+
+}
+
 
 
 
@@ -317,56 +367,6 @@ void handleDirectiveString(machineCode* dataMachineCode, char* stringFromCodeArr
 }
 
 
-// this function receive a argument from the array of arguments and return the Register Code- for inserting to the row.
-char* getRegisterCode(char* argFromLine) {
-
-	int i, foundRegister = FALSE, indexOfColon, resultCmp;
-
-	char** registerValuesTable = returnRegistersValues();
-	char* currRegisterName = NULL;
-	char* currRegisterRow = malloc(sizeof(char)* 9);
-
-
-	char* regVal = NULL;
-
-	if (isRegsiter(argFromLine) == TRUE) {
-
-		if (isValidRegister(argFromLine) == FALSE) {
-			printf("ERROR - Not valid Register name");
-			return;
-		}
-
-		for (i = 0; i < REGISTERS_NO && !foundRegister; i++) {
-
-			// if the i is smaller than 9 - split by 2 first chars
-			currRegisterRow = registerValuesTable[i];
-			indexOfColon = returnFirstIndexOfChar(currRegisterRow, ':');
-
-			currRegisterName = subString(currRegisterRow, 0, indexOfColon);
-
-	
-			resultCmp = strcmp(currRegisterName, argFromLine);
-
-			if (resultCmp == 0) {
-				foundRegister = TRUE;
-				regVal = subString(currRegisterRow, indexOfColon + 1, strlen(currRegisterRow));
-			}
-
-			// if bigger than 9 - split by 3 chars
-
-
-		}
-
-	/*	free(currRegisterName);
-		free(currRegisterRow);*/
-
-		return regVal;
-	}
-	else
-		return "0000\0";
-
-}
-
 // _------- Open
 // Handle scenraio of action Row 
 void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbolTable, char** arrayOfArgs, int lengthOfArr, int* pToActionsCounter) {
@@ -403,11 +403,11 @@ void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbol
 		// insert second word for hole row code
 		insertNewFullCodeWord(actionsMachineCode, symbolTable, arrayOfArgs, (*pToActionsCounter), isValidArgsNumber);
 
+		// handle the additional rows for each argument
+
+
 	}
-	//Else (-1), will be an ERROR!
-
-	// handle the additional rows for each argument
-
+	
 }
 
 
