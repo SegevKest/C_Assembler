@@ -322,8 +322,8 @@ char* getRegisterCode(char* argFromLine) {
 
 		}
 
-		free(currRegisterName);
-		free(currRegisterRow);
+	/*	free(currRegisterName);
+		free(currRegisterRow);*/
 
 		return regVal;
 	}
@@ -339,7 +339,7 @@ void handleActionRowScenario(machineCode* actionsMachineCode, char** arrayOfArgs
 	// there are 3 goups of action: 0 args, 1 args, 2 args - those will be the groupFlags
 	
 	int i, groupOfAction = -1, opCode, amountOfArgs ;
-
+	char* currRegCode = NULL;
 
 	// Check if the Opcode of this actin is exist
 	opCode = getOpcodeAction(arrayOfArgs[0]);
@@ -356,6 +356,7 @@ void handleActionRowScenario(machineCode* actionsMachineCode, char** arrayOfArgs
 	insertNewOpCodeWord(actionsMachineCode, arrayOfArgs[0], opCode, *pToActionsCounter);
 	(*pToActionsCounter) = (*pToActionsCounter) + 1;
 
+	currRegCode = getRegisterCode(arrayOfArgs[1]);
 
 	//handle the argument validations
 	amountOfArgs = lengthOfArr - 1;
@@ -371,7 +372,8 @@ void handleActionRowScenario(machineCode* actionsMachineCode, char** arrayOfArgs
 			if (opCode == 0 || opCode == 1 || opCode == 2 || opCode == 4) {
 
 				//check the first argument and get the origin Register + miun of origin code
-
+				
+				
 
 				//check the second argument and get the dest Register + address dest code
 			}

@@ -40,7 +40,7 @@ int main() {
 		};
 
 	
-	analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, " stop", ic, dc);
+	analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, "cmp r2", ic, dc);
 
 	//analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, " .string \"abcd\" ", ic, 100);
 

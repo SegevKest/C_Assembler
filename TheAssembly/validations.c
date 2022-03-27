@@ -319,7 +319,7 @@ int isMiunOne(char* argmntFromLine) {
 
 
 }
-int isMiunZTwo(char* argmntFromLine) {
+int isMiunTwo(char* argmntFromLine) {
 
 	// if containa  name of a symbol and concat  [{register}]
 	return FALSE;

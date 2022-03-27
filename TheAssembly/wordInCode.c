@@ -313,7 +313,9 @@ void updateFunctValue(machineCode* machCode, char actionName[]) {
 
 // -----Open
 // Add a new FullCodeWord - with funct - register and adress (Destination + origin)
-void insertNewFullCodeWord(machineCode* machCodeTable, char actionName[], int valueForNewWord) {
+
+//void insertNewFullCodeWord(machineCode* machCodeTable, char actionName[], int valueForNewWord) {
+void insertNewFullCodeWord(machineCode* machCodeTable, char** arrayOfArgs, int valueForNewWord) {
 
 	int i;
 	machineCode* newWord = createWordInMemory();
@@ -323,6 +325,7 @@ void insertNewFullCodeWord(machineCode* machCodeTable, char actionName[], int va
 
 		newWord->programWordValue = valueForNewWord;
 
+		// the first cell is the action
 		updateFunctValue(newWord, actionName);	// Update the func value inside the word
 
 		updateCodeWordARECells(newWord,'A');
