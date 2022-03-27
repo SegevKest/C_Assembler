@@ -18,8 +18,13 @@ int returnLastIndexOfChar(char* stringToCheck, char charToFind);
 char* getTrimmedCodeRow(char* rowFromCode);
 void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbolAttributes, int symbolValue);
 void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, machineCode* dataMachineCode, char* rowFromCode, int instructCounter, int dataCounter);
+void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbolTable, char** arrayOfArgs, int lengthOfArr, int* pToActionsCounter);
 
 char* convertNumberToBinaryString(int numberToConvert);
 int convertCharToAscii(char chToConvert);
+char* getRegisterCode(char* argFromLine);
+
+
+
 
 #endif //__helperFunctions_H

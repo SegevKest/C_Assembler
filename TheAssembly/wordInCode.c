@@ -6,6 +6,7 @@
 #include "wordInCode.h"
 #include "constantTables.h"
 #include "helperFunctions.h"
+#include "symbol.h"
 
 
 
@@ -38,7 +39,7 @@ void updateCodeWordARECells(machineCode* machCode, char areValueForWord);
 int getOpcodeAction(char actionName[]);
 char* getFunctOfAction(char actionName[], int opCodeOfAction);
 void insertNewOpCodeWord(machineCode* machCodeTable, char actionName[], int opCodeToTurnOn, int valueOfAction);
-void insertNewFullCodeWord(machineCode* machCodeTable);
+void insertNewFullCodeWord(machineCode* machCodeTable, symbolList* symbolTable, char** arrayOfArgs, int valueForNewWord, int numOfArgs);
 void insertNewCodeWordDirectiveValue(machineCode* machCodeTable, char binaryNumber[], int valueForNewWord);
 
 
@@ -315,10 +316,16 @@ void updateFunctValue(machineCode* machCode, char actionName[]) {
 // Add a new FullCodeWord - with funct - register and adress (Destination + origin)
 
 //void insertNewFullCodeWord(machineCode* machCodeTable, char actionName[], int valueForNewWord) {
-void insertNewFullCodeWord(machineCode* machCodeTable, char** arrayOfArgs, int valueForNewWord) {
+void insertNewFullCodeWord(machineCode* machCodeTable, symbolList* symbolTable, char** arrayOfArgs, int valueForNewWord, int numOfArgs) {
 
-	int i;
+	int i, indexOfFirstArg, indexOfScndArg;
+
+	char* firstArgVal = NULL, firstArgMiun = NULL;
+	char* secondArgVal=NULL, secondArgMiun = NULL;
+
 	machineCode* newWord = createWordInMemory();
+	indexOfFirstArg = 1;
+	indexOfScndArg = 2;
 
 	if (newWord) {
 		initializeCodeWord(newWord);
@@ -326,7 +333,7 @@ void insertNewFullCodeWord(machineCode* machCodeTable, char** arrayOfArgs, int v
 		newWord->programWordValue = valueForNewWord;
 
 		// the first cell is the action
-		updateFunctValue(newWord, actionName);	// Update the func value inside the word
+		updateFunctValue(newWord, arrayOfArgs[0]);	// Update the func value inside the word
 
 		updateCodeWordARECells(newWord,'A');
 
@@ -334,7 +341,21 @@ void insertNewFullCodeWord(machineCode* machCodeTable, char** arrayOfArgs, int v
 		//Insert Address + register destination
 		// Insert the Address + register origin
 		//Insert the A,R,E letters
-		
+
+
+		if (numOfArgs == 2) {
+			// find the register code and miun value to insert for both origin and dest
+			firstArgVal = getRegisterCode(arrayOfArgs[indexOfFirstArg]);
+			secondArgVal = getRegisterCode(arrayOfArgs[indexOfScndArg]);
+		}
+		else if (numOfArgs == 1)
+		{
+			// find the register code and miun value to insert for  dest only
+			firstArgVal = "0000\0";
+			secondArgVal = getRegisterCode(arrayOfArgs[indexOfFirstArg]);
+		}
+
+
 		
 		// init all other cells to 0
 		for (i = 0; i < WORD_LENGTH; i++)
@@ -423,6 +444,10 @@ void registersAdresses(machineCode* machCode, char directionFlag, char* register
 	//Enter the register andsAddresses codes in the word array.
 	// get the registerBinaryValue from table
 	// get the adressValue from table
+
+
+
+
 
 }
 

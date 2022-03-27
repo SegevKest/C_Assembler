@@ -2,10 +2,9 @@
 #include <stdio.h>
 #include<string.h>
 
-
+#include "symbol.h"
 #include "helperFunctions.h"
 #include "wordInCode.h"
-#include "symbol.h"
 #include "constantTables.h"
 
 
@@ -26,11 +25,12 @@ int isValidNameOfSymbol(char* symbolFromLine);
 int isValidSeperationBetweenActionAndParam(char* rowFromCode);
 int isValidSeperationBetweenParams(char* rowFromCode);
 int validateRowOfCode(char** arrayOfArgumentFromCode, int lengthOfArr);
+int isValidParamNumber(int amountOfArgs, int opCode);
 
 //Miun Functions
 int isMiunZero(char* argmntFromLine);
-int isMiunOne(char* argmntFromLine);
-int isMiunZTwo(char* argmntFromLine);
+int isMiunOne(char* argmntFromLine, symbolList* symbolTable);
+int isMiunTwo(char* argmntFromLine, symbolList* symbolTable);
 int isMiunThree(char* argmntFromLine);
 
 
@@ -226,10 +226,50 @@ int isValidSeperationBetweenActionAndParam(char* paramFromCode) {
 
 
 
-// -----------OPEN
-// Create the new table of relations between action - arg number...
-int isValidParamNumber() {
+// This method will return 2,1,0 if the amount of arguments were valid and matched the group
+// will return -1 if there was a error, after printing the error to user
+int isValidParamNumber(int amountOfArgs, int opCode) {
 
+	int result = -1;
+
+	if (amountOfArgs >= 0) {
+
+		// 2 arguments
+		if (amountOfArgs == 2) {
+			//Group 2	-- mov,cmp,add,sub,lea
+			// the first argument is origin argument
+			// the second argument is destination argument
+			if (opCode == 0 || opCode == 1 || opCode == 2 || opCode == 4) {
+				result = 2;
+			}
+			else
+			{
+				printf("ERROR: Not valid amount of arguments(%d) for action (OpCode:%d)", amountOfArgs, opCode);
+				result = -1;
+			}
+		}
+		if (amountOfArgs == 1) {
+			//Group 1 -- clr, not, inc, dec, jmp, bne, jsr, red, prn
+			// the first argument is the destination argument
+			if (opCode == 5 || opCode == 9 || opCode == 12 || opCode == 13) {
+				result = 1;
+			}
+			else
+			{
+				printf("ERROR: Not valid amount of arguments(%d) for action (OpCode:%d)", amountOfArgs, opCode);
+				result = -1;
+			}
+		}
+		else
+			result = 0;
+	}
+	else
+	{
+		printf("Error while getting the number of arguments ");
+		result = -1;
+	}
+
+	return result;
 }
 
 // this method checks if the name of the action argument name is exist
@@ -312,22 +352,46 @@ int isMiunZero(char* argmntFromLine) {
 	//return *argmntFromLine == '#' ? TRUE : FALSE;
 }
 
-int isMiunOne(char* argmntFromLine) {
+// if the argument is a symbol
+int isMiunOne(char* argmntFromLine, symbolList* symbolTable) {
 
 	// check if the argument is a Symbol
-	return FALSE;
+	symbolList* foundSymbol = NULL;
 
+	isSymbolAlreadyExist(symbolTable, argmntFromLine,foundSymbol);
+
+	if (foundSymbol == NULL)
+			return FALSE;
+	
+	return TRUE;
 
 }
-int isMiunTwo(char* argmntFromLine) {
 
-	// if containa  name of a symbol and concat  [{register}]
+// if containa  name of a symbol and concat  [{register}]
+int isMiunTwo(char* argmntFromLine, symbolList* symbolTable) {
+
+	
+
+	int indexOfBrace;
+	char* foundSymbol;
+
+	/*symbolList* foundSymbolObj = NULL;*/
+
+	if (strstr(argmntFromLine, "[") != NULL && strstr(argmntFromLine, "]") != NULL) {
+		// found the braces - check if the symbol exist
+		return TRUE;
+	}
 	return FALSE;
 
 }
+
+// if the argument is a register name
 int isMiunThree(char* argmntFromLine) {
-	return FALSE;
 
+	if (isRegsiter(argmntFromLine) && isValidRegister(argmntFromLine))
+		return TRUE;
+	
+	return FALSE;
 }
 
 

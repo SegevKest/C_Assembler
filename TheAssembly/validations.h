@@ -14,6 +14,16 @@ int isActionLine(char* rowFromCode);
 
 int isRegsiter(char* argFromLine);
 int isValidRegister(char* argmntFromLine);
+int isValidParamNumber(int amountOfArgs, int opCode);
+
 
 int validateRowOfCode(char** arrayOfArgumentFromCode, int lengthOfArr);
+
+
+//Miun Functions
+int isMiunZero(char* argmntFromLine);
+int isMiunOne(char* argmntFromLine, symbolList* symbolTable);
+int isMiunTwo(char* argmntFromLine, symbolList* symbolTable);
+int isMiunThree(char* argmntFromLine);
+
 #endif

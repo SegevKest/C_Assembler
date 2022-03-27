@@ -25,8 +25,10 @@ char* getTrimmedCodeRow(char* rowFromCode);
 void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, machineCode* dataMachineCode, char* rowFromCode, int instructCounter, int dataCounter);
 void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbolAttributes, int symbolValue);
 char** buildArrayOfRowParams(char* rowFromCode, int* lengthOfArr);
+void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbolTable, char** arrayOfArgs, int lengthOfArr, int* pToActionsCounter);
 
 char* convertNumberToBinaryString(int numberToConvert);
+char* getRegisterCode(char* argFromLine);
 
 
 
@@ -204,15 +206,43 @@ void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbo
 // Functions related to the handle of arguments
 
 // method that will receive an argument from the action line and will output the kind of miun needed
-// 0 ,1,2,3 - 
+// 0 ,1,2,3
 // It will know by the criteria of each miun
 
-int findMatchedMiun(char* argmntFromLine) {
+int findMatchedMiun(char* argmntFromLine, symbolList* symbolTable) {
 
+	int resultOfMiunChecks, miunMethod = -1;
 
+	resultOfMiunChecks = isMiunZero(argmntFromLine); // Miun 1
 
+	if (resultOfMiunChecks == FALSE) {
+		resultOfMiunChecks = isMiunOne(argmntFromLine);
+
+		if (resultOfMiunChecks == FALSE) {
+			resultOfMiunChecks = isMiunTwo(argmntFromLine);
+
+			if (resultOfMiunChecks == FALSE) {
+				resultOfMiunChecks = isMiunThree(argmntFromLine);
+
+				if (resultOfMiunChecks == TRUE)
+					miunMethod =  3;
+			}
+			miunMethod= 2;
+		}
+		miunMethod = 1;
+	}
+	else
+		miunMethod = 0;
+
+	if (miunMethod == -1) {
+		printf("Error while searching for the Miun Method");
+	}
+
+	return miunMethod;
 
 }
+
+
 
 
 // _------- Open
@@ -283,6 +313,7 @@ void handleDirectiveString(machineCode* dataMachineCode, char* stringFromCodeArr
 }
 
 
+// this function receive a argument from the array of arguments and return the Register Code- for inserting to the row.
 char* getRegisterCode(char* argFromLine) {
 
 	int i, foundRegister = FALSE, indexOfColon, resultCmp;
@@ -334,11 +365,11 @@ char* getRegisterCode(char* argFromLine) {
 
 // _------- Open
 // Handle scenraio of action Row 
-void handleActionRowScenario(machineCode* actionsMachineCode, char** arrayOfArgs, int lengthOfArr, int* pToActionsCounter) {
+void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbolTable, char** arrayOfArgs, int lengthOfArr, int* pToActionsCounter) {
 
 	// there are 3 goups of action: 0 args, 1 args, 2 args - those will be the groupFlags
 	
-	int i, groupOfAction = -1, opCode, amountOfArgs ;
+	int i, groupOfAction = -1, opCode, amountOfArgs,isValidArgsNumber ;
 	char* currRegCode = NULL;
 
 	// Check if the Opcode of this actin is exist
@@ -360,63 +391,17 @@ void handleActionRowScenario(machineCode* actionsMachineCode, char** arrayOfArgs
 
 	//handle the argument validations
 	amountOfArgs = lengthOfArr - 1;
-	if (amountOfArgs >= 0) {
 
-		// 2 arguments
-		if (amountOfArgs == 2) {	
-			//Group 2	-- mov,cmp,add,sub,lea
-			// the first argument is origin argument
-			// the second argument is destination argument
+	isValidArgsNumber = isValidParamNumber(lengthOfArr - 1, opCode);
 
-			groupOfAction = 2;
-			if (opCode == 0 || opCode == 1 || opCode == 2 || opCode == 4) {
+	if (isValidArgsNumber > 0) {
+		// will be 2 or 1
+		// insert second word for hole row code
+		insertNewFullCodeWord(actionsMachineCode, symbolTable, arrayOfArgs, (*pToActionsCounter), isValidArgsNumber);
 
-				//check the first argument and get the origin Register + miun of origin code
-				
-				
-
-				//check the second argument and get the dest Register + address dest code
-			}
-			else
-			{
-				printf("ERROR: Not valid amount of arguments(%d) for action (OpCode:%d)",amountOfArgs, opCode);
-				return;
-			}
-
-			// insert second word for hole row code
-			insertNewFullCodeWord(actionsMachineCode, arrayOfArgs[i], (*pToActionsCounter));
-		}
-		if (amountOfArgs == 1) {	
-			//Group 1 -- clr, not, inc, dec, jmp, bne, jsr, red, prn
-			// the first argument is the destination argument
-			// 
-			groupOfAction = 1;
-			if (opCode == 5 || opCode == 9 || opCode == 12 || opCode == 13) {
-
-			}
-			else
-			{
-				printf("ERROR: Not valid amount of arguments(%d) for action (OpCode:%d)", amountOfArgs, opCode);
-				return;
-			}
-
-			// insert second word for hole row code
-			insertNewFullCodeWord(actionsMachineCode, arrayOfArgs[i], (*pToActionsCounter));
-		}
-		else
-			groupOfAction = 0;			
-			// Amount of args = 0 - opCode - 14\15.
-			//.rts, stop
-
-		
 	}
-	else
-	{
-		printf("Error while getting the number of arguments ");
-		return;
-	}
-		
-
+	//Else (-1), will be an ERROR!
+	
 
 	// handle the rest of the parameters - from cell 1 to the end of array
 	for (i = 1; i < lengthOfArr; i++) {
@@ -648,7 +633,7 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 		}
 		// Handle the rest of the logic for action
 		printf("\n No Symbol ");
-		handleActionRowScenario(actionsMachineCode,arrayOfArgumentFromCode, lengthOfArr, &instructCounter);
+		handleActionRowScenario(actionsMachineCode, symbolTable, arrayOfArgumentFromCode, lengthOfArr, &instructCounter);
 
 
 	}
