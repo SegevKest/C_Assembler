@@ -343,16 +343,24 @@ void insertNewFullCodeWord(machineCode* machCodeTable, symbolList* symbolTable, 
 		//Insert the A,R,E letters
 
 
-		if (numOfArgs == 2) {
+		if (numOfArgs == 2) 
+		{
 			// find the register code and miun value to insert for both origin and dest
 			firstArgVal = getRegisterCode(arrayOfArgs[indexOfFirstArg]);
 			secondArgVal = getRegisterCode(arrayOfArgs[indexOfScndArg]);
+
+			firstArgMiun = findMatchedMiun(arrayOfArgs[indexOfFirstArg], symbolTable);
+			secondArgMiun = findMatchedMiun(arrayOfArgs[indexOfScndArg], symbolTable);
+
 		}
 		else if (numOfArgs == 1)
 		{
 			// find the register code and miun value to insert for  dest only
 			firstArgVal = "0000\0";
 			secondArgVal = getRegisterCode(arrayOfArgs[indexOfFirstArg]);
+
+			firstArgMiun = "0\0";
+			secondArgMiun = findMatchedMiun(arrayOfArgs[indexOfFirstArg], symbolTable);
 		}
 
 

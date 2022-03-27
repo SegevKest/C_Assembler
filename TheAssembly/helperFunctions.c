@@ -30,6 +30,9 @@ void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbol
 char* convertNumberToBinaryString(int numberToConvert);
 char* getRegisterCode(char* argFromLine);
 
+char* findMatchedMiun(char* argmntFromLine, symbolList* symbolTable);
+
+
 
 
 //get the index of the character in the array of chars
@@ -209,9 +212,10 @@ void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbo
 // 0 ,1,2,3
 // It will know by the criteria of each miun
 
-int findMatchedMiun(char* argmntFromLine, symbolList* symbolTable) {
+char* findMatchedMiun(char* argmntFromLine, symbolList* symbolTable) {
 
-	int resultOfMiunChecks, miunMethod = -1;
+	int resultOfMiunChecks;
+	char* miunMethod;
 
 	resultOfMiunChecks = isMiunZero(argmntFromLine); // Miun 1
 
@@ -225,14 +229,14 @@ int findMatchedMiun(char* argmntFromLine, symbolList* symbolTable) {
 				resultOfMiunChecks = isMiunThree(argmntFromLine);
 
 				if (resultOfMiunChecks == TRUE)
-					miunMethod =  3;
+					miunMethod = "11";
 			}
-			miunMethod= 2;
+			miunMethod= "10";
 		}
-		miunMethod = 1;
+		miunMethod = "01";
 	}
 	else
-		miunMethod = 0;
+		miunMethod ="00";
 
 	if (miunMethod == -1) {
 		printf("Error while searching for the Miun Method");
@@ -401,27 +405,8 @@ void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbol
 
 	}
 	//Else (-1), will be an ERROR!
-	
 
-	// handle the rest of the parameters - from cell 1 to the end of array
-	for (i = 1; i < lengthOfArr; i++) {
-		printf("\nArg: %s\n", arrayOfArgs[i]);
-		
-		if (groupOfAction == 2) {
-
-			if (i == 1) {
-				// origin argument
-
-			}
-			else if (i == 2) {
-				// destination argument
-
-			}
-
-		}
-		
-	}
-	
+	// handle the additional rows for each argument
 
 }
 
