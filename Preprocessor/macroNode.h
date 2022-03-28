@@ -6,8 +6,8 @@
 typedef struct macroNode macroTable;
 
 
-void insert_NewMacroName (macroTable** head, char* macroName);
-void insert_NewMacroContent(macroTable** head, char* macroName, char* macroRow);
+void insertNewMacroName(macroTable** head, char* macroName);
+void insertNewMacroContent(macroTable** head, char* macroName, char* macroRow);
 macroTable* returnMacro(macroTable** head, char* macroName);
 char* getContentOfMacro(macroTable** head, char* macroName);
 void displayMacroTable(const macroTable* head);

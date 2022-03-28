@@ -6,13 +6,14 @@
 #include "helperFunctions.h"
 #include "wordInCode.h"
 #include "constantTables.h"
-
+#include "macroNode.h"
 
 #define TRUE 1
 #define FALSE 0
 #define TOTAL_SAVED_NAMES_IN_PROG 36
 #define MAX_LENGTH_OF_SAVE_NAME 9
 
+// Common Validations
 int isCommentLine(char* rowFromCode);
 int isWhiteSpacesLine(char* rowFromCode);
 int isDirectiveLine(char* rowFromCode);
@@ -32,6 +33,10 @@ int isMiunZero(char* argmntFromLine);
 int isMiunOne(char* argmntFromLine, symbolList* symbolTable);
 int isMiunTwo(char* argmntFromLine, symbolList* symbolTable);
 int isMiunThree(char* argmntFromLine);
+
+
+// File and Macro validations
+int isExistMacro(macroTable** headOfMacroTable, char* argFromLine);
 
 
 
@@ -404,3 +409,13 @@ int isMiunThree(char* argmntFromLine) {
 }
 
 
+
+// File and Macro validations
+
+// this function checks if the current name from line is a macro
+int isExistMacro(macroTable** headOfMacroTable, char* argFromLine) {
+
+	if (returnMacro(headOfMacroTable, argFromLine) == NULL)
+		return FALSE;
+	return TRUE;
+}

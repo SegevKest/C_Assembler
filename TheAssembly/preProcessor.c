@@ -4,8 +4,9 @@
 #include <ctype.h>
 
 
-#include "macroNode.h"
 #include "helperFunctions.h"
+#include "macroNode.h"
+#include "validations.h"
 
 
 
@@ -14,20 +15,35 @@
 #define FALSE 0
 #define LINE_LENGTH 81
 #define NAME_LENGTH 70
+#define MACRO_MAX_LENGTH 80
+
+
 
 //int checkForValidArgs(int argc);
 
+void handleSingleFile(char* filePath);
+char* getSingleLineFromFile(FILE* filePointer);
+char* getFileName(char* filePath);
+FILE* createNewFileForOutPut(char* newFileName);
 
 
 
 void handleSingleFile(char* filePath) {
 
-    int foundMacro = FALSE, startIndex = 0;
-    FILE* filePointer;
+    int foundMacro = FALSE, startIndex = 0, indexOfFirstSpace, indexOfLastCharInRow;
 
+    macroTable* macroList = NULL;
+
+    FILE* filePointer;
+    FILE* outPutFilePointer;
     macroTable* currMacro;
 
-    char currLine[ LINE_LENGTH];
+    char currLine[LINE_LENGTH];
+    char* macroContent;
+    char* fileName;
+    char* newMacroName;
+    char* nameOfPossibleMacro;
+    char* newFileContentConcat;
 
     filePointer = fopen(filePath, "r");
 
@@ -36,41 +52,140 @@ void handleSingleFile(char* filePath) {
         return 0;
     }
 
-    while () {
+    // get the file name of the original file
+    fileName = getFileName(filePath);
 
+    // The new file pointer
+    outPutFilePointer = createNewFileForOutPut(fileName);
+    
+    // Iterate on the File - until we will receive EOF
+    while (fgets(currLine, LINE_LENGTH, filePointer)) {
+
+
+        // handle each line
+        printf("%s", currLine);
+
+
+        // inside definition of a macro
         if (foundMacro == TRUE) {
-            // enter the contnet of this row to the array of content of the macro
-            // concat the content of the macro to the array
+            
+            // nameOfPossibleMacro is the last found macro
+            insertNewMacroContent(macroList, nameOfPossibleMacro, getTrimmedCodeRow(currLine));
         }
+        else
+        {
+            indexOfFirstSpace = returnFirstIndexOfChar(currLine, ' ');
+            
+            if (indexOfFirstSpace >=0 )
+                nameOfPossibleMacro = subString(currLine, 0, indexOfFirstSpace);
+            else
+                nameOfPossibleMacro = subString(currLine, 0, strlen(currLine));
+
+            // check if it an existing macro
+            if (isExistMacro(macroList, nameOfPossibleMacro))
+            {
+                // This is an existing macro. Get the content of it and insert to the new File
+                macroContent = getContentOfMacro(macroList, nameOfPossibleMacro);
+
+                // insert the new macro content to the output file
+
+                //strcat(newFileContentConcat, macroContent);
+
+                fputs(macroContent, outPutFilePointer);
+                //fclose(outPutFilePointer);
+            }
+            else
+            {
+                if (strcmp(nameOfPossibleMacro, "macro") == 0) {
+                    // if it is 0 - then there is a new definition of a new macro
+                    foundMacro = TRUE;
+
+                    indexOfLastCharInRow = returnFirstIndexOfChar(currLine, '\n');
+                    newMacroName = subString(currLine, indexOfFirstSpace + 1, indexOfLastCharInRow);
+
+                    // insert the new content to the macroList
+                    insertNewMacroName( macroList, newMacroName);
+                }
+                else
+                {
+                    // else - no macro - regular line
+                    foundMacro = FALSE;
+                    if (strcmp(getTrimmedCodeRow(currLine), "endm") != 0) {
+                        // if the line is not end - regular line insert to original file
+                        
+                        //strcat(newFileContentConcat, currLine);
+
+                        fputs(currLine, outPutFilePointer);
+                        //fclose(outPutFilePointer);
+                    }
+                    else {
+                        // this is end of macro definition - leave it and dont add to output file
+                    }
+                }
+            }
+        }
+
+
     }
-   
-        
+
+  /*  fputs(newFileContentConcat, outPutFilePointer);*/
+    fclose(outPutFilePointer);
+
+    
+
+
 }
 
 // This method will get the file pointer and will return the next Line to analyize
-char* getSingleLineFromFile(FILE* filePointer) {
+char* getSingleLineFromFile(FILE* filePointer ) {
 
     int indexOfNewLine;
 
     char currLine[LINE_LENGTH];
 
-  
+    fgets(currLine, LINE_LENGTH, filePointer);
 
+    //strcpy(currLine, fseek(filePointer, returnFirstIndexOfChar(filePointer,'\n'), SEEK_SET));
+  
     return currLine;
 }
 
-
+// This method will get the file  name received and extract the name of it to all other files
 char* getFileName(char* filePath) {
+    
     int indexOfLastDot;
+    char* fileName;
 
-    indexOfLastDot = 
+    indexOfLastDot = returnFirstIndexOfChar(filePath,'.');
+
+    fileName = subString(filePath, 0, indexOfLastDot);
+
+    return fileName;
+
 }
 
-FILE* createNewFileForOutPut() {
+// This function will create the new additional File for the output
+FILE* createNewFileForOutPut(char* newFileName) {
 
     FILE* newFilePointer = NULL;
+    char* finishOfFile = ".am";
+    char* finalFileName = (char*)malloc(sizeof(newFileName));
 
-    newFilePointer = fopen("", "w");
+    if (finalFileName != NULL) {
+        // new final name will get the newFileName before concating 
+        strcpy(finalFileName, newFileName);
+
+        // concat the endOfFile - '.am'
+        strcat(finalFileName, finishOfFile);
+
+        // create the file
+        newFilePointer = fopen(finalFileName, "a");
+    }
+    else
+        printf("Error while creating the new File for the output");
+
+
+    return newFilePointer;
 }
 
 // Validate if the number of arguments received from the 
@@ -97,12 +212,16 @@ int spreadMacrosInFile(){
 
 
 
-int main(int argc, char* argv[]) {
-
+int main() {
+//
     int validArgs;
 
-    validArgs = checkForValidArgs(argc);
 
+
+//    //validArgs = checkForValidArgs(argc);
     handleSingleFile("test.as");
+
+
+    return 0;
 }
 

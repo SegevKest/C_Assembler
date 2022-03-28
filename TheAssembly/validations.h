@@ -4,6 +4,7 @@
 
 
 #include "symbol.h"
+#include "macroNode.h"
 
 int isCommentLine(char* rowFromCode);
 int isWhiteSpacesLine(char* rowFromCode);
@@ -27,5 +28,9 @@ int isMiunZero(char* argmntFromLine);
 int isMiunOne(char* argmntFromLine, symbolList* symbolTable);
 int isMiunTwo(char* argmntFromLine, symbolList* symbolTable);
 int isMiunThree(char* argmntFromLine);
+
+
+// File and Macro's handling
+int isExistMacro(macroTable** headOfMacroTable, char* argFromLine);
 
 #endif

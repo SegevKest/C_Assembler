@@ -16,7 +16,7 @@
 
 //int main() {
 //
-//	//initil
+//	initil
 //	int ic = 100 , dc = 0, i;
 //	
 //	machineCode* actionsMachineCodeHead = NULL; // the linked list for the instructions machine code
