@@ -37,50 +37,91 @@ typedef struct macroNode {
 }; 
 
 // Insert new macro name
-void insertNewMacroName(macroTable** head, char* macroNameParam){
+void insertNewMacroName(macroTable* head, char* macroNameParam){
 
-    macroTable *ptr;
+    macroTable* ptr;
     int i = 0;
 
-    if(*head == NULL)
+    //Noted here
     {
-        *head = (macroTable *)malloc(sizeof(macroTable));
+        //if(*head == NULL)
+        //{
+        //    *head = (macroTable *)malloc(sizeof(macroTable));
+
+        //    // Insert the new name of the macro to the Macro Node 
+        //    while( macroNameParam[i] != '\0'){
+        //        (*head)->macroName[i] = macroNameParam[i];
+        //        i++;
+        //    } 
+        //    while (i <= NAME_LENGTH) {
+        //        (*head)->macroName[i] = NULL;
+        //        i++;
+        //    }
+        //    
+        //    (*head)->nextMacro = NULL;  //Set next node to null
+        //}
+        //else 
+        //{
+        //    ptr = *head;
+
+        //    while( ptr->nextMacro != NULL)
+        //        ptr = ptr->nextMacro;
+
+        //    ptr->nextMacro = (macroTable *)malloc(sizeof(macroTable));
+        //    ptr = ptr->nextMacro;
+        //    ptr->nextMacro = NULL;  //Set next node to null
+
+        //    // Insert the new name of the macro to the Macro Node 
+        //    while( macroNameParam[i] != '\0'){
+        //        ptr->macroName[i] = macroNameParam[i];
+        //        i++;
+        //    } 
+        //    while (i <= NAME_LENGTH) {
+        //        (*head)->macroName[i] = NULL;
+        //        i++;
+        //    }
+        //}
+    }
+
+    if (head == NULL)
+    {
+        head = (macroTable*)malloc(sizeof(macroTable));
 
         // Insert the new name of the macro to the Macro Node 
-        while( macroNameParam[i] != '\0'){
-            (*head)->macroName[i] = macroNameParam[i];
-            i++;
-        } 
-        while (i <= NAME_LENGTH) {
-            (*head)->macroName[i] = NULL;
+        while (macroNameParam[i] != '\0') {
+            head->macroName[i] = macroNameParam[i];
             i++;
         }
-        
-        (*head)->nextMacro = NULL;  //Set next node to null
-    }
-    else 
-    {
-        ptr = *head;
+        while (i <= NAME_LENGTH) {
+            head->macroName[i] = NULL;
+            i++;
+        }
 
-        while( ptr->nextMacro != NULL)
+        head->nextMacro = NULL;  //Set next node to null
+    }
+    else
+    {
+        ptr = head;
+
+        while (ptr->nextMacro != NULL)
             ptr = ptr->nextMacro;
 
-        ptr->nextMacro = (macroTable *)malloc(sizeof(macroTable));
+        ptr->nextMacro = (macroTable*)malloc(sizeof(macroTable));
         ptr = ptr->nextMacro;
         ptr->nextMacro = NULL;  //Set next node to null
 
         // Insert the new name of the macro to the Macro Node 
-        while( macroNameParam[i] != '\0'){
+        while (macroNameParam[i] != '\0') {
             ptr->macroName[i] = macroNameParam[i];
             i++;
-        } 
+        }
         while (i <= NAME_LENGTH) {
-            (*head)->macroName[i] = NULL;
+            head->macroName[i] = NULL;
             i++;
         }
     }
 
-    printf("\n Macro Name inserted: %s\n", (*head)->macroName);
+    printf("\n Macro Name inserted: %s\n", head->macroName);
 
 }
 

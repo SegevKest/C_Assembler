@@ -74,6 +74,7 @@ void handleSingleFile(char* filePath) {
         }
         else
         {
+            // outside definition of macro
             indexOfFirstSpace = returnFirstIndexOfChar(currLine, ' ');
             
             if (indexOfFirstSpace >=0 )
@@ -88,11 +89,7 @@ void handleSingleFile(char* filePath) {
                 macroContent = getContentOfMacro(macroList, nameOfPossibleMacro);
 
                 // insert the new macro content to the output file
-
-                //strcat(newFileContentConcat, macroContent);
-
                 fputs(macroContent, outPutFilePointer);
-                //fclose(outPutFilePointer);
             }
             else
             {
@@ -113,10 +110,7 @@ void handleSingleFile(char* filePath) {
                     if (strcmp(getTrimmedCodeRow(currLine), "endm") != 0) {
                         // if the line is not end - regular line insert to original file
                         
-                        //strcat(newFileContentConcat, currLine);
-
                         fputs(currLine, outPutFilePointer);
-                        //fclose(outPutFilePointer);
                     }
                     else {
                         // this is end of macro definition - leave it and dont add to output file
