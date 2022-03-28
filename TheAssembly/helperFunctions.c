@@ -207,7 +207,6 @@ void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbo
 
 
 // Functions related to the handle of arguments
-
 // method that will receive an argument from the action line and will output the kind of miun needed
 // 0 ,1,2,3
 // It will know by the criteria of each miun
@@ -219,11 +218,11 @@ char* findMatchedMiun(char* argmntFromLine, symbolList* symbolTable) {
 
 	resultOfMiunChecks = isMiunZero(argmntFromLine); // Miun 0
 
-	if (resultOfMiunChecks == FALSE) {	// miun 3
-		resultOfMiunChecks = isMiunThree(argmntFromLine);
+	if (resultOfMiunChecks == FALSE) {	
+		resultOfMiunChecks = isMiunTwo(argmntFromLine, symbolTable); // miun 2
 
-		if (resultOfMiunChecks == FALSE) {		// miun 2
-			resultOfMiunChecks = isMiunTwo(argmntFromLine, symbolTable);
+		if (resultOfMiunChecks == FALSE) {		
+			resultOfMiunChecks = isMiunThree(argmntFromLine); // miun 3
 
 			if (resultOfMiunChecks == FALSE) {
 
@@ -231,10 +230,10 @@ char* findMatchedMiun(char* argmntFromLine, symbolList* symbolTable) {
 					return "01\0";
 			}
 			else
-				return "10\0";
+				return "11\0";
 		}
 		else
-			return "11\0";
+			return "10\0";
 	}
 	else
 		return "00\0";
@@ -244,15 +243,16 @@ char* findMatchedMiun(char* argmntFromLine, symbolList* symbolTable) {
 
 }
 
+
 // this function receive a argument from the array of arguments and return the Register Code- for inserting to the row.
 char* getRegisterCode(char* argFromLine) {
 
-	int i, foundRegister = FALSE, indexOfColon, resultCmp;
+	int i, foundRegister = FALSE, indexOfColon, resultCmp, isMiunIndex = FALSE, indexOfStartBrace, indexOfLastBrace;
 
 	char** registerValuesTable = returnRegistersValues();
 	char* currRegisterName = NULL;
 	char* currRegisterRow = malloc(sizeof(char) * 9);
-
+	char* regFromArg = NULL;
 
 	char* regVal = NULL;
 
@@ -263,6 +263,13 @@ char* getRegisterCode(char* argFromLine) {
 			return;
 		}
 
+		if (strstr(argFromLine, "[") != NULL) {
+			isMiunIndex = TRUE;
+			indexOfStartBrace = returnFirstIndexOfChar(argFromLine, '[');
+			indexOfLastBrace = returnFirstIndexOfChar(argFromLine, ']');
+			regFromArg = subString(argFromLine, indexOfStartBrace + 1, indexOfLastBrace);
+		}
+
 		for (i = 0; i < REGISTERS_NO && !foundRegister; i++) {
 
 			// if the i is smaller than 9 - split by 2 first chars
@@ -271,17 +278,19 @@ char* getRegisterCode(char* argFromLine) {
 
 			currRegisterName = subString(currRegisterRow, 0, indexOfColon);
 
-
-			resultCmp = strcmp(currRegisterName, argFromLine);
+			// Only if the miun is a 
+			if (isMiunIndex == TRUE) {
+				resultCmp = strcmp(currRegisterName, regFromArg);
+			}
+			else  {
+				resultCmp = strcmp(currRegisterName, argFromLine);
+			}
+			
 
 			if (resultCmp == 0) {
 				foundRegister = TRUE;
 				regVal = subString(currRegisterRow, indexOfColon + 1, strlen(currRegisterRow));
 			}
-
-			// if bigger than 9 - split by 3 chars
-
-
 		}
 
 		/*	free(currRegisterName);
@@ -295,13 +304,28 @@ char* getRegisterCode(char* argFromLine) {
 }
 
 
-
-
 // _------- Open
 // // 1. '.data' -> 2. '.string' -> 3. '.entry' -> 4. '.extern'
 // Handle scenraio of Directive Row 
 void handleDirectiveRowScenario(char* rowFromCode) {
 
+
+}
+
+
+//- OPEN 
+//To handle the .entry directive
+// if there is an entry directive - create new symbol with "entry"
+void handleDirectiveEntry() {
+
+
+
+}
+
+
+//To handle the .extern directive
+// if there is an entry directive - create new symbol with "external"
+void handleDirectiveExtern() {
 
 }
 
@@ -376,7 +400,7 @@ void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbol
 
 	// Check if the Opcode of this actin is exist
 	opCode = getOpcodeAction(arrayOfArgs[0]);
-	printf("Opcode: %d", opCode);
+	//printf("Opcode: %d", opCode);
 
 	// handle the action - first cell of array
 	// apply all validations of the name
@@ -394,6 +418,7 @@ void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbol
 	//handle the argument validations
 	amountOfArgs = lengthOfArr - 1;
 
+	// check for valid param number for this Action
 	isValidArgsNumber = isValidParamNumber(lengthOfArr - 1, opCode);
 
 	if (isValidArgsNumber > 0) {
@@ -408,17 +433,70 @@ void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbol
 	
 }
 
-
 //To handle the .entry directive
-void handleDirectiveEntry() {
+void insertAdditionalWords(machineCode* actionsMachineCode, symbolList* symbolTable, char** argsFromLine, int numOfArgs, int* pToActionsCounter)
+{
+
+	symbolList* searchedSymbol = NULL;
+	char* resultOfMiunCheck;
+	char* symbolNameToSearch = NULL;
+	int i, noOfNewWords, numberToConvertForWord, indexToCut, insertedWords;
+
+	// iterate on all arguments that exist
+	for (i = 1; i <= numOfArgs; i++) {
+
+		resultOfMiunCheck = findMatchedMiun(argsFromLine[i], symbolTable);
+
+		if (strcmp(resultOfMiunCheck, "00\0") == 0) {	// miun 0 - single new word
+			
+			//Split the content of the number value 
+			indexToCut = returnFirstIndexOfChar(argsFromLine[i], '#');
+			numberToConvertForWord = atoi(subString(argsFromLine[i], indexToCut + 1, strlen(argsFromLine[i])));
+
+			// insert new Row with extracted number
+			insertNewCodeWordDirectiveValue(actionsMachineCode, convertNumberToBinaryString(numberToConvertForWord), (*pToActionsCounter) );
+		}
+		else if (strcmp(resultOfMiunCheck, "01\0") == 0 || strcmp(resultOfMiunCheck, "10\0") == 0) {
+			// miun 1 - two new words  // miun 2 - two new words 
+			noOfNewWords = 2;
+			
+			// insert new Row  - not completed
+			insertEmptyRowForNewWordsOfSymbol(actionsMachineCode, (*pToActionsCounter));
+
+			// raise the counter +1
+			(*pToActionsCounter) = (*pToActionsCounter) + 1;
+
+			// insert the second argument
+			insertEmptyRowForNewWordsOfSymbol(actionsMachineCode, (*pToActionsCounter));
+
+			//indexToCut = returnFirstIndexOfChar(argsFromLine[i], '[');
+			//symbolNameToSearch = subString(argsFromLine[i], 0, indexToCut);
+			//
+			//isSymbolAlreadyExist(symbolTable, symbolNameToSearch, searchedSymbol);
+			//if (searchedSymbol != NULL) {
+			//	// found the symbol
+			//}
+			//else
+			//	printf("Error while searching for symbol in the symbol list");
+
+		}
+		else
+		{	// miun 3 - no new words
+			noOfNewWords = 0;
+		}
+
+	}
+
+	// check the miun of each argument and insert the the machine Table the relevant new code
+	// 1 or two new words
+
+	// depends on the type of miun -
+	// leave the isCompleted false, if conatin symbol for example.
+
 
 }
 
 
-//To handle the .extern directive
-void handleDirectiveExtern() {
-
-}
 
 
 char* convertNumberToBinaryString(int numberToConvert) {

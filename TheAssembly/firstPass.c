@@ -40,7 +40,7 @@ int main() {
 		};
 
 	
-	analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, "dec K", ic, dc);
+	analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, "bne END[r15]", ic, dc);
 
 	//analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, " .string \"abcd\" ", ic, 100);
 

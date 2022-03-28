@@ -14,4 +14,8 @@ int getOpcodeAction(char actionName[]);
 
 
 void insertNewCodeWordDirectiveValue(machineCode* machCodeTable, char* binaryNumber, int valueForNewWord);
+void insertEmptyRowForNewWordsOfSymbol(machineCode* machCodeTable, int valueForNewWord);
+
+
+
 #endif //__WORDINCODE_H

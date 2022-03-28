@@ -153,7 +153,7 @@ int isRegsiter(char* argFromLine) {
 
 	char firstCharOfrgstr = argFromLine[0];
 
-	if (firstCharOfrgstr == 'r')
+	if (firstCharOfrgstr == 'r' || strstr(argFromLine, "[") != NULL )
 		return TRUE;
 	return FALSE;
 }
@@ -163,9 +163,20 @@ int isValidRegister(char* rgstrFromLine) {
 
 	// first - check if the argmt is a register
 	char firstCharOfrgstr = rgstrFromLine[0];
-	char* restOfrgstrArg = subString(rgstrFromLine, 1, 3);
+	char* restOfrgstrArg;
 
-	int validRegister = FALSE, strLength, rgstrNo;
+	int validRegister = FALSE, strLength, rgstrNo, indexOfStartBrace, indexOfLastBrace;
+
+	if (strstr(rgstrFromLine, "[") != NULL) {
+		indexOfStartBrace = returnFirstIndexOfChar(rgstrFromLine, '[');
+		indexOfLastBrace = returnFirstIndexOfChar(rgstrFromLine, ']');
+		restOfrgstrArg = subString(rgstrFromLine, indexOfStartBrace + 1, indexOfLastBrace);
+	}
+	else
+		restOfrgstrArg = subString(rgstrFromLine, 1, 3);
+
+
+
 
 	strLength = strlen(rgstrFromLine);
 	rgstrNo = atoi(restOfrgstrArg);
@@ -248,7 +259,7 @@ int isValidParamNumber(int amountOfArgs, int opCode) {
 				result = -1;
 			}
 		}
-		if (amountOfArgs == 1) {
+		else if (amountOfArgs == 1) {
 			//Group 1 -- clr, not, inc, dec, jmp, bne, jsr, red, prn
 			// the first argument is the destination argument
 			if (opCode == 5 || opCode == 9 || opCode == 12 || opCode == 13) {

@@ -40,7 +40,8 @@ int getOpcodeAction(char actionName[]);
 char* getFunctOfAction(char actionName[], int opCodeOfAction);
 void insertNewOpCodeWord(machineCode* machCodeTable, char actionName[], int opCodeToTurnOn, int valueOfAction);
 void insertNewFullCodeWord(machineCode* machCodeTable, symbolList* symbolTable, char** arrayOfArgs, int valueForNewWord, int numOfArgs);
-void insertNewCodeWordDirectiveValue(machineCode* machCodeTable, char binaryNumber[], int valueForNewWord);
+void insertNewCodeWordDirectiveValue(machineCode* machCodeTable, char* binaryNumber, int valueForNewWord);
+void insertEmptyRowForNewWordsOfSymbol(machineCode* machCodeTable, int valueForNewWord);
 
 void registersAdresses(machineCode* machCode, char directionFlag, char* registerCode, char* adrCode);
 
@@ -88,6 +89,7 @@ void initializeWithNotCompletedCodeWord(machineCode* machCode) {
 }
 
 
+// ------------Doesnot work!!! 
 // This method will insert a new Word to the end of the current Machine Code Table - after it was built
 void insertNewWordToEndOfTable(machineCode* machCodeTable, machineCode* newMachineCodeWord) {
 
@@ -293,7 +295,6 @@ char* getFunctOfAction(char actionName[], int opCodeOfAction) {
 // this function updates the Funct range inside the wordInCode
 void updateFunctValue(machineCode* machCode, char actionName[]) {
 
-
 	char* functOfAction;
 	int functIndex = 4, endFunctIndex = 8, opCodeOfAction;	//modify cells 4-7
 
@@ -309,15 +310,8 @@ void updateFunctValue(machineCode* machCode, char actionName[]) {
 		machCode->wordBinary[functIndex++] = (*functOfAction)-'0';
 		functOfAction++;
 	}
-
-
-
 }
 
-
-
-// -----Open
-// Add a new FullCodeWord - with funct - register and adress (Destination + origin)
 
 //void insertNewFullCodeWord(machineCode* machCodeTable, char actionName[], int valueForNewWord) {
 void insertNewFullCodeWord(machineCode* machCodeTable, symbolList* symbolTable, char** arrayOfArgs, int valueForNewWord, int numOfArgs) {
@@ -379,6 +373,9 @@ void insertNewFullCodeWord(machineCode* machCodeTable, symbolList* symbolTable, 
 				newWord->wordBinary[i] = 0;
 		}
 
+		// change the isCompleted to true - done inserting this row
+		newWord->isCompleted = TRUE;
+
 		// insert the new word to the machine code table
 		insertNewWordToEndOfTable(machCodeTable, newWord);
 
@@ -393,7 +390,6 @@ void insertNewFullCodeWord(machineCode* machCodeTable, symbolList* symbolTable, 
 }
 
 
-// -----Open
 // Add a new CodeWord - for string or data values 
 void insertNewCodeWordDirectiveValue(machineCode* machCodeTable, char* binaryNumber, int valueForNewWord) {
 
@@ -416,6 +412,8 @@ void insertNewCodeWordDirectiveValue(machineCode* machCodeTable, char* binaryNum
 		insertNewWordToEndOfTable(machCodeTable, newWord);
 
 		newWord->isCompleted = TRUE;
+
+		displayWord(newWord);
 	}
 	else
 	{
@@ -427,7 +425,54 @@ void insertNewCodeWordDirectiveValue(machineCode* machCodeTable, char* binaryNum
 }
 
 
-// -----Open
+// On first Pass - enter empty rows - for symbols values need to be inserted in second pass
+void insertEmptyRowForNewWordsOfSymbol(machineCode* machCodeTable, int valueForNewWord) {
+
+	machineCode* newWord = createWordInMemory();
+
+	if (newWord) {
+
+		// insert new word as not completed
+		initializeWithNotCompletedCodeWord(newWord);
+
+		// insert the value of the row only!
+		newWord->programWordValue = valueForNewWord;
+		
+		// insert the new word to end of table
+		insertNewWordToEndOfTable(machCodeTable, newWord);
+
+		displayWord(newWord);
+	}
+	else
+	{
+		printf("Not enoght memory - error in Insert new OPCODE");
+		return NULL;
+	}
+	free(newWord);
+
+}
+
+
+//------------OPEN - PASS 2
+// this method  will edit the found machine code accordingly to the symbol values
+void updateEmptyRowForNewWordsOfSymbol(machineCode* machCodeTable) {
+
+
+
+}
+
+
+//-----------OPEN - PASS 2
+// this method will search for the relevant row of the current argument in the machine code and return a pointer to it
+machineCode* findRowOfSymbolInMachineCode() {
+
+	machineCode* foundSymbol = NULL;
+
+
+	return foundSymbol;
+}
+
+
 // this function gets Char ('O' or 'D') for indicating which address and register to update
 // Origin - Register + address - will be signaled in 'O'
 // Destination - Register + address will be signaled in 'D'
@@ -463,7 +508,7 @@ void registersAdresses(machineCode* machCode, char directionFlag, char* register
 		machCode->wordBinary[regIndex] = registerCode[currRangeReg] - '0';
 		regIndex++;
 	}
-	printf("Reg index Done at : %d", regIndex);
+	//printf("Reg index Done at : %d", regIndex);
 
 	// insert to relevant cells in word the Miun code
 	for (currRangeAdr = 0; currRangeAdr < rangeToInsertAdr; currRangeAdr++) {
@@ -471,9 +516,8 @@ void registersAdresses(machineCode* machCode, char directionFlag, char* register
 		machCode->wordBinary[adrIndex] = adrCode[currRangeAdr] - '0';
 		adrIndex++;
 	}
-	printf("Miun index Done at : %d", adrIndex);
+	//printf("Miun index Done at : %d", adrIndex);
 }
-
 
 
 // Cleans the word from the memory
