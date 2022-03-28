@@ -5,22 +5,23 @@
 #include "macroNode.h"
 
 #define NAME_LENGTH 70
+#define MACRO_MAX_LENGTH 80
 #define TRUE 1      
 #define FALSE 0
 
-typedef struct node 
-{
-     
-    char letter;    // current Char of Macro
-	struct node *nextLetter;    // Next Char Node
-     
-} macroCharNode; 
-
+//typedef struct node 
+//{
+//     
+//    char letter;    // current Char of Macro
+//	struct node *nextLetter;    // Next Char Node
+//     
+//} macroCharNode; 
+//
 
 typedef struct macroNode {
      
     char macroName[NAME_LENGTH];      // The name of the Macro
-    macroCharNode macroContent;     // refers to the content of the Macro - all letter 
+    char macroContent[MACRO_MAX_LENGTH];     // refers to the content of the Macro - all letter 
 	
     struct macroNode *nextMacro;    // Pointer to next Node of Macro
      
@@ -76,31 +77,31 @@ void insert_NewMacroName (macroTable** head, char macroNameParam[]){
 
 
 // Insert Content - for every row of the macro from the code - use this method.
-void insert_NewMacroContent(macroTable** head, char macroNameParam[], char macroRow[]) {
-    
-    int i = 0;
-    macroCharNode *pContent;
-    macroTable *macroNodeToEnterContentTo = returnMacro(head,macroNameParam);
-
-    if(macroNodeToEnterContentTo == NULL)
-        printf("\n Macro that return is empty.\n");
-    else
-    {
-        pContent = (macroCharNode *)malloc(sizeof(macroCharNode));
-
-        if (!pContent  )
-            printf("\n Allocate failed - returned null.\n");
-
-        while(macroRow != NULL ) // Reached end of line
-        {
-            pContent->letter = macroRow[i];
-            pContent->nextLetter = (macroCharNode *)malloc(sizeof(macroCharNode));
-            pContent = pContent->nextLetter;
-            i++;      // next cell of row
-        }
-    }
-
-}
+//void insert_NewMacroContent(macroTable** head, char macroNameParam[], char macroRow[]) {
+//    
+//    int i = 0;
+//    macroCharNode *pContent;
+//    macroTable *macroNodeToEnterContentTo = returnMacro(head,macroNameParam);
+//
+//    if(macroNodeToEnterContentTo == NULL)
+//        printf("\n Macro that return is empty.\n");
+//    else
+//    {
+//        pContent = (macroCharNode *)malloc(sizeof(macroCharNode));
+//
+//        if (!pContent  )
+//            printf("\n Allocate failed - returned null.\n");
+//
+//        while(macroRow != NULL ) // Reached end of line
+//        {
+//            pContent->letter = macroRow[i];
+//            pContent->nextLetter = (macroCharNode *)malloc(sizeof(macroCharNode));
+//            pContent = pContent->nextLetter;
+//            i++;      // next cell of row
+//        }
+//    }
+//
+//}
 
 // Search in linked list
 macroTable* returnMacro(macroTable** head, char macroNameParam[]){

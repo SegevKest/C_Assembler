@@ -389,7 +389,6 @@ void handleDirectiveString(machineCode* dataMachineCode, char* stringFromCodeArr
 }
 
 
-// _------- Open
 // Handle scenraio of action Row 
 void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbolTable, char** arrayOfArgs, int lengthOfArr, int* pToActionsCounter) {
 
@@ -413,7 +412,6 @@ void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbol
 	insertNewOpCodeWord(actionsMachineCode, arrayOfArgs[0], opCode, *pToActionsCounter);
 	(*pToActionsCounter) = (*pToActionsCounter) + 1;
 
-	currRegCode = getRegisterCode(arrayOfArgs[1]);
 
 	//handle the argument validations
 	amountOfArgs = lengthOfArr - 1;
@@ -433,7 +431,7 @@ void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbol
 }
 
 
-
+// Helper finction to convert an integer to a 16 digit binary data
 char* convertNumberToBinaryString(int numberToConvert) {
 
 	char binaryNumber[LENGTH_OF_BIN_NUMBER] = { 0 };
@@ -480,7 +478,6 @@ char* convertNumberToBinaryString(int numberToConvert) {
 
 	return &binaryNumber;
 }
-
 
 
 // OPEN ------ MUST !
@@ -623,14 +620,11 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 	if (actionRow) { 		// handle an action row
 
 		if (rowHasSymbol == TRUE) {
-			printf("\n With Symbol ");
 			//Handle action scenario
 			handleSymbolScenario(&symbolTable, newSymbolName, "code", instructCounter);
 		}
 		// Handle the rest of the logic for action
-		printf("\n No Symbol ");
 		handleActionRowScenario(actionsMachineCode, symbolTable, arrayOfArgumentFromCode, lengthOfArr, &instructCounter);
-
 
 	}
 }

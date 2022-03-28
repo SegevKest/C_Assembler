@@ -41,7 +41,7 @@ void isSymbolAlreadyExist(symbolList* symbolTable, char symbolName[], symbolList
 	char* p;
 	int namesAreEqual;
 
-	displaySymbol(ptr);
+	//displaySymbol(ptr);
 
 	if (symbolTable != NULL) {
 
@@ -90,7 +90,7 @@ void insertNewSymbolData(symbolList* symbolTable, char symbolNameParam[], int va
 
 		if (newSymbol) {
 
-			displaySymbol(newSymbol);
+			//displaySymbol(newSymbol);
 			// insert the name of the symbol
 			strcpy(newSymbol->symbolName, symbolNameParam);
 
@@ -104,13 +104,13 @@ void insertNewSymbolData(symbolList* symbolTable, char symbolNameParam[], int va
 			
 			// Attributes array will be initialized -
 			newSymbol->noOfAttributes = 1;
-
+			newSymbol->nextSymbol = NULL;
 
 			//The part is not working!!
 			strcpy(newSymbol->attributes[0], attributeParam);
 
 			//The part is not working!!
-			// INsert to the existing table at the end
+			 //INsert to the existing table at the end
 			while (pToSymbolinTable->nextSymbol != NULL) 
 				pToSymbolinTable = pToSymbolinTable->nextSymbol;
 			
@@ -178,9 +178,9 @@ void displaySymbol(symbolList* symbol) {
 
 		printf("\nAttirbutes:\n");
 
-		for (i = 0; i < ptr->noOfAttributes; i++) {
+	/*	for (i = 0; i < ptr->noOfAttributes; i++) {
 			printf("%s", currSymbolAttr[i]);
-		}
+		}*/
 	}
 	free(ptr);
 
