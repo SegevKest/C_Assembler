@@ -4,9 +4,9 @@
 #include <ctype.h>
 
 
-
-#include "helperFunctions.h"
 #include "macroNode.h"
+#include "helperFunctions.h"
+
 
 
 #define MIN_NUM_OF_ARGS 2
