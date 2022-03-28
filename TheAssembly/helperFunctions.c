@@ -425,77 +425,12 @@ void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbol
 		// will be 2 or 1
 		// insert second word for hole row code
 		insertNewFullCodeWord(actionsMachineCode, symbolTable, arrayOfArgs, (*pToActionsCounter), isValidArgsNumber);
+		(*pToActionsCounter) = (*pToActionsCounter) + 1;
 
 		// handle the additional rows for each argument
-
-
+		insertAdditionalWords(actionsMachineCode, symbolTable, arrayOfArgs, amountOfArgs, pToActionsCounter);
 	}
-	
 }
-
-//To handle the .entry directive
-void insertAdditionalWords(machineCode* actionsMachineCode, symbolList* symbolTable, char** argsFromLine, int numOfArgs, int* pToActionsCounter)
-{
-
-	symbolList* searchedSymbol = NULL;
-	char* resultOfMiunCheck;
-	char* symbolNameToSearch = NULL;
-	int i, noOfNewWords, numberToConvertForWord, indexToCut, insertedWords;
-
-	// iterate on all arguments that exist
-	for (i = 1; i <= numOfArgs; i++) {
-
-		resultOfMiunCheck = findMatchedMiun(argsFromLine[i], symbolTable);
-
-		if (strcmp(resultOfMiunCheck, "00\0") == 0) {	// miun 0 - single new word
-			
-			//Split the content of the number value 
-			indexToCut = returnFirstIndexOfChar(argsFromLine[i], '#');
-			numberToConvertForWord = atoi(subString(argsFromLine[i], indexToCut + 1, strlen(argsFromLine[i])));
-
-			// insert new Row with extracted number
-			insertNewCodeWordDirectiveValue(actionsMachineCode, convertNumberToBinaryString(numberToConvertForWord), (*pToActionsCounter) );
-		}
-		else if (strcmp(resultOfMiunCheck, "01\0") == 0 || strcmp(resultOfMiunCheck, "10\0") == 0) {
-			// miun 1 - two new words  // miun 2 - two new words 
-			noOfNewWords = 2;
-			
-			// insert new Row  - not completed
-			insertEmptyRowForNewWordsOfSymbol(actionsMachineCode, (*pToActionsCounter));
-
-			// raise the counter +1
-			(*pToActionsCounter) = (*pToActionsCounter) + 1;
-
-			// insert the second argument
-			insertEmptyRowForNewWordsOfSymbol(actionsMachineCode, (*pToActionsCounter));
-
-			//indexToCut = returnFirstIndexOfChar(argsFromLine[i], '[');
-			//symbolNameToSearch = subString(argsFromLine[i], 0, indexToCut);
-			//
-			//isSymbolAlreadyExist(symbolTable, symbolNameToSearch, searchedSymbol);
-			//if (searchedSymbol != NULL) {
-			//	// found the symbol
-			//}
-			//else
-			//	printf("Error while searching for symbol in the symbol list");
-
-		}
-		else
-		{	// miun 3 - no new words
-			noOfNewWords = 0;
-		}
-
-	}
-
-	// check the miun of each argument and insert the the machine Table the relevant new code
-	// 1 or two new words
-
-	// depends on the type of miun -
-	// leave the isCompleted false, if conatin symbol for example.
-
-
-}
-
 
 
 

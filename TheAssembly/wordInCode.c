@@ -42,6 +42,7 @@ void insertNewOpCodeWord(machineCode* machCodeTable, char actionName[], int opCo
 void insertNewFullCodeWord(machineCode* machCodeTable, symbolList* symbolTable, char** arrayOfArgs, int valueForNewWord, int numOfArgs);
 void insertNewCodeWordDirectiveValue(machineCode* machCodeTable, char* binaryNumber, int valueForNewWord);
 void insertEmptyRowForNewWordsOfSymbol(machineCode* machCodeTable, int valueForNewWord);
+void insertAdditionalWords(machineCode* actionsMachineCode, symbolList* symbolTable, char** argsFromLine, int numOfArgs, int* pToActionsCounter);
 
 void registersAdresses(machineCode* machCode, char directionFlag, char* registerCode, char* adrCode);
 
@@ -451,6 +452,71 @@ void insertEmptyRowForNewWordsOfSymbol(machineCode* machCodeTable, int valueForN
 	free(newWord);
 
 }
+
+
+//To handle the .entry directive
+void insertAdditionalWords(machineCode* actionsMachineCode, symbolList* symbolTable, char** argsFromLine, int numOfArgs, int* pToActionsCounter)
+{
+	symbolList* searchedSymbol = NULL;
+	char* resultOfMiunCheck;
+	char* symbolNameToSearch = NULL;
+	char* binNumberToInsert = malloc(sizeof(char) * LENGTH_OF_BIN_NUMBER);
+	int i, noOfNewWords, numberToConvertForWord, indexToCut, insertedWords;
+
+	// iterate on all arguments that exist
+	for (i = 1; i <= numOfArgs; i++) {
+
+		resultOfMiunCheck = findMatchedMiun(argsFromLine[i], symbolTable);
+
+		if (strcmp(resultOfMiunCheck, "00\0") == 0) {	// miun 0 - single new word
+
+			//Split the content of the number value 
+			indexToCut = returnFirstIndexOfChar(argsFromLine[i], '#');
+			numberToConvertForWord = atoi(subString(argsFromLine[i], indexToCut + 1, strlen(argsFromLine[i])));
+
+			strcpy(binNumberToInsert,convertNumberToBinaryString(numberToConvertForWord));
+			// insert new Row with extracted number
+			insertNewCodeWordDirectiveValue(actionsMachineCode, binNumberToInsert, (*pToActionsCounter));
+		
+			// raise the counter +1
+			(*pToActionsCounter) = (*pToActionsCounter) + 1;
+		}
+		else if (strcmp(resultOfMiunCheck, "01\0") == 0 || strcmp(resultOfMiunCheck, "10\0") == 0) {
+			// miun 1 - two new words  // miun 2 - two new words 
+			noOfNewWords = 2;
+
+			// insert new Row  - not completed
+			insertEmptyRowForNewWordsOfSymbol(actionsMachineCode, (*pToActionsCounter));
+
+			// raise the counter +1
+			(*pToActionsCounter) = (*pToActionsCounter) + 1;
+
+			// insert the second argument
+			insertEmptyRowForNewWordsOfSymbol(actionsMachineCode, (*pToActionsCounter));
+
+			// raise the counter +1
+			(*pToActionsCounter) = (*pToActionsCounter) + 1;
+
+
+			//indexToCut = returnFirstIndexOfChar(argsFromLine[i], '[');
+			//symbolNameToSearch = subString(argsFromLine[i], 0, indexToCut);
+			//
+			//isSymbolAlreadyExist(symbolTable, symbolNameToSearch, searchedSymbol);
+			//if (searchedSymbol != NULL) {
+			//	// found the symbol
+			//}
+			//else
+			//	printf("Error while searching for symbol in the symbol list");
+
+		}
+		else
+		{	// miun 3 - no new words
+			noOfNewWords = 0;
+		}
+
+	}
+}
+
 
 
 //------------OPEN - PASS 2
