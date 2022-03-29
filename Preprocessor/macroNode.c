@@ -121,7 +121,7 @@ void insertNewMacroName(macroTable* head, char* macroNameParam){
         }
     }
 
-    printf("\n Macro Name inserted: %s\n", head->macroName);
+    //printf("\n Macro Name inserted: %s\n", head->macroName);
 
 }
 

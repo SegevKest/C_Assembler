@@ -61,19 +61,9 @@ void handleSingleFile(char* filePath) {
     // Iterate on the File - until we will receive EOF
     while (fgets(currLine, LINE_LENGTH, filePointer)) {
 
-
         // handle each line
         printf("%s", currLine);
 
-
-        // inside definition of a macro
-        if (foundMacro == TRUE) {
-            
-            // nameOfPossibleMacro is the last found macro
-            insertNewMacroContent(macroList, nameOfPossibleMacro, getTrimmedCodeRow(currLine));
-        }
-        else
-        {
             // outside definition of macro
             indexOfFirstSpace = returnFirstIndexOfChar(currLine, ' ');
             
@@ -83,7 +73,7 @@ void handleSingleFile(char* filePath) {
                 nameOfPossibleMacro = subString(currLine, 0, strlen(currLine));
 
             // check if it an existing macro
-            if (isExistMacro(macroList, nameOfPossibleMacro))
+            if (isExistMacro(macroList, getTrimmedCodeRow(nameOfPossibleMacro)))
             {
                 // This is an existing macro. Get the content of it and insert to the new File
                 macroContent = getContentOfMacro(macroList, nameOfPossibleMacro);
@@ -105,28 +95,33 @@ void handleSingleFile(char* filePath) {
                 }
                 else
                 {
-                    // else - no macro - regular line
-                    foundMacro = FALSE;
-                    if (strcmp(getTrimmedCodeRow(currLine), "endm") != 0) {
-                        // if the line is not end - regular line insert to original file
-                        
-                        fputs(currLine, outPutFilePointer);
+
+                    // inside definition of a macro
+                    if (foundMacro == TRUE && strcmp(getTrimmedCodeRow(currLine), "endm") != 0) {
+
+                        // nameOfPossibleMacro is the last found macro
+                        insertNewMacroContent(macroList, nameOfPossibleMacro, getTrimmedCodeRow(currLine));
                     }
-                    else {
-                        // this is end of macro definition - leave it and dont add to output file
+                    else
+                    {
+                        // else - no macro - regular line
+                        foundMacro = FALSE;
+                        if (strcmp(getTrimmedCodeRow(currLine), "endm") != 0) {
+                            // if the line is not end - regular line insert to original file
+
+                            fputs(currLine, outPutFilePointer);
+                        }
+                        else {
+                            // this is end of macro definition - leave it and dont add to output file
+                        }
                     }
+   
                 }
             }
-        }
-
-
     }
 
   /*  fputs(newFileContentConcat, outPutFilePointer);*/
     fclose(outPutFilePointer);
-
-    
-
 
 }
 
@@ -182,6 +177,7 @@ FILE* createNewFileForOutPut(char* newFileName) {
     return newFilePointer;
 }
 
+
 // Validate if the number of arguments received from the 
 int checkForValidArgs(int argc){
 
@@ -195,14 +191,6 @@ int checkForValidArgs(int argc){
     //printf("valid number of arguments\n");
     return TRUE;
 }
-
-
-
-
-int spreadMacrosInFile(){
-
-}
-
 
 
 
