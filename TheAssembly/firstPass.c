@@ -36,7 +36,7 @@ void firstPassOnFile(machineCode* actionsMachineCodeHead, machineCode* dataMachi
 
 		printf("%s", currLine);
 
-		analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead,getTrimmedCodeRow(currLine), instructCounter,dataCounter );
+		analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, getTrimmedCodeRow(currLine), ( * instructCounter), (*dataCounter) , &validationFlag);
 
 	}
 

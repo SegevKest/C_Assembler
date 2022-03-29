@@ -22,7 +22,7 @@ char* subString(char* sourceString, int strtIndex, int endIndex);
 //int findTheIndexOfTheActionInTable(char* stringToCheck);
 
 char* getTrimmedCodeRow(char* rowFromCode);
-void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, machineCode* dataMachineCode, char* rowFromCode, int instructCounter, int dataCounter);
+void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, machineCode* dataMachineCode, char* rowFromCode, int instructCounter, int dataCounter, int* validationFlag);
 void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbolAttributes, int symbolValue);
 char** buildArrayOfRowParams(char* rowFromCode, int* lengthOfArr);
 void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbolTable, char** arrayOfArgs, int lengthOfArr, int* pToActionsCounter);
@@ -474,14 +474,14 @@ char* convertNumberToBinaryString(int numberToConvert) {
 
 // OPEN ------ MUST !
 // functin that will get the line from the file and split it to different strings in a new array
-void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, machineCode* dataMachineCode, char* rowFromCode, int instructCounter, int dataCounter) {
+void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, machineCode* dataMachineCode, char* rowFromCode, int instructCounter, int dataCounter, int* validationFlag) {
 
 	char* newSymbolName = NULL;
 	char* restOfRowFromCode = NULL;
 	char newSymbolAttribute[MAX_LENGTH_OF_ATTRBIUTE];
 	char** arrayOfArgumentFromCode = NULL;
 
-	int	i, validationFlag, lengthOfArr,
+	int	i, localValidationFlag, lengthOfArr,
 		whiteSpaceLine, commentLine, rowHasSymbol, actionRow, directiveRow, typeOfDirective, commaLocation;
 
 
@@ -524,7 +524,7 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 
 	printf("\nCode is:%s", restOfRowFromCode);
 
-	printf("\nAction - %d; Directive - %d ;Symbol - %d\n Counters: ic: %d	\t dc:%d\n ", actionRow, directiveRow, rowHasSymbol, instructCounter, dataCounter);
+	//printf("\nAction - %d; Directive - %d ;Symbol - %d\n Counters: ic: %d	\t dc:%d\n ", actionRow, directiveRow, rowHasSymbol, instructCounter, dataCounter);
 	{
 		// if symbol exist - handle it. else - continue with rest of logic for each row
 		//if (rowHasSymbol == TRUE)
@@ -569,14 +569,13 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 	arrayOfArgumentFromCode = buildArrayOfRowParams(restOfRowFromCode, &lengthOfArr);
 
 	// validate the all array
-	validationFlag = validateRowOfCode(arrayOfArgumentFromCode, lengthOfArr);
+	localValidationFlag = validateRowOfCode(arrayOfArgumentFromCode, lengthOfArr);
 
+	// Edit the validation Flag for this file
+	(*validationFlag) = localValidationFlag;
 
-	/*for (i = 0; 0 <= strlen(arrayOfArgumentFromCode[i]); i++)
-		printf("\n%s", arrayOfArgumentFromCode[i]);*/
-
-
-	if (directiveRow) {		// handle an directive row 
+	// handle an directive row 
+	if (directiveRow) {		
 
 		typeOfDirective = isDirectiveLine(rowFromCode);
 
@@ -608,8 +607,8 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 			}
 		}
 	}
-
-	if (actionRow) { 		// handle an action row
+	// handle an action row
+	if (actionRow) { 		
 
 		if (rowHasSymbol == TRUE) {
 			//Handle action scenario

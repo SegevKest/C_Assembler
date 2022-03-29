@@ -200,16 +200,20 @@ int checkForValidArgs(int argc){
 
 
 
-int main() {
+
+
+// this main should be located in the mainProgramfile
+//int main() {
+////
+//    int validArgs;
 //
-    int validArgs;
-
-
-
-//    //validArgs = checkForValidArgs(argc);
-    handleSingleFile("test");
-    firstPassOnFile();
-
-    return 0;
-}
+//    char* fileNameToPass;
+//
+////    //validArgs = checkForValidArgs(argc);
+//    fileNameToPass = handleSingleFile("test");
+//
+//    
+//
+//    return 0;
+//}
 
