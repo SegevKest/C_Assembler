@@ -485,7 +485,6 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 		whiteSpaceLine, commentLine, rowHasSymbol, actionRow, directiveRow, typeOfDirective, commaLocation;
 
 
-
 	whiteSpaceLine = commentLine = rowHasSymbol = actionRow = directiveRow = lengthOfArr = FALSE;
 
 	// raise flag of char accordingly 
@@ -494,7 +493,6 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 
 	// Check If the row has symbol 
 	rowHasSymbol = isRowContainSymbol(rowFromCode);
-
 
 	// if empty row or comment Row - finish this row
 	if (whiteSpaceLine == TRUE || commentLine == TRUE)
@@ -525,45 +523,6 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 	printf("\nCode is:%s", restOfRowFromCode);
 
 	//printf("\nAction - %d; Directive - %d ;Symbol - %d\n Counters: ic: %d	\t dc:%d\n ", actionRow, directiveRow, rowHasSymbol, instructCounter, dataCounter);
-	{
-		// if symbol exist - handle it. else - continue with rest of logic for each row
-		//if (rowHasSymbol == TRUE)
-		//{
-
-		//	// indicate which line is it - action or directive
-		//	// create the new attribute to the symbol by the row 
-		//	if (actionRow) {
-		//		printf("\n Action l : %d", rowHasSymbol);
-		//		handleSymbolScenario(symbolTable, newSymbolName, "code", instructCounter);
-		//	}
-		//	if (directiveRow) {
-		//		// check what is the value of isDirective line and by that continue flow
-		//		//1. '.data' -> 2. '.string' -> 3. '.entry' -> 4. '.extern'
-		//		typeOfDirective = isDirectiveLine(rowFromCode);
-
-		//		printf("\n Directive : %d,\t typeOfDirective: %d", rowHasSymbol, typeOfDirective);
-
-		//		if (typeOfDirective == 1 || typeOfDirective == 2) {
-		//			// Data and String
-
-		//			//Handle symbol scenario
-		//			handleSymbolScenario(symbolTable, newSymbolName, "data", dataCounter);
-
-		//			// identify all the data received - insert code in data machine code
-		//			// increase the data counter by the number of data arguments reveiced (coded)?
-
-		//		}
-		//		else if (typeOfDirective == 4) {	// extern
-
-		//			//Handle symbol scenario
-		//			handleSymbolScenario(symbolTable, newSymbolName, "external", 0);
-
-		//		}
-
-		//	}
-		//}
-
-	}
 
 	//Get the array of arguments from the current Row
 	arrayOfArgumentFromCode = buildArrayOfRowParams(restOfRowFromCode, &lengthOfArr);

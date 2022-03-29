@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
 		return;
 	}
 
-	firstPassOnFile(actionsMachineCode, dataMachineCode, symbolTable, "test", &validationFlag, &dataCounter, &actionCounter);
+	firstPassOnFile(actionsMachineCode, dataMachineCode, symbolTable, "test.am", &validationFlag, &dataCounter, &actionCounter);
 
 
 	// first pass
