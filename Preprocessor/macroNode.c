@@ -185,7 +185,8 @@ void displayMacroTable(const macroTable* head){
         printf("\nSr. No.\t\tAddress\t\tInfo\t\tLink\n");
         while (ptr != NULL)
 		{
-			printf("\n%d.\t\t%d\t\t%d\t\t%d\n", i, ptr, ptr->nextMacro);
+			printf("\n%d.\t\t%d\t\t%s\t\t%d\n", i, ptr,ptr->macroName ,ptr->nextMacro);
+            printf("\n %s", ptr->macroContent);
 
 			ptr = ptr->nextMacro;
 			i++;

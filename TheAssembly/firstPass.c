@@ -9,10 +9,39 @@
 #include "validations.h"
 #include "helperFunctions.h"
 
+#define TRUE 1      
+#define FALSE 0
+#define LINE_LENGTH 81
+
+void firstPassOnFile(machineCode* actionsMachineCodeHead, machineCode* dataMachineCodeHead, symbolList* symbolHead, char* filePath, int* validationFlag, int* dataCounter, int* instructCounter);
 
 
 
+void firstPassOnFile(machineCode* actionsMachineCodeHead, machineCode* dataMachineCodeHead, symbolList* symbolHead, char* filePath, int* validationFlag, int* dataCounter, int* instructCounter ) {
 
+
+	FILE* filePointer;
+
+	filePointer= fopen(filePath, "r");
+
+	char currLine[LINE_LENGTH];
+
+
+	if (filePointer == NULL) {
+		printf("File pointer received is an ERROR");
+		*validationFlag = FALSE;
+	}
+
+	while (fgets(currLine, LINE_LENGTH, filePointer)) {
+
+		printf("%s", currLine);
+
+		analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead,getTrimmedCodeRow(currLine), instructCounter,dataCounter );
+
+	}
+
+
+}
 
 //int main() {
 //

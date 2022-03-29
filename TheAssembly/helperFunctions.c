@@ -210,7 +210,6 @@ void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbo
 // method that will receive an argument from the action line and will output the kind of miun needed
 // 0 ,1,2,3
 // It will know by the criteria of each miun
-
 char* findMatchedMiun(char* argmntFromLine, symbolList* symbolTable) {
 
 	int resultOfMiunChecks;
@@ -468,13 +467,6 @@ char* convertNumberToBinaryString(int numberToConvert) {
 				binaryNumber[i] = '0';
 		}
 	}
-
-	//// Print the final binary number as a array of chars
-	//for (i = 0; i < LENGTH_OF_BIN_NUMBER; i++) {
-	//	printf("%c ", binaryNumber[i]);
-	//}
-
-
 
 	return &binaryNumber;
 }

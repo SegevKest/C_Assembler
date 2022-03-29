@@ -21,7 +21,6 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbolTable, char** arrayOfArgs, int lengthOfArr, int* pToActionsCounter);
 
 char* convertNumberToBinaryString(int numberToConvert);
-int convertCharToAscii(char chToConvert);
 char* getRegisterCode(char* argFromLine);
 char* findMatchedMiun(char* argmntFromLine, symbolList* symbolTable);
 

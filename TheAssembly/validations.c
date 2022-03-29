@@ -204,6 +204,7 @@ int isValidSeperationBetweenParams(char* paramFromCode) {
 	return TRUE;
 }
 
+
 // Add more???
 // the method will check if the seperation of all the arguments are in order
 // using tab - return 1
@@ -239,7 +240,6 @@ int isValidSeperationBetweenActionAndParam(char* paramFromCode) {
 	return TRUE;
 
 }
-
 
 
 // This method will return 2,1,0 if the amount of arguments were valid and matched the group
@@ -287,6 +287,7 @@ int isValidParamNumber(int amountOfArgs, int opCode) {
 
 	return result;
 }
+
 
 // this method checks if the name of the action argument name is exist
 int isValidNameOfAction(char* paramFromCode) {

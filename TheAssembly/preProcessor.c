@@ -7,6 +7,7 @@
 #include "helperFunctions.h"
 #include "macroNode.h"
 #include "validations.h"
+#include "firstPass.h"
 
 
 
@@ -18,17 +19,14 @@
 #define MACRO_MAX_LENGTH 80
 
 
-
 //int checkForValidArgs(int argc);
-
-void handleSingleFile(char* filePath);
+char* handleSingleFile(char* filePath);
 char* getSingleLineFromFile(FILE* filePointer);
 char* getFileName(char* filePath);
 FILE* createNewFileForOutPut(char* newFileName);
 
 
-
-void handleSingleFile(char* filePath) {
+char* handleSingleFile(char* filePath) {
 
     int foundMacro = FALSE, startIndex = 0, indexOfFirstSpace, indexOfLastCharInRow;
 
@@ -43,9 +41,14 @@ void handleSingleFile(char* filePath) {
     char* fileName;
     char* newMacroName;
     char* nameOfPossibleMacro;
-    char* newFileContentConcat;
 
-    filePointer = fopen(filePath, "r");
+    char* fullFilePath = malloc(sizeof(filePath) + 3);
+    
+    if (fullFilePath != NULL) {
+        strcpy(fullFilePath, filePath);
+        strcat(fullFilePath,".as");
+        filePointer = fopen(fullFilePath, "r");
+    }
 
     if (filePointer == NULL) {
         printf("File pointer received is an ERROR");
@@ -54,7 +57,6 @@ void handleSingleFile(char* filePath) {
 
     // get the file name of the original file
     fileName = getFileName(filePath);
-
     // The new file pointer
     outPutFilePointer = createNewFileForOutPut(fileName);
     
@@ -95,7 +97,6 @@ void handleSingleFile(char* filePath) {
                 }
                 else
                 {
-
                     // inside definition of a macro
                     if (foundMacro == TRUE && strcmp(getTrimmedCodeRow(currLine), "endm") != 0) {
 
@@ -107,8 +108,8 @@ void handleSingleFile(char* filePath) {
                         // else - no macro - regular line
                         foundMacro = FALSE;
                         if (strcmp(getTrimmedCodeRow(currLine), "endm") != 0) {
-                            // if the line is not end - regular line insert to original file
 
+                            // if the line is not end - regular line insert to original file
                             fputs(currLine, outPutFilePointer);
                         }
                         else {
@@ -119,9 +120,13 @@ void handleSingleFile(char* filePath) {
                 }
             }
     }
-
-  /*  fputs(newFileContentConcat, outPutFilePointer);*/
+  
     fclose(outPutFilePointer);
+  
+    return fileName;
+    //free(newMacroName);
+    //free(currLine);
+    //free(nameOfPossibleMacro);
 
 }
 
@@ -145,9 +150,10 @@ char* getFileName(char* filePath) {
     int indexOfLastDot;
     char* fileName;
 
-    indexOfLastDot = returnFirstIndexOfChar(filePath,'.');
+    //indexOfLastDot = returnFirstIndexOfChar(filePath,'.');
 
-    fileName = subString(filePath, 0, indexOfLastDot);
+    //fileName = subString(filePath, 0, indexOfLastDot);
+    fileName = subString(filePath, 0, strlen(filePath));
 
     return fileName;
 
@@ -201,8 +207,8 @@ int main() {
 
 
 //    //validArgs = checkForValidArgs(argc);
-    handleSingleFile("test.as");
-
+    handleSingleFile("test");
+    firstPassOnFile();
 
     return 0;
 }
