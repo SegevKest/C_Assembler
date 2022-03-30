@@ -7,7 +7,7 @@
 
 #define SYMBOL_MAX_LENGTH 31
 #define OFFSET_CALCULATE 16
-#define MAX_ATTRIBUTES_VALUE 6
+#define MAX_ATTRIBUTES_LENGTH 15
 
 
 #define TRUE 1
@@ -21,17 +21,22 @@ typedef struct symbolNode
 	int offset;
 	int noOfAttributes;
 
-	char* attributes[MAX_ATTRIBUTES_VALUE];
+	/*char* attributes[MAX_ATTRIBUTES_VALUE];*/
+
+	char* attributes;
 
 	struct symbolNode* nextSymbol;
-
 };
 
 
 // Allocate memory to symbol and return pointer to it
 symbolList* createNewSymbol() {
 
-	return (symbolList*)malloc(sizeof(symbolList));
+
+	symbolList* newSym = (symbolList*)malloc(sizeof(symbolList));
+	newSym->attributes = (char*)malloc(sizeof(char) * MAX_ATTRIBUTES_LENGTH);
+	
+	return newSym;
 }
 
 // this method checks if a symbol is already in the symbol table - return the pointer if yes, null if no
@@ -72,7 +77,8 @@ void insertNewSymbolData(symbolList* symbolTable, char symbolNameParam[], int va
 
 	int i, j;
 	int symbolExist = FALSE, newSymbolOffset, newSymbolBaseAdd;
-	symbolList *newSymbol=NULL,*ret=NULL;
+	symbolList* newSymbol = NULL;
+	symbolList* ret = NULL;
 
 	symbolList* pToSymbolinTable = symbolTable;
 
@@ -111,7 +117,7 @@ void insertNewSymbolData(symbolList* symbolTable, char symbolNameParam[], int va
 
 			//The part is not working!!
 			 //INsert to the existing table at the end
-			while (pToSymbolinTable->nextSymbol != NULL) 
+			while (pToSymbolinTable != NULL) 
 				pToSymbolinTable = pToSymbolinTable->nextSymbol;
 			
 			pToSymbolinTable->nextSymbol = newSymbol;

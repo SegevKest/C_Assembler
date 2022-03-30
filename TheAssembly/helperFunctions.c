@@ -192,7 +192,7 @@ char** buildArrayOfRowParams(char* rowFromCode, int* lengthOfArr) {
 // Handle scenraio of row with symbol 
 void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbolAttributes, int* symbolValue) {
 
-	symbolList* isSymbolExist = NULL;
+	symbolList* isSymbolExist = symbolTable;
 	int isValidName;
 
 	//Validations on the symbol
@@ -454,7 +454,7 @@ void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbol
 	}
 
 	// handle the action in the code
-	insertNewOpCodeWord(actionsMachineCode, arrayOfArgs[0], opCode, *pToActionsCounter);
+	insertNewOpCodeWord(&actionsMachineCode, arrayOfArgs[0], opCode, *pToActionsCounter);
 	
 	(*pToActionsCounter) = (*pToActionsCounter) + 1;
 
@@ -467,7 +467,7 @@ void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbol
 	if (isValidArgsNumber > 0) {
 		// will be 2 or 1
 		// insert second word for hole row code
-		insertNewFullCodeWord(actionsMachineCode, symbolTable, arrayOfArgs, (*pToActionsCounter), isValidArgsNumber);
+		insertNewFullCodeWord(&actionsMachineCode, symbolTable, arrayOfArgs, (*pToActionsCounter), isValidArgsNumber);
 		(*pToActionsCounter) = (*pToActionsCounter) + 1;
 
 		// handle the additional rows for each argument
@@ -491,7 +491,7 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 	int	i, localValidationFlag, lengthOfArr,
 		whiteSpaceLine, commentLine, rowHasSymbol, actionRow, directiveRow, typeOfDirective, commaLocation;
 
-	int* localActionsCounter = malloc(sizeof(int));
+	//int* localActionsCounter = malloc(sizeof(int));
 
 	//localActionsCounter = instructCounter;
 
@@ -581,9 +581,9 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 
 		if (rowHasSymbol == TRUE) {
 			//Handle action scenario
-			handleSymbolScenario(&symbolTable, newSymbolName, "code", instructCounter);
+			handleSymbolScenario(symbolTable, newSymbolName, "code", instructCounter);
 		}
-		printf("\n\BEfore inserting in analyze code - actionsCounter: %d\n\n", *instructCounter);
+		//printf("\n\BEfore inserting in analyze code - actionsCounter: %d\n\n", *instructCounter);
 
 		// Handle the rest of the logic for action
 		handleActionRowScenario(actionsMachineCode, symbolTable, arrayOfArgumentFromCode, lengthOfArr, instructCounter);
