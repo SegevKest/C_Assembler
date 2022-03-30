@@ -38,11 +38,11 @@ void checkForWordFullyCompleted(machineCode* machCode);
 void updateCodeWordARECells(machineCode* machCode, char areValueForWord);
 int getOpcodeAction(char actionName[]);
 char* getFunctOfAction(char actionName[], int opCodeOfAction);
-void insertNewOpCodeWord(machineCode* machCodeTable, char actionName[], int opCodeToTurnOn, int valueOfAction);
-void insertNewFullCodeWord(machineCode* machCodeTable, symbolList* symbolTable, char** arrayOfArgs, int valueForNewWord, int numOfArgs);
+void insertNewOpCodeWord(machineCode** machCodeTable, char actionName[], int opCodeToTurnOn, int valueOfAction);
+void insertNewFullCodeWord(machineCode** machCodeTable, symbolList* symbolTable, char** arrayOfArgs, int valueForNewWord, int numOfArgs);
 void insertNewCodeWordDirectiveValue(machineCode* machCodeTable, char* binaryNumber, int valueForNewWord);
-void insertEmptyRowForNewWordsOfSymbol(machineCode* machCodeTable, int valueForNewWord);
-void insertAdditionalWords(machineCode* actionsMachineCode, symbolList* symbolTable, char** argsFromLine, int numOfArgs, int* pToActionsCounter);
+void insertEmptyRowForNewWordsOfSymbol(machineCode** machCodeTable, int valueForNewWord);
+void insertAdditionalWords(machineCode** actionsMachineCode, symbolList* symbolTable, char** argsFromLine, int numOfArgs, int* pToActionsCounter);
 
 void registersAdresses(machineCode* machCode, char directionFlag, char* registerCode, char* adrCode);
 
@@ -144,8 +144,8 @@ void insertNewWordToEndOfTable(machineCode** machCodeTable, machineCode* newMach
 		}
 	}
 
-	printf("\nAfter insert inside function: ");
-	printList(*machCodeTable);
+	//printf("\nAfter insert inside function: ");
+	//printList(*machCodeTable);
 	//free(pWord);
 }
 
@@ -269,9 +269,10 @@ void insertNewOpCodeWord(machineCode** machCodeTable, char actionName[],int opCo
 
 		//Insert to machineCodeTable in the end
 		insertNewWordToEndOfTable(machCodeTable, newWord);
-		printf("\nAfter insert outside insert function: ");
-
-		printList(*machCodeTable);
+		
+		
+		//printf("\nAfter insert outside insert function: ");
+		//printList(*machCodeTable);
 
 	}
 	else
@@ -416,6 +417,8 @@ void insertNewFullCodeWord(machineCode** machCodeTable, symbolList* symbolTable,
 		// insert the new word to the machine code table
 		insertNewWordToEndOfTable(machCodeTable, newWord);
 
+
+		printf("Inserted Full word\n");
 		printList(*machCodeTable);
 	}
 	else
@@ -462,7 +465,7 @@ void insertNewCodeWordDirectiveValue(machineCode* machCodeTable, char* binaryNum
 
 
 // On first Pass - enter empty rows - for symbols values need to be inserted in second pass
-void insertEmptyRowForNewWordsOfSymbol(machineCode* machCodeTable, int valueForNewWord) {
+void insertEmptyRowForNewWordsOfSymbol(machineCode** machCodeTable, int valueForNewWord) {
 
 	machineCode* newWord = createWordInMemory();
 
@@ -473,6 +476,7 @@ void insertEmptyRowForNewWordsOfSymbol(machineCode* machCodeTable, int valueForN
 
 		// insert the value of the row only!
 		newWord->programWordValue = valueForNewWord;
+		newWord->nextWord = NULL;
 		
 		// insert the new word to end of table
 		insertNewWordToEndOfTable(machCodeTable, newWord);
@@ -484,13 +488,14 @@ void insertEmptyRowForNewWordsOfSymbol(machineCode* machCodeTable, int valueForN
 		printf("Not enoght memory - error in Insert new OPCODE");
 		return NULL;
 	}
-	free(newWord);
+	
+	//free(newWord);
 
 }
 
 
 //To handle the .entry directive
-void insertAdditionalWords(machineCode* actionsMachineCode, symbolList* symbolTable, char** argsFromLine, int numOfArgs, int* pToActionsCounter)
+void insertAdditionalWords(machineCode** actionsMachineCode, symbolList* symbolTable, char** argsFromLine, int numOfArgs, int* pToActionsCounter)
 {
 	symbolList* searchedSymbol = NULL;
 	char* resultOfMiunCheck;
@@ -526,13 +531,18 @@ void insertAdditionalWords(machineCode* actionsMachineCode, symbolList* symbolTa
 			// raise the counter +1
 			(*pToActionsCounter) = (*pToActionsCounter) + 1;
 
+			printList(*actionsMachineCode);
+
 			// insert the second argument
 			insertEmptyRowForNewWordsOfSymbol(actionsMachineCode, (*pToActionsCounter));
 
 			// raise the counter +1
 			(*pToActionsCounter) = (*pToActionsCounter) + 1;
 
-
+			printList(*actionsMachineCode);
+			
+			
+			
 			//indexToCut = returnFirstIndexOfChar(argsFromLine[i], '[');
 			//symbolNameToSearch = subString(argsFromLine[i], 0, indexToCut);
 			//

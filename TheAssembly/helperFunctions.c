@@ -471,7 +471,7 @@ void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbol
 		(*pToActionsCounter) = (*pToActionsCounter) + 1;
 
 		// handle the additional rows for each argument
-		insertAdditionalWords(actionsMachineCode, symbolTable, arrayOfArgs, amountOfArgs, pToActionsCounter);
+		insertAdditionalWords(&actionsMachineCode, symbolTable, arrayOfArgs, amountOfArgs, pToActionsCounter);
 	}
 
 }
