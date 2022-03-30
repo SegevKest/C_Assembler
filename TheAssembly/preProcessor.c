@@ -69,6 +69,7 @@ char* handleSingleFile(char* filePath) {
             // outside definition of macro
             indexOfFirstSpace = returnFirstIndexOfChar(currLine, ' ');
             
+            // get the possible macro string if exist
             if (indexOfFirstSpace >=0 )
                 nameOfPossibleMacro = subString(currLine, 0, indexOfFirstSpace);
             else

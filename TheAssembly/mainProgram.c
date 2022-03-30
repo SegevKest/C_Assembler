@@ -15,19 +15,19 @@
 #define FALSE 0
 
 
-
-int main(int argc, char* argv[]) {
+int main(){
+//int main(int argc, char* argv[]) {
 
 
 
 	// Define the machine code for actions
-	machineCode* actionsMachineCode;
+	machineCode* actionsMachineCode = NULL;
 
 	// Define the machine code for data
-	machineCode* dataMachineCode;
+	machineCode* dataMachineCode = NULL;
 
 	// Define the symbol Table
-	symbolList* symbolTable;
+	symbolList* symbolTable = NULL;
 
 	char* currentFileName;
 
@@ -38,43 +38,44 @@ int main(int argc, char* argv[]) {
 	//int* dataCounterAd = &dataCounter;
 	//int* actionCounterAd = &actionCounter;
 
-	if (argc < 2) {
-		printf("ERROR: got not enough arguments from user");
-		return;
-	}
+	//if (argc < 2) {
+	//	printf("ERROR: got not enough arguments from user");
+	//	return;
+	//}
 
 	firstPassOnFile(actionsMachineCode, dataMachineCode, symbolTable, "test.am", &validationFlag, &dataCounter, &actionCounter);
 
 
 	// first pass
-	for (char** pToArgv = argv + 1; *pToArgv != argv[argc]; pToArgv++) {
 
-		// Pre Processor - return the new file name to start pass
-		//currentFileName = handleSingleFile(*pToArgv);
+	//for (char** pToArgv = argv + 1; *pToArgv != argv[argc]; pToArgv++) {
 
-		// First Pass - enter all elements
-		//firstPassOnFile(actionsMachineCode, dataMachineCode, symbolTable, currentFileName, &validationFlag, &dataCounter, &actionCounter);
+	//	// Pre Processor - return the new file name to start pass
+	//	currentFileName = handleSingleFile(*pToArgv);
 
-
-		// check the validationFlag - if it is not valid - Finish this run
-		if (validationFlag != FALSE)
-		{
-			// validation were valid - continue to second pass and output
-
-			// Second Pass
+	//	// First Pass - enter all elements
+	//	firstPassOnFile(actionsMachineCode, dataMachineCode, symbolTable, currentFileName, &validationFlag, &dataCounter, &actionCounter);
 
 
-			// Create output files
+	//	// check the validationFlag - if it is not valid - Finish this run
+	//	if (validationFlag != FALSE)
+	//	{
+	//		// validation were valid - continue to second pass and output
 
-		}
-		//else -  End this file and do not move to second pass and Output
+	//		// Second Pass
 
 
-		// reset all parameters for next iteration on next file
-		dataCounter = 0;
-		actionCounter = 100;
-		validationFlag = TRUE;
- 	}
+	//		// Create output files
+
+	//	}
+	//	//else -  End this file and do not move to second pass and Output
+
+
+	//	// reset all parameters for next iteration on next file
+	//	dataCounter = 0;
+	//	actionCounter = 100;
+	//	validationFlag = TRUE;
+ //	}
 
 
 	

@@ -34,10 +34,10 @@ void firstPassOnFile(machineCode* actionsMachineCodeHead, machineCode* dataMachi
 
 	while (fgets(currLine, LINE_LENGTH, filePointer)) {
 
-		printf("%s", currLine);
+		//printf("%s", currLine);
 
-		analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, getTrimmedCodeRow(currLine), ( * instructCounter), (*dataCounter) , &validationFlag);
-
+		analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, getTrimmedCodeRow(currLine),  instructCounter, dataCounter , validationFlag);
+		//printf("\n\nAt first pass outer - actionsCounter: %d\n\n", *instructCounter);
 	}
 
 

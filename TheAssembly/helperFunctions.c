@@ -87,9 +87,11 @@ char* subString(char *sourceString, int strtIndex, int endIndex) {
 // This method will iterate all the string and will return a new string with no spaces
 char* getTrimmedCodeRow(char* rowFromCode) {
 
-	char* trimmedRow = strdup(rowFromCode);
+	char* trimmedRow = malloc(sizeof(rowFromCode));
+		
 	char* endOfLine;
 	
+	trimmedRow = strdup(rowFromCode);
 	// Run from the prefix of the rowFromCode
 	while (isspace((unsigned char)*trimmedRow))	trimmedRow++;
 	
@@ -120,7 +122,9 @@ char** buildArrayOfRowParams(char* rowFromCode, int* lengthOfArr) {
 		//split between the action / directive to all params
 		arrOfParamsFromCode[0] = (char*)malloc(sizeof(char) * MAX_LENGTH_OF_PARAM);
 
-		strcpy(arrOfParamsFromCode[0], getTrimmedCodeRow(subString(rowFromCode, 0, returnFirstIndexOfChar(rowFromCode, ' '))));
+		if (arrOfParamsFromCode[0] != NULL) {
+			strcpy(arrOfParamsFromCode[0], getTrimmedCodeRow(subString(rowFromCode, 0, returnFirstIndexOfChar(rowFromCode, ' '))));
+		}
 
 		startIndex = returnFirstIndexOfChar(rowFromCode, ' ') + 1;
 	
@@ -138,9 +142,10 @@ char** buildArrayOfRowParams(char* rowFromCode, int* lengthOfArr) {
 
 			// Create memory for this element in array
 			arrOfParamsFromCode[i] = (char*)malloc(sizeof(char) * MAX_LENGTH_OF_PARAM);
-
-			strcpy(arrOfParamsFromCode[i], getTrimmedCodeRow(subString(rowFromCode, startIndex, endIndex)));
-
+			
+			if (arrOfParamsFromCode[i] != NULL) {
+				strcpy(arrOfParamsFromCode[i], getTrimmedCodeRow(subString(rowFromCode, startIndex, endIndex)));
+			}
 			startIndex = endIndex + 1;
 		}
 	}
@@ -185,7 +190,7 @@ char** buildArrayOfRowParams(char* rowFromCode, int* lengthOfArr) {
 
 // _------- Open
 // Handle scenraio of row with symbol 
-void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbolAttributes, int symbolValue) {
+void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbolAttributes, int* symbolValue) {
 
 	symbolList* isSymbolExist = NULL;
 	int isValidName;
@@ -199,7 +204,7 @@ void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbo
 	}
 	else	{
 		// insert the new symbol if all validation are valid
-		insertNewSymbolData(symbolTable,symbolName, symbolValue, symbolAttributes);
+		insertNewSymbolData(symbolTable,symbolName, *symbolValue, symbolAttributes);
 
 	}
 }
@@ -300,6 +305,47 @@ char* getRegisterCode(char* argFromLine) {
 	else
 		return "0000\0";
 
+}
+
+// Helper finction to convert an integer to a 16 digit binary data
+char* convertNumberToBinaryString(int numberToConvert) {
+
+	char binaryNumber[LENGTH_OF_BIN_NUMBER] = { 0 };
+
+	int numberBuff = 0, i, isPositive = TRUE;
+
+
+	//If the number is negative - handle it
+	if (numberToConvert < 0) {
+		isPositive = FALSE;
+		numberToConvert += 1;
+		numberToConvert = abs(numberToConvert);
+	}
+
+	// Calculate the bits as necessary
+	for (i = LENGTH_OF_BIN_NUMBER - 1; i >= 0 && numberToConvert > 0; i--) {
+
+		binaryNumber[i] = (numberToConvert % 2) + '0';
+		numberToConvert = numberToConvert / 2;
+	}
+
+	// switch all other bits to '0'
+	for (i; i >= 0; i--) {
+		binaryNumber[i] = '0';
+	}
+
+	// Flip the bits if necessary
+	if (!isPositive) {
+
+		for (i = 0; i < LENGTH_OF_BIN_NUMBER; i++) {
+			if (binaryNumber[i] == '0')
+				binaryNumber[i] = '1';
+			else
+				binaryNumber[i] = '0';
+		}
+	}
+
+	return &binaryNumber;
 }
 
 
@@ -409,8 +455,8 @@ void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbol
 
 	// handle the action in the code
 	insertNewOpCodeWord(actionsMachineCode, arrayOfArgs[0], opCode, *pToActionsCounter);
+	
 	(*pToActionsCounter) = (*pToActionsCounter) + 1;
-
 
 	//handle the argument validations
 	amountOfArgs = lengthOfArr - 1;
@@ -427,54 +473,15 @@ void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbol
 		// handle the additional rows for each argument
 		insertAdditionalWords(actionsMachineCode, symbolTable, arrayOfArgs, amountOfArgs, pToActionsCounter);
 	}
+
 }
 
 
-// Helper finction to convert an integer to a 16 digit binary data
-char* convertNumberToBinaryString(int numberToConvert) {
-
-	char binaryNumber[LENGTH_OF_BIN_NUMBER] = { 0 };
-
-	int numberBuff = 0, i, isPositive = TRUE;
-
-
-	//If the number is negative - handle it
-	if (numberToConvert < 0) {
-		isPositive = FALSE;
-		numberToConvert += 1;
-		numberToConvert = abs(numberToConvert);
-	}
-
-	// Calculate the bits as necessary
-	for (i = LENGTH_OF_BIN_NUMBER - 1; i >= 0 && numberToConvert > 0; i--) {
-
-		binaryNumber[i] = (numberToConvert % 2) +'0';
-		numberToConvert = numberToConvert / 2;
-	}
-	
-	// switch all other bits to '0'
-	for (i; i >= 0; i--) {
-		binaryNumber[i] =  '0';
-	}
-
-	// Flip the bits if necessary
-	if (!isPositive) {
-
-		for (i = 0; i < LENGTH_OF_BIN_NUMBER; i++) {
-			if (binaryNumber[i] == '0')
-				binaryNumber[i] = '1';
-			else
-				binaryNumber[i] = '0';
-		}
-	}
-
-	return &binaryNumber;
-}
 
 
 // OPEN ------ MUST !
 // functin that will get the line from the file and split it to different strings in a new array
-void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, machineCode* dataMachineCode, char* rowFromCode, int instructCounter, int dataCounter, int* validationFlag) {
+void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, machineCode* dataMachineCode, char* rowFromCode, int* instructCounter, int* dataCounter, int* validationFlag) {
 
 	char* newSymbolName = NULL;
 	char* restOfRowFromCode = NULL;
@@ -484,6 +491,9 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 	int	i, localValidationFlag, lengthOfArr,
 		whiteSpaceLine, commentLine, rowHasSymbol, actionRow, directiveRow, typeOfDirective, commaLocation;
 
+	int* localActionsCounter = malloc(sizeof(int));
+
+	//localActionsCounter = instructCounter;
 
 	whiteSpaceLine = commentLine = rowHasSymbol = actionRow = directiveRow = lengthOfArr = FALSE;
 
@@ -558,11 +568,11 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 			// Insert a new data machine code words accordingly
 			if (typeOfDirective == 1) {
 				printf("\n Insert data machine code ");
-				handleDirectiveData(dataMachineCode, arrayOfArgumentFromCode, lengthOfArr, &dataCounter);
+				handleDirectiveData(dataMachineCode, arrayOfArgumentFromCode, lengthOfArr, dataCounter);
 			}
 			else {
 				printf("\n Insert String machine code ");
-				handleDirectiveString(dataMachineCode, arrayOfArgumentFromCode[1], &dataCounter);
+				handleDirectiveString(dataMachineCode, arrayOfArgumentFromCode[1], dataCounter);
 			}
 		}
 	}
@@ -573,9 +583,21 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 			//Handle action scenario
 			handleSymbolScenario(&symbolTable, newSymbolName, "code", instructCounter);
 		}
+		printf("\n\BEfore inserting in analyze code - actionsCounter: %d\n\n", *instructCounter);
+
 		// Handle the rest of the logic for action
-		handleActionRowScenario(actionsMachineCode, symbolTable, arrayOfArgumentFromCode, lengthOfArr, &instructCounter);
+		handleActionRowScenario(actionsMachineCode, symbolTable, arrayOfArgumentFromCode, lengthOfArr, instructCounter);
+
+		//handleActionRowScenario(actionsMachineCode, symbolTable, arrayOfArgumentFromCode, lengthOfArr, localActionsCounter);
+
+		//printf("\n\nAfter inserting in analyze code - actionsCounter: %d\n\n", *instructCounter);
+
+		//printf("\n\nAfter inserting in analyze code - actionsCounter: %d\n\n", *localActionsCounter);
 
 	}
+	//&instructCounter = (*localActionsCounter);
+
+
+	free(arrayOfArgumentFromCode);
 }
 
