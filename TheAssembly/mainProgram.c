@@ -32,7 +32,7 @@ int main(){
 	char* currentFileName;
 
 	int dataCounter = 0;
-	int actionCounter = 100;
+	int actionCounter = 99;
 	int validationFlag = TRUE; 	// Define the validation Flag to TRUE;
 
 	//int* dataCounterAd = &dataCounter;
@@ -51,7 +51,14 @@ int main(){
 	// first pass
 	firstPassOnFile(&actionsMachineCode, &dataMachineCode, &symbolTable, "test.am", &validationFlag, &dataCounter, &actionCounter);
 
+	printf("\nActions\n");
+
 	printList(actionsMachineCode);
+	printf("\nData\n");
+	printList(dataMachineCode);
+
+	printf("\nSymbols\n");
+	printSymList(symbolTable);
 	// first pass
 
 	//for (char** pToArgv = argv + 1; *pToArgv != argv[argc]; pToArgv++) {

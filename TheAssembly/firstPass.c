@@ -39,7 +39,9 @@ void firstPassOnFile(machineCode** actionsMachineCodeHead, machineCode** dataMac
 		analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, getTrimmedCodeRow(currLine),  instructCounter, dataCounter , validationFlag);
 		//printf("\n\nAt first pass outer - actionsCounter: %d\n\n", *instructCounter);
 	
-		printList(*actionsMachineCodeHead);
+		printf("\nDone with this row!\n");
+
+
 	}
 
 

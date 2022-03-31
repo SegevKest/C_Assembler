@@ -265,7 +265,7 @@ void insertNewOpCodeWord(machineCode** machCodeTable, char actionName[],int opCo
 
 		newWord->isCompleted = TRUE;
 
-		displayWord(newWord);
+		//displayWord(newWord);
 
 		//Insert to machineCodeTable in the end
 		insertNewWordToEndOfTable(machCodeTable, newWord);
@@ -412,7 +412,7 @@ void insertNewFullCodeWord(machineCode** machCodeTable, symbolList* symbolTable,
 		newWord->isCompleted = TRUE;
 
 		// TEST
-		displayWord(newWord);
+		//displayWord(newWord);
 
 		// insert the new word to the machine code table
 		insertNewWordToEndOfTable(machCodeTable, newWord);
@@ -670,9 +670,6 @@ void displayWord(machineCode* machCode) {
 	else
 	{
 		printf("\nSr. No.\t\PrgramWordValue\t\tIsCompleted\t\tLink\n");
-
-		while (ptr != NULL)
-		{
 			printf("\n%d.\t \t%d\t \t%d\t \n", i, ptr->programWordValue, ptr->isCompleted);
 			
 			i++;
@@ -690,11 +687,8 @@ void displayWord(machineCode* machCode) {
 				printf("| %d |", ptr->wordBinary[j]);
 			}
 
-			ptr = ptr->nextWord;
-
-		}
 	}
-	free(ptr);
+	//free(ptr);
 
 }
 
@@ -705,7 +699,11 @@ void printList(machineCode* head) {
 
 	while (head != NULL)
 	{
-		printf(" %d ",  head->programWordValue);
+		printf(" %d - isCom:%d  ", head->programWordValue, head->isCompleted);
+		//displayWord(head->wordBinary);
 		head = head->nextWord;
+		
 	}
+
+
 }

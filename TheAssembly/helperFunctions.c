@@ -399,7 +399,7 @@ void handleSymbolScenario(symbolList** symbolTable, char* symbolName, char* symb
 }
 
 //To handle the .data directive
-void handleDirectiveData(machineCode* dataMachineCode,  char** arrayOfArgs, int lengthOfArr, int* pToDataCounter) {
+void handleDirectiveData(machineCode** dataMachineCode,  char** arrayOfArgs, int lengthOfArr, int* pToDataCounter) {
 
 	int i;
 
@@ -418,13 +418,13 @@ void handleDirectiveData(machineCode* dataMachineCode,  char** arrayOfArgs, int 
 		
 		*pToDataCounter = (*pToDataCounter) + 1;
 
-		insertNewCodeWordDirectiveValue(&dataMachineCode, pToBin, *pToDataCounter);
+		insertNewCodeWordDirectiveValue(dataMachineCode, pToBin, *pToDataCounter);
 	}
 }
 
 
 //To handle the .string directive
-void handleDirectiveString(machineCode* dataMachineCode, char* stringFromCodeArray, int* pToDataCounter) {
+void handleDirectiveString(machineCode** dataMachineCode, char* stringFromCodeArray, int* pToDataCounter) {
 	
 	int lengthOfStringToEnter, i;
 	char currChar;
@@ -449,7 +449,7 @@ void handleDirectiveString(machineCode* dataMachineCode, char* stringFromCodeArr
 
 		*pToDataCounter = (*pToDataCounter) + 1;
 
-		insertNewCodeWordDirectiveValue(&dataMachineCode, pToBin, *pToDataCounter);
+		insertNewCodeWordDirectiveValue(dataMachineCode, pToBin, *pToDataCounter);
 
 		
 	}
@@ -517,7 +517,7 @@ void analyzeCodeRow(symbolList** symbolTable, machineCode** actionsMachineCode, 
 		whiteSpaceLine, commentLine, rowHasSymbol, actionRow, directiveRow, typeOfDirective, commaLocation;
 
 	//int* localActionsCounter = malloc(sizeof(int));
-
+	printf("\nFULL ROW : Code is:%s", rowFromCode);
 	//localActionsCounter = instructCounter;
 
 	whiteSpaceLine = commentLine = rowHasSymbol = actionRow = directiveRow = lengthOfArr = FALSE;
@@ -539,7 +539,7 @@ void analyzeCodeRow(symbolList** symbolTable, machineCode** actionsMachineCode, 
 		commaLocation = returnFirstIndexOfChar(rowFromCode, ':');
 		newSymbolName = getTrimmedCodeRow(subString(rowFromCode, 0, commaLocation));
 		restOfRowFromCode = getTrimmedCodeRow(subString(rowFromCode, commaLocation + 1, strlen(rowFromCode)));
-		printf("\nSymbol Name:%s	;", newSymbolName);
+		printf("\nSymbol Name:%s", newSymbolName);
 	}
 	else
 	{

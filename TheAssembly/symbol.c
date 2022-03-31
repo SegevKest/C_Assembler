@@ -167,9 +167,6 @@ void insertNewSymbolData(symbolList** symbolTable, char symbolNameParam[], int v
 			}
 
 			insertSymbolToEndOfList(symbolTable, newSymbol);
-
-			printf("All values fixed - inserted new symbol");
-			printSymList(*symbolTable);
 		}
 		else
 			printf("Not enoght memory - error in Insert new Symbol");
@@ -263,11 +260,11 @@ void displaySymbol(symbolList* symbol) {
 
 void printSymList(symbolList* head) {
 
-	printf("\n The linked list of machine code is\n");
+	printf("\n The linked list of Symbols is\n");
 
 	while (head != NULL)
 	{
-		printf(" %d ", head->value);
+		printf(" %s - v:%d, base:%d, off:%d",head->symbolName, head->value, head->baseAddress, head->offset);
 		head = head->nextSymbol;
 	}
 }
