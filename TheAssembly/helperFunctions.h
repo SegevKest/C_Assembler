@@ -24,6 +24,6 @@ char* convertNumberToBinaryString(int numberToConvert);
 char* getRegisterCode(char* argFromLine);
 char* findMatchedMiun(char* argmntFromLine, symbolList* symbolTable);
 
-
+int isString(char* stringToCheck);
 
 #endif //__helperFunctions_H

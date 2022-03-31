@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include<string.h>
 #include <stdlib.h>
+#include <ctype.h>
+
 
 #include "validations.h"
 #include "wordInCode.h"
@@ -31,7 +33,7 @@ char* convertNumberToBinaryString(int numberToConvert);
 char* getRegisterCode(char* argFromLine);
 
 char* findMatchedMiun(char* argmntFromLine, symbolList* symbolTable);
-
+int isString(char* stringToCheck);
 
 
 
@@ -81,6 +83,22 @@ char* subString(char *sourceString, int strtIndex, int endIndex) {
 	//printf("\nSubstring: %s", destString);
 
 	return destString;
+}
+
+// this function check if the string entered contains a digit or not
+// if the isdigit return other than 0 - means that there is a digit number inside the 
+int isString(char* stringToCheck) {
+
+	int i;
+
+	for (i = 0; i < strlen(stringToCheck); i++)
+	{
+		if (isdigit(stringToCheck[i]) != 0)
+			return FALSE;
+	}
+
+	return TRUE;
+
 }
 
 

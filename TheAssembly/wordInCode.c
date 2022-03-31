@@ -521,7 +521,8 @@ void insertAdditionalWords(machineCode** actionsMachineCode, symbolList* symbolT
 			// insert new Row  - not completed
 			insertEmptyRowForNewWordsOfSymbol(actionsMachineCode, (*pToActionsCounter));
 
-			
+			//insertEmptySymbolWithSavedLines();
+
 			// raise the counter +1
 			(*pToActionsCounter) = (*pToActionsCounter) + 1;
 
