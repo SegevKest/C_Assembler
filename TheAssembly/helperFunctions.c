@@ -24,8 +24,8 @@ char* subString(char* sourceString, int strtIndex, int endIndex);
 //int findTheIndexOfTheActionInTable(char* stringToCheck);
 
 char* getTrimmedCodeRow(char* rowFromCode);
-void analyzeCodeRow(symbolList* symbolTable, machineCode** actionsMachineCode, machineCode* dataMachineCode, char* rowFromCode, int instructCounter, int dataCounter, int* validationFlag);
-void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbolAttributes, int symbolValue);
+void analyzeCodeRow(symbolList** symbolTable, machineCode** actionsMachineCode, machineCode** dataMachineCode, char* rowFromCode, int instructCounter, int dataCounter, int* validationFlag);
+void handleSymbolScenario(symbolList** symbolTable, char* symbolName, char* symbolAttributes, int symbolValue);
 char** buildArrayOfRowParams(char* rowFromCode, int* lengthOfArr);
 void handleActionRowScenario(machineCode** actionsMachineCode, symbolList* symbolTable, char** arrayOfArgs, int lengthOfArr, int* pToActionsCounter);
 
@@ -379,7 +379,7 @@ void handleDirectiveExtern() {
 
 // _------- Open
 // Handle scenraio of row with symbol 
-void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbolAttributes, int symbolValue) {
+void handleSymbolScenario(symbolList** symbolTable, char* symbolName, char* symbolAttributes, int symbolValue) {
 
 	symbolList* isSymbolExist = symbolTable;
 	int isValidName;
@@ -393,7 +393,7 @@ void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbo
 	}
 	else {
 		// insert the new symbol if all validation are valid
-		insertNewSymbolData(&symbolTable, symbolName, symbolValue, symbolAttributes);
+		insertNewSymbolData(symbolTable, symbolName, symbolValue, symbolAttributes);
 
 	}
 }
@@ -506,7 +506,7 @@ void handleActionRowScenario(machineCode** actionsMachineCode, symbolList** symb
 
 // OPEN ------ MUST !
 // functin that will get the line from the file and split it to different strings in a new array
-void analyzeCodeRow(symbolList* symbolTable, machineCode** actionsMachineCode, machineCode* dataMachineCode, char* rowFromCode, int* instructCounter, int* dataCounter, int* validationFlag) {
+void analyzeCodeRow(symbolList** symbolTable, machineCode** actionsMachineCode, machineCode** dataMachineCode, char* rowFromCode, int* instructCounter, int* dataCounter, int* validationFlag) {
 
 	char* newSymbolName = NULL;
 	char* restOfRowFromCode = NULL;
