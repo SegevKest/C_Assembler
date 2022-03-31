@@ -12,7 +12,7 @@
 
 #define WORD_LENGTH 20
 #define NO_OF_ACTIONS 16
-
+#define LENGTH_OF_SAVED_WORDS 2
 #define TRUE 1
 #define FALSE 0
 
@@ -491,7 +491,10 @@ void insertAdditionalWords(machineCode** actionsMachineCode, symbolList* symbolT
 	char* resultOfMiunCheck;
 	char* symbolNameToSearch = NULL;
 	char* binNumberToInsert = malloc(sizeof(char) * LENGTH_OF_BIN_NUMBER);
-	int i, noOfNewWords, numberToConvertForWord, indexToCut, insertedWords;
+	char* newSymbolNameWithEmptyLines = NULL;
+	int savedWordValues[LENGTH_OF_SAVED_WORDS] = { (*pToActionsCounter) + 1 , (*pToActionsCounter) + 2 };
+
+	int i, noOfNewWords, numberToConvertForWord, indexToCut, insertedWords, indexOfSymbolName;
 
 	// iterate on all arguments that exist
 	for (i = 1; i <= numOfArgs; i++) {
@@ -513,7 +516,38 @@ void insertAdditionalWords(machineCode** actionsMachineCode, symbolList* symbolT
 		}
 		else if (strcmp(resultOfMiunCheck, "01\0") == 0 || strcmp(resultOfMiunCheck, "10\0") == 0) {
 			// miun 1 - two new words  // miun 2 - two new words 
-			noOfNewWords = 2;
+			// 
+			// get the Symbol name from argument in each scenario
+			// Check which of the arguments is the symbol name and extarct it - for the insertion
+			if (strcmp(resultOfMiunCheck, "01\0") == 0) {
+				// miun 1 - will be only string
+				if (isString(argsFromLine[1]) == TRUE)
+					indexOfSymbolName = 1;
+				else
+					indexOfSymbolName = 2;
+
+				newSymbolNameWithEmptyLines = malloc(sizeof(char) * SYMBOL_MAX_LENGTH);
+				
+				if (newSymbolNameWithEmptyLines!=NULL)
+					strcpy(newSymbolNameWithEmptyLines,  argsFromLine[indexOfSymbolName]);
+			}
+			else
+			{
+				// miun 2 - will contain [Reg_No]
+				if (strstr(argsFromLine[1],"[") == TRUE)
+					indexOfSymbolName = 1;
+				else
+					indexOfSymbolName = 2;
+
+				// split the symbol name from the argument
+				indexToCut= returnFirstIndexOfChar(argsFromLine[indexOfSymbolName], '[');
+				newSymbolNameWithEmptyLines = subString(argsFromLine[indexOfSymbolName], 0, indexToCut);
+			}
+			printf("\n%s\n", newSymbolNameWithEmptyLines);
+
+			insertEmptySymbolWithSavedLines(&symbolTable, newSymbolNameWithEmptyLines,savedWordValues);
+
+
 
 			// raise the counter +1
 			(*pToActionsCounter) = (*pToActionsCounter) + 1;
@@ -521,15 +555,11 @@ void insertAdditionalWords(machineCode** actionsMachineCode, symbolList* symbolT
 			// insert new Row  - not completed
 			insertEmptyRowForNewWordsOfSymbol(actionsMachineCode, (*pToActionsCounter));
 
-			//insertEmptySymbolWithSavedLines();
-
 			// raise the counter +1
 			(*pToActionsCounter) = (*pToActionsCounter) + 1;
 
 			// insert the second argument
 			insertEmptyRowForNewWordsOfSymbol(actionsMachineCode, (*pToActionsCounter));
-
-			
 
 			{
 				//printList(*actionsMachineCode);

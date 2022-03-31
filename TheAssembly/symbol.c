@@ -217,19 +217,23 @@ void printToMachineCode(symbolList* symbolTable) {
 // this function will insert a symbol without any values - only the name of the symbol and the saved lines indexes
 void insertEmptySymbolWithSavedLines(symbolList** symbolTable, char* symbolName, int* savedLinesOfSymbol) {
 
-
 	symbolList* newEmptySymbol = NULL;
+	int i, noNewLines = 2;
 
+	newEmptySymbol = createNewSymbol();
 	// insert the new symbol name
 	strcpy(newEmptySymbol->symbolName, symbolName);
 
 	// copy the saved Lines to the savedLines
-	memcpy(newEmptySymbol->savedLinesInCode, savedLinesOfSymbol, MAX_SAVED_LINES_LENGTH);
+	for (i = 0; i < noNewLines; i++) {
+		newEmptySymbol->savedLinesInCode[i] = savedLinesOfSymbol[i];
+	}
 
 	// insert the current empty symbol to the symbol table
 	insertSymbolToEndOfList(symbolTable, newEmptySymbol);
 
 }
+
 
 void displaySymbol(symbolList* symbol) {
 

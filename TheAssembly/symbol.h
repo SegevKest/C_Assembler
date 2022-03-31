@@ -2,6 +2,7 @@
 #ifndef __SYMBOL_H
 #define __SYMBOL_H
 
+#define SYMBOL_MAX_LENGTH 31
 
 typedef struct symbolNode symbolList;
 
