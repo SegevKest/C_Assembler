@@ -38,6 +38,8 @@ void firstPassOnFile(machineCode* actionsMachineCodeHead, machineCode* dataMachi
 
 		analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, getTrimmedCodeRow(currLine),  instructCounter, dataCounter , validationFlag);
 		//printf("\n\nAt first pass outer - actionsCounter: %d\n\n", *instructCounter);
+	
+		printList(actionsMachineCodeHead);
 	}
 
 

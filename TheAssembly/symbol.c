@@ -13,6 +13,12 @@
 #define TRUE 1
 #define FALSE 0
 
+
+void isSymbolAlreadyExist(symbolList* symbolTable, char symbolName[], symbolList* ret);
+void insertNewSymbolData(symbolList** symbolTable, char symbolNameParam[], int valueOfSymbol, char* attributeParam);
+void insertSymbolToEndOfList(symbolList** symbolTable, symbolList* newSymbolToInsert);
+void printSymList(symbolList* head);
+
 typedef struct symbolNode
 {
 	char symbolName[SYMBOL_MAX_LENGTH];
@@ -40,15 +46,15 @@ symbolList* createNewSymbol() {
 }
 
 // this method checks if a symbol is already in the symbol table - return the pointer if yes, null if no
-void isSymbolAlreadyExist(symbolList* symbolTable, char symbolName[], symbolList* ret) {
+void isSymbolAlreadyExist(symbolList** symbolTable, char symbolName[], symbolList* ret) {
 
-	symbolList* ptr = symbolTable;
+	symbolList* ptr = *symbolTable;
 	char* p;
 	int namesAreEqual;
 
 	//displaySymbol(ptr);
 
-	if (symbolTable != NULL) {
+	if (ptr != NULL) {
 
 		while (ptr->nextSymbol != NULL && ret) {
 
@@ -67,20 +73,43 @@ void isSymbolAlreadyExist(symbolList* symbolTable, char symbolName[], symbolList
 }
 
 
+// this function will be used to insert a new symbol to the end of the symbol table that exist
+void insertSymbolToEndOfList(symbolList** symbolTable, symbolList* newSymbolToInsert) {
+
+	symbolList* pSymbol;
+
+	if (*symbolTable == NULL) {
+
+		*symbolTable = newSymbolToInsert;
+		(*symbolTable)->nextSymbol = NULL;
+	}
+	else
+	{
+		pSymbol = *symbolTable;
+
+		while (pSymbol->nextSymbol != NULL)
+			pSymbol = pSymbol->nextSymbol;
+
+		pSymbol->nextSymbol = newSymbolToInsert;
+	}
+
+}
+
+
 // -----Open - issue with inserting
 // Function to create a new symbol from given parameters
 // It will calculate the BaseAddress + Offset and will add it to the new Symbol
 // Then - iterate until end of symbolTable and insert the newSybol at the end 
-void insertNewSymbolData(symbolList* symbolTable, char symbolNameParam[], int valueOfSymbol, char* attributeParam) {
+void insertNewSymbolData(symbolList** symbolTable, char symbolNameParam[], int valueOfSymbol, char* attributeParam) {
 
-	printf("%s, val:  %d, , ", symbolNameParam, valueOfSymbol);
+	printf("\nName of symbol: %s, value:  %d ", symbolNameParam, valueOfSymbol);
 
 	int i, j;
 	int symbolExist = FALSE, newSymbolOffset, newSymbolBaseAdd;
 	symbolList* newSymbol = NULL;
 	symbolList* ret = NULL;
 
-	symbolList* pToSymbolinTable = symbolTable;
+	//symbolList* pToSymbolinTable = symbolTable;
 
 	isSymbolAlreadyExist(symbolTable, symbolNameParam, ret);
 
@@ -98,6 +127,9 @@ void insertNewSymbolData(symbolList* symbolTable, char symbolNameParam[], int va
 
 			//displaySymbol(newSymbol);
 			// insert the name of the symbol
+
+			//(*valueOfSymbol) = (*valueOfSymbol) + 1;
+
 			strcpy(newSymbol->symbolName, symbolNameParam);
 
 			//Calculate offset + baseAdress
@@ -113,18 +145,22 @@ void insertNewSymbolData(symbolList* symbolTable, char symbolNameParam[], int va
 			newSymbol->nextSymbol = NULL;
 
 			//The part is not working!!
-			strcpy(newSymbol->attributes[0], attributeParam);
+			//strcpy(newSymbol->attributes[0], attributeParam);
+
+			strcpy(newSymbol->attributes, attributeParam);
 
 			//The part is not working!!
 			 //INsert to the existing table at the end
-			while (pToSymbolinTable != NULL) 
+			/*while (pToSymbolinTable != NULL) 
 				pToSymbolinTable = pToSymbolinTable->nextSymbol;
 			
 			pToSymbolinTable->nextSymbol = newSymbol;
 			pToSymbolinTable = pToSymbolinTable->nextSymbol;
-			pToSymbolinTable->nextSymbol = NULL;
+			pToSymbolinTable->nextSymbol = NULL;*/
+			insertSymbolToEndOfList(symbolTable, newSymbol);
 
 			printf("All values fixed - inserted new symbol");
+			printSymList(*symbolTable);
 		}
 		else
 			printf("Not enoght memory - error in Insert new Symbol");
@@ -154,7 +190,7 @@ void insertNewSymbolData(symbolList* symbolTable, char symbolNameParam[], int va
 		}
 	}
 	
-	free(pToSymbolinTable);
+	//free(pToSymbolinTable);
 
 }
 
@@ -190,4 +226,17 @@ void displaySymbol(symbolList* symbol) {
 	}
 	free(ptr);
 
+}
+
+
+
+void printSymList(symbolList* head) {
+
+	printf("\n The linked list of machine code is\n");
+
+	while (head != NULL)
+	{
+		printf(" %d ", head->value);
+		head = head->nextSymbol;
+	}
 }

@@ -437,11 +437,9 @@ void insertNewCodeWordDirectiveValue(machineCode** machCodeTable, char* binaryNu
 		newWord->programWordValue = valueForNewWord;	// add new Word value from data counter
 		updateCodeWordARECells(newWord, 'A');	// set the Bit
 
-
 		// insert the binary number to the array - in order
 		for (i = 0; i < LENGTH_OF_BIN_NUMBER; i++, wordIndexToInsert++) {
 			newWord->wordBinary[wordIndexToInsert] = (binaryNumber[i]-'0');
-			//printf("%d ", newWord->wordBinary[wordIndexToInsert]);
 		}
 
 		newWord->isCompleted = TRUE;
@@ -449,16 +447,12 @@ void insertNewCodeWordDirectiveValue(machineCode** machCodeTable, char* binaryNu
 		displayWord(newWord);
 
 		insertNewWordToEndOfTable(machCodeTable, newWord);
-
-		printList(*machCodeTable);
 	}
 	else
 	{
 		printf("Not enoght memory - error in Insert new OPCODE");
 		return NULL;
 	}
-
-	//free(newWord);
 }
 
 

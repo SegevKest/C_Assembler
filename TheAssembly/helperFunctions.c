@@ -123,7 +123,13 @@ char** buildArrayOfRowParams(char* rowFromCode, int* lengthOfArr) {
 		arrOfParamsFromCode[0] = (char*)malloc(sizeof(char) * MAX_LENGTH_OF_PARAM);
 
 		if (arrOfParamsFromCode[0] != NULL) {
-			strcpy(arrOfParamsFromCode[0], getTrimmedCodeRow(subString(rowFromCode, 0, returnFirstIndexOfChar(rowFromCode, ' '))));
+
+			if (strstr(rowFromCode, " ") != NULL) {
+				strcpy(arrOfParamsFromCode[0], getTrimmedCodeRow(subString(rowFromCode, 0, returnFirstIndexOfChar(rowFromCode, ' '))));
+			}
+			else
+				strcpy(arrOfParamsFromCode[0], getTrimmedCodeRow(subString(rowFromCode, 0, strlen(rowFromCode))));
+
 		}
 
 		startIndex = returnFirstIndexOfChar(rowFromCode, ' ') + 1;
@@ -187,29 +193,6 @@ char** buildArrayOfRowParams(char* rowFromCode, int* lengthOfArr) {
 //	}
 //
 //}
-
-// _------- Open
-// Handle scenraio of row with symbol 
-void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbolAttributes, int* symbolValue) {
-
-	symbolList* isSymbolExist = symbolTable;
-	int isValidName;
-
-	//Validations on the symbol
-	// check if the symbolName equals any of the saved words - method
-	isValidName = isValidNameOfSymbol(symbolName);
-
-	if (isValidName == FALSE)	{
-		printf("ERROR: The symbol is named as a saved word");
-	}
-	else	{
-		// insert the new symbol if all validation are valid
-		insertNewSymbolData(symbolTable,symbolName, *symbolValue, symbolAttributes);
-
-	}
-}
-
-
 
 // Functions related to the handle of arguments
 // method that will receive an argument from the action line and will output the kind of miun needed
@@ -375,6 +358,28 @@ void handleDirectiveExtern() {
 }
 
 
+
+// _------- Open
+// Handle scenraio of row with symbol 
+void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbolAttributes, int symbolValue) {
+
+	symbolList* isSymbolExist = symbolTable;
+	int isValidName;
+
+	//Validations on the symbol
+	// check if the symbolName equals any of the saved words - method
+	isValidName = isValidNameOfSymbol(symbolName);
+
+	if (isValidName == FALSE) {
+		printf("ERROR: The symbol is named as a saved word");
+	}
+	else {
+		// insert the new symbol if all validation are valid
+		insertNewSymbolData(&symbolTable, symbolName, symbolValue, symbolAttributes);
+
+	}
+}
+
 //To handle the .data directive
 void handleDirectiveData(machineCode* dataMachineCode,  char** arrayOfArgs, int lengthOfArr, int* pToDataCounter) {
 
@@ -396,11 +401,7 @@ void handleDirectiveData(machineCode* dataMachineCode,  char** arrayOfArgs, int 
 		*pToDataCounter = (*pToDataCounter) + 1;
 
 		insertNewCodeWordDirectiveValue(&dataMachineCode, pToBin, *pToDataCounter);
-
-		
 	}
-
-
 }
 
 
@@ -494,7 +495,7 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 	char newSymbolAttribute[MAX_LENGTH_OF_ATTRBIUTE];
 	char** arrayOfArgumentFromCode = NULL;
 
-	int	i, localValidationFlag, lengthOfArr,
+	int	i, localValidationFlag, lengthOfArr, newValueForSymbol,
 		whiteSpaceLine, commentLine, rowHasSymbol, actionRow, directiveRow, typeOfDirective, commaLocation;
 
 	//int* localActionsCounter = malloc(sizeof(int));
@@ -556,9 +557,12 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 
 		if (rowHasSymbol == TRUE) {
 
+			// assign the correct value for the symbol
+			newValueForSymbol = (*dataCounter) + 1;
+
 			if (typeOfDirective == 1 || typeOfDirective == 2) {		// Data and String symbols
 
-				handleSymbolScenario(symbolTable, newSymbolName, "data", dataCounter);
+				handleSymbolScenario(symbolTable, newSymbolName, "data", newValueForSymbol);
 			}
 			else if (typeOfDirective == 4) {	// extern
 
@@ -585,16 +589,19 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 	// handle an action row
 	if (actionRow) { 		
 
-		if (rowHasSymbol == TRUE) {
-			//Handle action scenario
-			handleSymbolScenario(symbolTable, newSymbolName, "code", instructCounter);
-		}
 		//printf("\n\BEfore inserting in analyze code - actionsCounter: %d\n\n", *instructCounter);
+
+		// assign the correct value for the symbol
+		newValueForSymbol = (*instructCounter) + 1;
 
 		// Handle the rest of the logic for action
 		handleActionRowScenario(actionsMachineCode, symbolTable, arrayOfArgumentFromCode, lengthOfArr, instructCounter);
 
+		if (rowHasSymbol == TRUE) {
+			//Handle action scenario
+			handleSymbolScenario(symbolTable, newSymbolName, "code", newValueForSymbol);
+		}
 	}
-	free(arrayOfArgumentFromCode);
+	//free(arrayOfArgumentFromCode);
 }
 
