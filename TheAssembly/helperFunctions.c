@@ -24,10 +24,10 @@ char* subString(char* sourceString, int strtIndex, int endIndex);
 //int findTheIndexOfTheActionInTable(char* stringToCheck);
 
 char* getTrimmedCodeRow(char* rowFromCode);
-void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, machineCode* dataMachineCode, char* rowFromCode, int instructCounter, int dataCounter, int* validationFlag);
+void analyzeCodeRow(symbolList* symbolTable, machineCode** actionsMachineCode, machineCode* dataMachineCode, char* rowFromCode, int instructCounter, int dataCounter, int* validationFlag);
 void handleSymbolScenario(symbolList* symbolTable, char* symbolName, char* symbolAttributes, int symbolValue);
 char** buildArrayOfRowParams(char* rowFromCode, int* lengthOfArr);
-void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbolTable, char** arrayOfArgs, int lengthOfArr, int* pToActionsCounter);
+void handleActionRowScenario(machineCode** actionsMachineCode, symbolList* symbolTable, char** arrayOfArgs, int lengthOfArr, int* pToActionsCounter);
 
 char* convertNumberToBinaryString(int numberToConvert);
 char* getRegisterCode(char* argFromLine);
@@ -458,7 +458,7 @@ void handleDirectiveString(machineCode* dataMachineCode, char* stringFromCodeArr
 
 
 // Handle scenraio of action Row 
-void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbolTable, char** arrayOfArgs, int lengthOfArr, int* pToActionsCounter) {
+void handleActionRowScenario(machineCode** actionsMachineCode, symbolList** symbolTable, char** arrayOfArgs, int lengthOfArr, int* pToActionsCounter) {
 
 	// there are 3 goups of action: 0 args, 1 args, 2 args - those will be the groupFlags
 	
@@ -479,7 +479,7 @@ void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbol
 	(*pToActionsCounter) = (*pToActionsCounter) + 1;
 
 	// handle the action in the code
-	insertNewOpCodeWord(&actionsMachineCode, arrayOfArgs[0], opCode, *pToActionsCounter);
+	insertNewOpCodeWord(actionsMachineCode, arrayOfArgs[0], opCode, *pToActionsCounter);
 	
 	//handle the argument validations
 	amountOfArgs = lengthOfArr - 1;
@@ -492,10 +492,10 @@ void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbol
 		// insert second word for hole row code
 		(*pToActionsCounter) = (*pToActionsCounter) + 1;
 
-		insertNewFullCodeWord(&actionsMachineCode, symbolTable, arrayOfArgs, (*pToActionsCounter), isValidArgsNumber);
+		insertNewFullCodeWord(actionsMachineCode, *symbolTable, arrayOfArgs, (*pToActionsCounter), isValidArgsNumber);
 		
 		// handle the additional rows for each argument
-		insertAdditionalWords(&actionsMachineCode, symbolTable, arrayOfArgs, amountOfArgs, pToActionsCounter);
+		insertAdditionalWords(actionsMachineCode, symbolTable, arrayOfArgs, amountOfArgs, pToActionsCounter);
 	}
 
 	//printList(actionsMachineCode);
@@ -506,7 +506,7 @@ void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbol
 
 // OPEN ------ MUST !
 // functin that will get the line from the file and split it to different strings in a new array
-void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, machineCode* dataMachineCode, char* rowFromCode, int* instructCounter, int* dataCounter, int* validationFlag) {
+void analyzeCodeRow(symbolList* symbolTable, machineCode** actionsMachineCode, machineCode* dataMachineCode, char* rowFromCode, int* instructCounter, int* dataCounter, int* validationFlag) {
 
 	char* newSymbolName = NULL;
 	char* restOfRowFromCode = NULL;

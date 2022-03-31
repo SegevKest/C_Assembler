@@ -49,9 +49,9 @@ int main(){
 	//currentFileName = handleSingleFile("test.am");
 
 	// first pass
-	firstPassOnFile(actionsMachineCode, dataMachineCode, symbolTable, "test.am", &validationFlag, &dataCounter, &actionCounter);
+	firstPassOnFile(&actionsMachineCode, dataMachineCode, &symbolTable, "test.am", &validationFlag, &dataCounter, &actionCounter);
 
-
+	printList(actionsMachineCode);
 	// first pass
 
 	//for (char** pToArgv = argv + 1; *pToArgv != argv[argc]; pToArgv++) {

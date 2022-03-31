@@ -15,7 +15,7 @@ int getOpcodeAction(char actionName[]);
 
 void insertNewCodeWordDirectiveValue(machineCode** machCodeTable, char* binaryNumber, int valueForNewWord);
 void insertEmptyRowForNewWordsOfSymbol(machineCode** machCodeTable, int valueForNewWord);
-void insertAdditionalWords(machineCode** actionsMachineCode, symbolList* symbolTable, char** argsFromLine, int numOfArgs, int* pToActionsCounter);
+void insertAdditionalWords(machineCode** actionsMachineCode, symbolList** symbolTable, char** argsFromLine, int numOfArgs, int* pToActionsCounter);
 
 void printList(machineCode* head);
 

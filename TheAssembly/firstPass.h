@@ -8,7 +8,7 @@
 
 
 
-void firstPassOnFile(machineCode* actionsMachineCodeHead, machineCode* dataMachineCodeHead, symbolList* symbolHead, char* filePath, int* validationFlag, int* dataCounter, int* instructCounter);
+void firstPassOnFile(machineCode** actionsMachineCodeHead, machineCode* dataMachineCodeHead, symbolList* symbolHead, char* filePath, int* validationFlag, int* dataCounter, int* instructCounter);
 
 
 #endif //____FIRSTPASS_H

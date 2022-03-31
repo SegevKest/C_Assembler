@@ -13,11 +13,11 @@
 #define FALSE 0
 #define LINE_LENGTH 81
 
-void firstPassOnFile(machineCode* actionsMachineCodeHead, machineCode* dataMachineCodeHead, symbolList* symbolHead, char* filePath, int* validationFlag, int* dataCounter, int* instructCounter);
+void firstPassOnFile(machineCode** actionsMachineCodeHead, machineCode* dataMachineCodeHead, symbolList** symbolHead, char* filePath, int* validationFlag, int* dataCounter, int* instructCounter);
 
 
 
-void firstPassOnFile(machineCode* actionsMachineCodeHead, machineCode* dataMachineCodeHead, symbolList* symbolHead, char* filePath, int* validationFlag, int* dataCounter, int* instructCounter ) {
+void firstPassOnFile(machineCode** actionsMachineCodeHead, machineCode* dataMachineCodeHead, symbolList** symbolHead, char* filePath, int* validationFlag, int* dataCounter, int* instructCounter ) {
 
 
 	FILE* filePointer;
@@ -39,7 +39,7 @@ void firstPassOnFile(machineCode* actionsMachineCodeHead, machineCode* dataMachi
 		analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, getTrimmedCodeRow(currLine),  instructCounter, dataCounter , validationFlag);
 		//printf("\n\nAt first pass outer - actionsCounter: %d\n\n", *instructCounter);
 	
-		printList(actionsMachineCodeHead);
+		printList(*actionsMachineCodeHead);
 	}
 
 

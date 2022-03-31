@@ -42,7 +42,7 @@ void insertNewOpCodeWord(machineCode** machCodeTable, char actionName[], int opC
 void insertNewFullCodeWord(machineCode** machCodeTable, symbolList* symbolTable, char** arrayOfArgs, int valueForNewWord, int numOfArgs);
 void insertNewCodeWordDirectiveValue(machineCode** machCodeTable, char* binaryNumber, int valueForNewWord);
 void insertEmptyRowForNewWordsOfSymbol(machineCode** machCodeTable, int valueForNewWord);
-void insertAdditionalWords(machineCode** actionsMachineCode, symbolList* symbolTable, char** argsFromLine, int numOfArgs, int* pToActionsCounter);
+void insertAdditionalWords(machineCode** actionsMachineCode, symbolList** symbolTable, char** argsFromLine, int numOfArgs, int* pToActionsCounter);
 
 void registersAdresses(machineCode* machCode, char directionFlag, char* registerCode, char* adrCode);
 
@@ -485,7 +485,7 @@ void insertEmptyRowForNewWordsOfSymbol(machineCode** machCodeTable, int valueFor
 
 
 //To handle the .entry directive
-void insertAdditionalWords(machineCode** actionsMachineCode, symbolList* symbolTable, char** argsFromLine, int numOfArgs, int* pToActionsCounter)
+void insertAdditionalWords(machineCode** actionsMachineCode, symbolList** symbolTable, char** argsFromLine, int numOfArgs, int* pToActionsCounter)
 {
 	symbolList* searchedSymbol = NULL;
 	char* resultOfMiunCheck;
@@ -515,8 +515,6 @@ void insertAdditionalWords(machineCode** actionsMachineCode, symbolList* symbolT
 			(*pToActionsCounter) = (*pToActionsCounter) + 1;
 		}
 		else if (strcmp(resultOfMiunCheck, "01\0") == 0 || strcmp(resultOfMiunCheck, "10\0") == 0) {
-			// miun 1 - two new words  // miun 2 - two new words 
-			// 
 			// get the Symbol name from argument in each scenario
 			// Check which of the arguments is the symbol name and extarct it - for the insertion
 			if (strcmp(resultOfMiunCheck, "01\0") == 0) {
@@ -543,9 +541,9 @@ void insertAdditionalWords(machineCode** actionsMachineCode, symbolList* symbolT
 				indexToCut= returnFirstIndexOfChar(argsFromLine[indexOfSymbolName], '[');
 				newSymbolNameWithEmptyLines = subString(argsFromLine[indexOfSymbolName], 0, indexToCut);
 			}
-			printf("\n%s\n", newSymbolNameWithEmptyLines);
 
-			insertEmptySymbolWithSavedLines(&symbolTable, newSymbolNameWithEmptyLines,savedWordValues);
+			//Insert the newEmpty symbol to list
+			insertEmptySymbolWithSavedLines(symbolTable, newSymbolNameWithEmptyLines,savedWordValues);
 
 
 
