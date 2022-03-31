@@ -40,13 +40,13 @@ int getOpcodeAction(char actionName[]);
 char* getFunctOfAction(char actionName[], int opCodeOfAction);
 void insertNewOpCodeWord(machineCode** machCodeTable, char actionName[], int opCodeToTurnOn, int valueOfAction);
 void insertNewFullCodeWord(machineCode** machCodeTable, symbolList* symbolTable, char** arrayOfArgs, int valueForNewWord, int numOfArgs);
-void insertNewCodeWordDirectiveValue(machineCode* machCodeTable, char* binaryNumber, int valueForNewWord);
+void insertNewCodeWordDirectiveValue(machineCode** machCodeTable, char* binaryNumber, int valueForNewWord);
 void insertEmptyRowForNewWordsOfSymbol(machineCode** machCodeTable, int valueForNewWord);
 void insertAdditionalWords(machineCode** actionsMachineCode, symbolList* symbolTable, char** argsFromLine, int numOfArgs, int* pToActionsCounter);
 
 void registersAdresses(machineCode* machCode, char directionFlag, char* registerCode, char* adrCode);
 
-
+void printList(machineCode* head);
 
 // allocate memory of a new word
 machineCode* createWordInMemory() {
@@ -416,10 +416,6 @@ void insertNewFullCodeWord(machineCode** machCodeTable, symbolList* symbolTable,
 
 		// insert the new word to the machine code table
 		insertNewWordToEndOfTable(machCodeTable, newWord);
-
-
-		printf("Inserted Full word\n");
-		printList(*machCodeTable);
 	}
 	else
 	{
@@ -430,7 +426,7 @@ void insertNewFullCodeWord(machineCode** machCodeTable, symbolList* symbolTable,
 
 
 // Add a new CodeWord - for string or data values 
-void insertNewCodeWordDirectiveValue(machineCode* machCodeTable, char* binaryNumber, int valueForNewWord) {
+void insertNewCodeWordDirectiveValue(machineCode** machCodeTable, char* binaryNumber, int valueForNewWord) {
 
 	int i, wordIndexToInsert = 4;
 	machineCode* newWord = createWordInMemory();
@@ -447,12 +443,14 @@ void insertNewCodeWordDirectiveValue(machineCode* machCodeTable, char* binaryNum
 			newWord->wordBinary[wordIndexToInsert] = (binaryNumber[i]-'0');
 			//printf("%d ", newWord->wordBinary[wordIndexToInsert]);
 		}
-		//printf("\n");
-		insertNewWordToEndOfTable(machCodeTable, newWord);
 
 		newWord->isCompleted = TRUE;
 
 		displayWord(newWord);
+
+		insertNewWordToEndOfTable(machCodeTable, newWord);
+
+		printList(*machCodeTable);
 	}
 	else
 	{
@@ -460,7 +458,7 @@ void insertNewCodeWordDirectiveValue(machineCode* machCodeTable, char* binaryNum
 		return NULL;
 	}
 
-	free(newWord);
+	//free(newWord);
 }
 
 
@@ -472,7 +470,7 @@ void insertEmptyRowForNewWordsOfSymbol(machineCode** machCodeTable, int valueFor
 	if (newWord) {
 
 		// insert new word as not completed
-		initializeWithNotCompletedCodeWord(newWord);
+		initializeCodeWord(newWord);
 
 		// insert the value of the row only!
 		newWord->programWordValue = valueForNewWord;
@@ -489,8 +487,6 @@ void insertEmptyRowForNewWordsOfSymbol(machineCode** machCodeTable, int valueFor
 		return NULL;
 	}
 	
-	//free(newWord);
-
 }
 
 
@@ -525,34 +521,34 @@ void insertAdditionalWords(machineCode** actionsMachineCode, symbolList* symbolT
 			// miun 1 - two new words  // miun 2 - two new words 
 			noOfNewWords = 2;
 
-			// insert new Row  - not completed
-			insertEmptyRowForNewWordsOfSymbol(actionsMachineCode, (*pToActionsCounter));
-
 			// raise the counter +1
 			(*pToActionsCounter) = (*pToActionsCounter) + 1;
 
-			printList(*actionsMachineCode);
+			// insert new Row  - not completed
+			insertEmptyRowForNewWordsOfSymbol(actionsMachineCode, (*pToActionsCounter));
+
+			
+			// raise the counter +1
+			(*pToActionsCounter) = (*pToActionsCounter) + 1;
 
 			// insert the second argument
 			insertEmptyRowForNewWordsOfSymbol(actionsMachineCode, (*pToActionsCounter));
 
-			// raise the counter +1
-			(*pToActionsCounter) = (*pToActionsCounter) + 1;
+			
 
-			printList(*actionsMachineCode);
-			
-			
-			
-			//indexToCut = returnFirstIndexOfChar(argsFromLine[i], '[');
-			//symbolNameToSearch = subString(argsFromLine[i], 0, indexToCut);
-			//
-			//isSymbolAlreadyExist(symbolTable, symbolNameToSearch, searchedSymbol);
-			//if (searchedSymbol != NULL) {
-			//	// found the symbol
-			//}
-			//else
-			//	printf("Error while searching for symbol in the symbol list");
-
+			{
+				//printList(*actionsMachineCode);
+				//printList(*actionsMachineCode);
+				//indexToCut = returnFirstIndexOfChar(argsFromLine[i], '[');
+				//symbolNameToSearch = subString(argsFromLine[i], 0, indexToCut);
+				//
+				//isSymbolAlreadyExist(symbolTable, symbolNameToSearch, searchedSymbol);
+				//if (searchedSymbol != NULL) {
+				//	// found the symbol
+				//}
+				//else
+				//	printf("Error while searching for symbol in the symbol list");
+			}
 		}
 		else
 		{	// miun 3 - no new words
@@ -680,7 +676,7 @@ void displayWord(machineCode* machCode) {
 }
 
 
-printList(machineCode* head) {
+void printList(machineCode* head) {
 
 	printf("\n The linked list of machine code is\n");
 

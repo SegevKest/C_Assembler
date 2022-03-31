@@ -393,9 +393,11 @@ void handleDirectiveData(machineCode* dataMachineCode,  char** arrayOfArgs, int 
 		if (pToBin!=NULL)
 			strcpy(pToBin, convertNumberToBinaryString(atoi(arrayOfArgs[i])));
 		
-		insertNewCodeWordDirectiveValue(dataMachineCode, pToBin, *pToDataCounter);
-
 		*pToDataCounter = (*pToDataCounter) + 1;
+
+		insertNewCodeWordDirectiveValue(&dataMachineCode, pToBin, *pToDataCounter);
+
+		
 	}
 
 
@@ -426,9 +428,11 @@ void handleDirectiveString(machineCode* dataMachineCode, char* stringFromCodeArr
 		if (pToBin != NULL)
 			strcpy(pToBin, convertNumberToBinaryString((int)currChar));
 
-		insertNewCodeWordDirectiveValue(dataMachineCode, pToBin, *pToDataCounter);
-
 		*pToDataCounter = (*pToDataCounter) + 1;
+
+		insertNewCodeWordDirectiveValue(&dataMachineCode, pToBin, *pToDataCounter);
+
+		
 	}
 
 }
@@ -453,11 +457,11 @@ void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbol
 		return;
 	}
 
+	(*pToActionsCounter) = (*pToActionsCounter) + 1;
+
 	// handle the action in the code
 	insertNewOpCodeWord(&actionsMachineCode, arrayOfArgs[0], opCode, *pToActionsCounter);
 	
-	(*pToActionsCounter) = (*pToActionsCounter) + 1;
-
 	//handle the argument validations
 	amountOfArgs = lengthOfArr - 1;
 
@@ -467,13 +471,15 @@ void handleActionRowScenario(machineCode* actionsMachineCode, symbolList* symbol
 	if (isValidArgsNumber > 0) {
 		// will be 2 or 1
 		// insert second word for hole row code
-		insertNewFullCodeWord(&actionsMachineCode, symbolTable, arrayOfArgs, (*pToActionsCounter), isValidArgsNumber);
 		(*pToActionsCounter) = (*pToActionsCounter) + 1;
 
+		insertNewFullCodeWord(&actionsMachineCode, symbolTable, arrayOfArgs, (*pToActionsCounter), isValidArgsNumber);
+		
 		// handle the additional rows for each argument
 		insertAdditionalWords(&actionsMachineCode, symbolTable, arrayOfArgs, amountOfArgs, pToActionsCounter);
 	}
 
+	//printList(actionsMachineCode);
 }
 
 
@@ -588,16 +594,7 @@ void analyzeCodeRow(symbolList* symbolTable, machineCode* actionsMachineCode, ma
 		// Handle the rest of the logic for action
 		handleActionRowScenario(actionsMachineCode, symbolTable, arrayOfArgumentFromCode, lengthOfArr, instructCounter);
 
-		//handleActionRowScenario(actionsMachineCode, symbolTable, arrayOfArgumentFromCode, lengthOfArr, localActionsCounter);
-
-		//printf("\n\nAfter inserting in analyze code - actionsCounter: %d\n\n", *instructCounter);
-
-		//printf("\n\nAfter inserting in analyze code - actionsCounter: %d\n\n", *localActionsCounter);
-
 	}
-	//&instructCounter = (*localActionsCounter);
-
-
 	free(arrayOfArgumentFromCode);
 }
 
