@@ -46,7 +46,9 @@ char* handleSingleFile(char* filePath) {
     
     if (fullFilePath != NULL) {
         strcpy(fullFilePath, filePath);
-        strcat(fullFilePath,".as");
+        if (strstr(fullFilePath,".as")==NULL)
+            strcat(fullFilePath,".as");
+        
         filePointer = fopen(fullFilePath, "r");
     }
 
@@ -76,10 +78,10 @@ char* handleSingleFile(char* filePath) {
                 nameOfPossibleMacro = subString(currLine, 0, strlen(currLine));
 
             // check if it an existing macro
-            if (isExistMacro(macroList, getTrimmedCodeRow(nameOfPossibleMacro)))
+            if (isExistMacro(&macroList, getTrimmedCodeRow(nameOfPossibleMacro)))
             {
                 // This is an existing macro. Get the content of it and insert to the new File
-                macroContent = getContentOfMacro(macroList, nameOfPossibleMacro);
+                macroContent = getContentOfMacro(&macroList, getTrimmedCodeRow( nameOfPossibleMacro));
 
                 // insert the new macro content to the output file
                 fputs(macroContent, outPutFilePointer);
@@ -94,7 +96,7 @@ char* handleSingleFile(char* filePath) {
                     newMacroName = subString(currLine, indexOfFirstSpace + 1, indexOfLastCharInRow);
 
                     // insert the new content to the macroList
-                    insertNewMacroName( macroList, newMacroName);
+                    insertNewMacroName(&macroList, newMacroName);
                 }
                 else
                 {
@@ -102,7 +104,7 @@ char* handleSingleFile(char* filePath) {
                     if (foundMacro == TRUE && strcmp(getTrimmedCodeRow(currLine), "endm") != 0) {
 
                         // nameOfPossibleMacro is the last found macro
-                        insertNewMacroContent(macroList, nameOfPossibleMacro, getTrimmedCodeRow(currLine));
+                        insertNewMacroContent(&macroList, newMacroName, currLine);
                     }
                     else
                     {
@@ -124,7 +126,8 @@ char* handleSingleFile(char* filePath) {
   
     fclose(outPutFilePointer);
   
-    return fileName;
+
+    //return fileName;
     //free(newMacroName);
     //free(currLine);
     //free(nameOfPossibleMacro);
@@ -156,7 +159,7 @@ char* getFileName(char* filePath) {
     //fileName = subString(filePath, 0, indexOfLastDot);
     fileName = subString(filePath, 0, strlen(filePath));
 
-    return fileName;
+    return strcat(fileName,".am");
 
 }
 
@@ -172,7 +175,7 @@ FILE* createNewFileForOutPut(char* newFileName) {
         strcpy(finalFileName, newFileName);
 
         // concat the endOfFile - '.am'
-        strcat(finalFileName, finishOfFile);
+       // strcat(finalFileName, finishOfFile);
 
         // create the file
         newFilePointer = fopen(finalFileName, "a");

@@ -15,7 +15,7 @@
 #define FALSE 0
 
 
-void isSymbolAlreadyExist(symbolList** symbolTable, char symbolName[], symbolList* ret);
+void isSymbolAlreadyExist(symbolList** symbolTable, char symbolName[], symbolList** ret);
 void insertNewSymbolData(symbolList** symbolTable, char symbolNameParam[], int valueOfSymbol, char* attributeParam);
 void insertSymbolToEndOfList(symbolList** symbolTable, symbolList* newSymbolToInsert);
 void printSymList(symbolList* head);
@@ -174,7 +174,6 @@ void insertNewSymbolData(symbolList** symbolTable, char symbolNameParam[], int v
 	// located in the table - insert the values received as params to existing 1
 	else    
 	{
-		printf("The symbol already exists in the SymbolTable - insert data");
 		//Calculate offset + baseAdress
 
 		// Will happen only if they change the values from 0 to something else
@@ -199,16 +198,10 @@ void insertNewSymbolData(symbolList** symbolTable, char symbolNameParam[], int v
 				ret->noOfAttributes++;
 				strcat(ret->attributes, ",");
 				strcat(ret->attributes, attributeParam);
-			}
-			
-			//strcat(ret->attributes, ",");
-			
-			//strcpy(newSymbol->attributes[newSymbol->noOfAttributes - 1], attributeParam);
+			}			
 		}
 	}
-	
 	//free(pToSymbolinTable);
-
 }
 
 
@@ -277,7 +270,7 @@ void printSymList(symbolList* head) {
 
 	while (head != NULL)
 	{
-		printf(" %s - v:%d, base:%d, off:%d, att: %s",head->symbolName, head->value, head->baseAddress, head->offset, head->attributes);
+		printf(" %s - v:%d, base:%d, off:%d, att: %s\n",head->symbolName, head->value, head->baseAddress, head->offset, head->attributes);
 		head = head->nextSymbol;
 	}
 }

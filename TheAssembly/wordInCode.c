@@ -548,8 +548,6 @@ void insertAdditionalWords(machineCode** actionsMachineCode, symbolList** symbol
 			//Insert the newEmpty symbol to list
 			insertEmptySymbolWithSavedLines(symbolTable, newSymbolNameWithEmptyLines,savedWordValues);
 
-
-
 			// raise the counter +1
 			(*pToActionsCounter) = (*pToActionsCounter) + 1;
 
