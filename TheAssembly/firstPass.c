@@ -32,6 +32,15 @@ void firstPassOnFile(machineCode** actionsMachineCodeHead, machineCode** dataMac
 		*validationFlag = FALSE;
 	}
 
+
+	//while (fgets(currLine, LINE_LENGTH, filePointer)) {
+
+	//	printf("%s", currLine);
+
+	//	//printf("\nDone with this row!\n");
+
+	//}
+
 	while (fgets(currLine, LINE_LENGTH, filePointer)) {
 
 		//printf("%s", currLine);
@@ -40,7 +49,6 @@ void firstPassOnFile(machineCode** actionsMachineCodeHead, machineCode** dataMac
 		//printf("\n\nAt first pass outer - actionsCounter: %d\n\n", *instructCounter);
 	
 		printf("\nDone with this row!\n");
-
 
 	}
 

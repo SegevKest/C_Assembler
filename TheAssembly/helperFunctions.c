@@ -521,6 +521,7 @@ void analyzeCodeRow(symbolList** symbolTable, machineCode** actionsMachineCode, 
 	//localActionsCounter = instructCounter;
 
 	whiteSpaceLine = commentLine = rowHasSymbol = actionRow = directiveRow = lengthOfArr = FALSE;
+	newValueForSymbol = 0;
 
 	// raise flag of char accordingly 
 	whiteSpaceLine = isWhiteSpacesLine(rowFromCode);
@@ -573,6 +574,11 @@ void analyzeCodeRow(symbolList** symbolTable, machineCode** actionsMachineCode, 
 
 		typeOfDirective = isDirectiveLine(rowFromCode);
 
+		if (typeOfDirective == 4) {	// extern
+			newSymbolName = arrayOfArgumentFromCode[1];	// in Extern directive- the symbol will be located in the second argument of the row 
+			handleSymbolScenario(symbolTable, newSymbolName, "external", 0);
+		}
+
 		if (rowHasSymbol == TRUE) {
 
 			// assign the correct value for the symbol
@@ -581,11 +587,7 @@ void analyzeCodeRow(symbolList** symbolTable, machineCode** actionsMachineCode, 
 			if (typeOfDirective == 1 || typeOfDirective == 2) {		// Data and String symbols
 
 				handleSymbolScenario(symbolTable, newSymbolName, "data", newValueForSymbol);
-			}
-			else if (typeOfDirective == 4) {	// extern
-
-				handleSymbolScenario(symbolTable, newSymbolName, "external", 0);
-			}
+			} 
 			// else entry typeOfDirective == 3
 			// Ignore this row and wait for the second PASS
 		}

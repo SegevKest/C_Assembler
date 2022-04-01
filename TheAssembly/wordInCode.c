@@ -508,11 +508,14 @@ void insertAdditionalWords(machineCode** actionsMachineCode, symbolList** symbol
 			numberToConvertForWord = atoi(subString(argsFromLine[i], indexToCut + 1, strlen(argsFromLine[i])));
 
 			strcpy(binNumberToInsert,convertNumberToBinaryString(numberToConvertForWord));
+			
+			// raise the counter +1
+			(*pToActionsCounter) = (*pToActionsCounter) + 1;
+
 			// insert new Row with extracted number
 			insertNewCodeWordDirectiveValue(actionsMachineCode, binNumberToInsert, (*pToActionsCounter));
 		
-			// raise the counter +1
-			(*pToActionsCounter) = (*pToActionsCounter) + 1;
+
 		}
 		else if (strcmp(resultOfMiunCheck, "01\0") == 0 || strcmp(resultOfMiunCheck, "10\0") == 0) {
 			// get the Symbol name from argument in each scenario

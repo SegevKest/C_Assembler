@@ -15,7 +15,7 @@
 #define FALSE 0
 
 
-void isSymbolAlreadyExist(symbolList* symbolTable, char symbolName[], symbolList* ret);
+void isSymbolAlreadyExist(symbolList** symbolTable, char symbolName[], symbolList* ret);
 void insertNewSymbolData(symbolList** symbolTable, char symbolNameParam[], int valueOfSymbol, char* attributeParam);
 void insertSymbolToEndOfList(symbolList** symbolTable, symbolList* newSymbolToInsert);
 void printSymList(symbolList* head);
@@ -52,7 +52,7 @@ symbolList* createNewSymbol() {
 }
 
 // this method checks if a symbol is already in the symbol table - return the pointer if yes, null if no
-void isSymbolAlreadyExist(symbolList** symbolTable, char symbolName[], symbolList* ret) {
+void isSymbolAlreadyExist(symbolList** symbolTable, char symbolName[], symbolList** ret) {
 
 	symbolList* ptr = *symbolTable;
 	char* p;
@@ -62,13 +62,13 @@ void isSymbolAlreadyExist(symbolList** symbolTable, char symbolName[], symbolLis
 
 	if (ptr != NULL) {
 
-		while (ptr->nextSymbol != NULL && ret) {
+		while (ptr != NULL && !(* ret)) {
 
 			namesAreEqual = strcmp((ptr->symbolName), symbolName);
 
 			if (!namesAreEqual)		// return 0 if equal
 			{
-				ret = ptr;
+				*ret = ptr;
 			}
 			else
 			{
@@ -82,7 +82,7 @@ void isSymbolAlreadyExist(symbolList** symbolTable, char symbolName[], symbolLis
 // this function will be used to insert a new symbol to the end of the symbol table that exist
 void insertSymbolToEndOfList(symbolList** symbolTable, symbolList* newSymbolToInsert) {
 
-	symbolList* pSymbol;
+	symbolList* pSymbol = createNewSymbol();
 
 	if (*symbolTable == NULL) {
 
@@ -102,13 +102,12 @@ void insertSymbolToEndOfList(symbolList** symbolTable, symbolList* newSymbolToIn
 }
 
 
-// -----Open - issue with inserting
 // Function to create a new symbol from given parameters
 // It will calculate the BaseAddress + Offset and will add it to the new Symbol
 // Then - iterate until end of symbolTable and insert the newSybol at the end 
 void insertNewSymbolData(symbolList** symbolTable, char symbolNameParam[], int valueOfSymbol, char* attributeParam) {
 
-	printf("\nName of symbol: %s, value:  %d ", symbolNameParam, valueOfSymbol);
+	//printf("\nName of symbol: %s, value:  %d ", symbolNameParam, valueOfSymbol);
 
 	int i, j;
 	int symbolExist = FALSE, newSymbolOffset, newSymbolBaseAdd;
@@ -117,7 +116,7 @@ void insertNewSymbolData(symbolList** symbolTable, char symbolNameParam[], int v
 
 	//symbolList* pToSymbolinTable = symbolTable;
 
-	isSymbolAlreadyExist(symbolTable, symbolNameParam, ret);
+	isSymbolAlreadyExist(symbolTable, symbolNameParam, &ret);
 
 	if (ret!=NULL)
 		symbolExist = TRUE;
@@ -190,9 +189,21 @@ void insertNewSymbolData(symbolList** symbolTable, char symbolNameParam[], int v
 		}
 		if (strlen(attributeParam) > 0)
 		{
-			// Attributes array will be initialized -
-			newSymbol->noOfAttributes++;
-			strcpy(newSymbol->attributes[newSymbol->noOfAttributes - 1], attributeParam);
+			//check if need to init the noOfAttributes
+			if (ret->noOfAttributes < 0 || ret->noOfAttributes > 2) {
+				ret->noOfAttributes = 1;
+				strcpy(ret->attributes, attributeParam);
+			}
+			else
+			{
+				ret->noOfAttributes++;
+				strcat(ret->attributes, ",");
+				strcat(ret->attributes, attributeParam);
+			}
+			
+			//strcat(ret->attributes, ",");
+			
+			//strcpy(newSymbol->attributes[newSymbol->noOfAttributes - 1], attributeParam);
 		}
 	}
 	
@@ -220,6 +231,8 @@ void insertEmptySymbolWithSavedLines(symbolList** symbolTable, char* symbolName,
 	newEmptySymbol = createNewSymbol();
 	// insert the new symbol name
 	strcpy(newEmptySymbol->symbolName, symbolName);
+
+	newEmptySymbol->nextSymbol = NULL;
 
 	// copy the saved Lines to the savedLines
 	for (i = 0; i < noNewLines; i++) {
@@ -264,7 +277,7 @@ void printSymList(symbolList* head) {
 
 	while (head != NULL)
 	{
-		printf(" %s - v:%d, base:%d, off:%d",head->symbolName, head->value, head->baseAddress, head->offset);
+		printf(" %s - v:%d, base:%d, off:%d, att: %s",head->symbolName, head->value, head->baseAddress, head->offset, head->attributes);
 		head = head->nextSymbol;
 	}
 }
