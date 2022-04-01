@@ -127,7 +127,7 @@ char* handleSingleFile(char* filePath) {
     fclose(outPutFilePointer);
   
 
-    //return fileName;
+    return fileName;
     //free(newMacroName);
     //free(currLine);
     //free(nameOfPossibleMacro);
