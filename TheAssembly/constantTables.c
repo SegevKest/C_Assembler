@@ -9,6 +9,7 @@
 char** returnActionsByOpcodeTable();
 char** returnRegistersValues();
 
+// Saved names in program Table
 static char *savedNamesInProgram[] = 
 	{
 		// All Registers - from 0 -15
@@ -23,6 +24,7 @@ static char *savedNamesInProgram[] =
 		".data",".string",".entry",".extern"
 	};
 
+//all the action - with their binary values of opcode and funct
 static char *actionsByBinary[] =
 {
 	"name:mov,opcodebinary:0000",
@@ -43,6 +45,7 @@ static char *actionsByBinary[] =
 	"name:stop,opcodebinary:1111"
 };
 
+// the table contains all actions with thier integer opcode values + their binary funct
 // name:NameOfAction,opcode:opcodeValue, funct:functOfAction
 static char *actionsOpcodes[] =
 {
@@ -64,7 +67,7 @@ static char *actionsOpcodes[] =
 	"stop,opcode:15"
 };
 
-
+// contains all the possible miuns
 // " NoOfMiun:NoOfNewWords, value:ValueOfMiun"
 static char *addressesNewWordsAndValues[] =
 {
@@ -74,7 +77,7 @@ static char *addressesNewWordsAndValues[] =
 	"3:0,value:11"
 };
 
-
+// this table contains all the register + binary values
 //	nameOfRegister:noOfRegisterInBinary
 static char *registersValues[] =
 {
@@ -95,8 +98,6 @@ static char *registersValues[] =
 	"r14:1110",
 	"r15:1111",
 };
-
-
 
 
 // return the actionsByOpcode table

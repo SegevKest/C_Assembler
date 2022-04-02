@@ -35,9 +35,8 @@ int main(){
 	int actionCounter = 99;
 	int validationFlag = TRUE; 	// Define the validation Flag to TRUE;
 
-	//int* dataCounterAd = &dataCounter;
-	//int* actionCounterAd = &actionCounter;
 
+	// Validation on number of arguments received from the cmd
 	//if (argc < 2) {
 	//	printf("ERROR: got not enough arguments from user");
 	//	return;
@@ -46,7 +45,6 @@ int main(){
 	//printf("hello");
 
 	// Pre Processor - return the new file name to start pass
-	
 	//currentFileName = handleSingleFile("test");
 
 	// first pass
@@ -60,7 +58,7 @@ int main(){
 
 	printf("\nSymbols\n");
 	printSymList(symbolTable);
-	// first pass
+
 
 	//for (char** pToArgv = argv + 1; *pToArgv != argv[argc]; pToArgv++) {
 

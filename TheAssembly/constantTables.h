@@ -4,14 +4,12 @@
 
 #define REGISTERS_NO 16
 
-// return the 
-char** returnActionsByOpcodeTable();
-char** returnSavedNamesTable();
-char** returnRegistersValues();
 
+char** returnActionsByOpcodeTable();		// Method to return the actionsByOpCode table pointer
+char** returnSavedNamesTable();		// Method to return the savedNames table pointer
+char** returnRegistersValues();		// Method to return the Register values table pointer
 
-int sizeOfActionsByOpcodeTable();
-
+int sizeOfActionsByOpcodeTable();		// method that will return the size of the actionsByOpcode Table
 
 
 #endif //__SYMBOL_H

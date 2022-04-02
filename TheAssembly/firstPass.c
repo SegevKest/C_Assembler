@@ -32,21 +32,11 @@ void firstPassOnFile(machineCode** actionsMachineCodeHead, machineCode** dataMac
 		*validationFlag = FALSE;
 	}
 
-
-	//while (fgets(currLine, LINE_LENGTH, filePointer)) {
-
-	//	printf("%s", currLine);
-
-	//	//printf("\nDone with this row!\n");
-
-	//}
-
 	while (fgets(currLine, LINE_LENGTH, filePointer)) {
 
 		//printf("%s", currLine);
 
 		analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, getTrimmedCodeRow(currLine),  instructCounter, dataCounter , validationFlag);
-		//printf("\n\nAt first pass outer - actionsCounter: %d\n\n", *instructCounter);
 	
 		printf("\nDone with this row!\n");
 

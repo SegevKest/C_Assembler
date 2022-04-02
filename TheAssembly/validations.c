@@ -13,13 +13,15 @@
 #define TOTAL_SAVED_NAMES_IN_PROG 36
 #define MAX_LENGTH_OF_SAVE_NAME 9
 
+
+
 // Common Validations
 int isCommentLine(char* rowFromCode);
 int isWhiteSpacesLine(char* rowFromCode);
 int isDirectiveLine(char* rowFromCode);
 int isActionLine(char* rowFromCode);
 int isRowContainSymbol(char* rowFromCode);
-int isValidSymbolArgmnt(char* argmntFromLine);
+//int isValidSymbolArgmnt(char* argmntFromLine);
 int isRegsiter(char* argFromLine);
 int isValidRegister(char* argmntFromLine);
 int isValidNameOfSymbol(char* symbolFromLine);
@@ -39,11 +41,6 @@ int isMiunThree(char* argmntFromLine);
 int isExistMacro(macroTable** headOfMacroTable, char* argFromLine);
 
 
-
-// method that will be responsible for validating the line and the arguments
-
-
-
 // Check if the current line is a comment - return TRUE if yes, FALSE if not
 int isCommentLine(char* rowFromCode) {
 
@@ -55,6 +52,7 @@ int isCommentLine(char* rowFromCode) {
 	return FALSE;
 
 }
+
 
 // Check if the current line is a WhiteSpaces - return TRUE if yes, FALSE if not
 int isWhiteSpacesLine(char* rowFromCode) {
@@ -115,15 +113,14 @@ int isRowContainSymbol(char* rowFromCode) {
 }
 
 
-// Should remove??
-// this method will check if the argument is a Symbol or not and check its name and 
-int isValidSymbolArgmnt(char* argmntFromLine) {
-
-
-	return FALSE;
-
-}
-
+//// Should remove??
+//// this method will check if the argument is a Symbol or not and check its name and 
+//int isValidSymbolArgmnt(char* argmntFromLine) {
+//
+//
+//	return FALSE;
+//
+//}
 
 // Validations necessary
 
@@ -138,7 +135,7 @@ int isValidNameOfSymbol(char* symbolFromLine) {
 		
 		currSavedName[i] = malloc(MAX_LENGTH_OF_SAVE_NAME+1 * sizeof(char));
 		strcpy(currSavedName[i], savedNamesTable[i]);
-		//currSavedName = savedNamesTable[i];
+
 		rsltOfCompare = strcmp(currSavedName[i], symbolFromLine);
 
 		// if the result is 0 - means there was a match in the saved names
@@ -180,9 +177,6 @@ int isValidRegister(char* rgstrFromLine) {
 	else
 		restOfrgstrArg = subString(rgstrFromLine, 1, 3);
 
-
-
-
 	strLength = strlen(rgstrFromLine);
 	rgstrNo = atoi(restOfrgstrArg);
 
@@ -205,7 +199,6 @@ int isValidSeperationBetweenParams(char* paramFromCode) {
 }
 
 
-// Add more???
 // the method will check if the seperation of all the arguments are in order
 // using tab - return 1
 //using space - return 0
@@ -306,8 +299,6 @@ int isValidNameOfAction(char* paramFromCode) {
 int validateRowOfCode(char** arrayOfArgumentFromCode, int lengthOfArr) {
 
 	int i, isDirective = FALSE, isValidActionName = FALSE, isValidSeparation = FALSE, foundUnValidSeparation = FALSE;
-	//int  = getLengthOfArgsArray(arrayOfArgumentFromCode);
-
 
 	isDirective = isDirectiveLine(arrayOfArgumentFromCode[0]);
 
@@ -347,9 +338,7 @@ int validateRowOfCode(char** arrayOfArgumentFromCode, int lengthOfArr) {
 	if (foundUnValidSeparation == TRUE)
 		return FALSE;
 
-
 	return TRUE;
-
 }
 
 
@@ -389,8 +378,6 @@ int isMiunTwo(char* argmntFromLine, symbolList* symbolTable) {
 
 	int indexOfBrace;
 	char* foundSymbol;
-
-	/*symbolList* foundSymbolObj = NULL;*/
 
 	if (strstr(argmntFromLine, "[") != NULL && strstr(argmntFromLine, "]") != NULL) {
 		// found the braces - check if the symbol exist

@@ -19,9 +19,9 @@
 #define MACRO_MAX_LENGTH 80
 
 
-//int checkForValidArgs(int argc);
-char* handleSingleFile(char* filePath);
 char* getSingleLineFromFile(FILE* filePointer);
+
+char* handleSingleFile(char* filePath);
 char* getFileName(char* filePath);
 FILE* createNewFileForOutPut(char* newFileName);
 
@@ -66,7 +66,6 @@ char* handleSingleFile(char* filePath) {
     while (fgets(currLine, LINE_LENGTH, filePointer)) {
 
         // handle each line
-        printf("%s", currLine);
 
             // outside definition of macro
             indexOfFirstSpace = returnFirstIndexOfChar(currLine, ' ');
@@ -115,23 +114,17 @@ char* handleSingleFile(char* filePath) {
                             // if the line is not end - regular line insert to original file
                             fputs(currLine, outPutFilePointer);
                         }
-                        else {
                             // this is end of macro definition - leave it and dont add to output file
-                        }
                     }
-   
+  
                 }
             }
     }
   
+    //close the file after editing it
     fclose(outPutFilePointer);
-  
-
+ 
     return fileName;
-    //free(newMacroName);
-    //free(currLine);
-    //free(nameOfPossibleMacro);
-
 }
 
 // This method will get the file pointer and will return the next Line to analyize
@@ -142,8 +135,6 @@ char* getSingleLineFromFile(FILE* filePointer ) {
     char currLine[LINE_LENGTH];
 
     fgets(currLine, LINE_LENGTH, filePointer);
-
-    //strcpy(currLine, fseek(filePointer, returnFirstIndexOfChar(filePointer,'\n'), SEEK_SET));
   
     return currLine;
 }
@@ -154,9 +145,6 @@ char* getFileName(char* filePath) {
     int indexOfLastDot;
     char* fileName;
 
-    //indexOfLastDot = returnFirstIndexOfChar(filePath,'.');
-
-    //fileName = subString(filePath, 0, indexOfLastDot);
     fileName = subString(filePath, 0, strlen(filePath));
 
     return strcat(fileName,".am");
@@ -174,9 +162,6 @@ FILE* createNewFileForOutPut(char* newFileName) {
         // new final name will get the newFileName before concating 
         strcpy(finalFileName, newFileName);
 
-        // concat the endOfFile - '.am'
-       // strcat(finalFileName, finishOfFile);
-
         // create the file
         newFilePointer = fopen(finalFileName, "a");
     }
@@ -187,37 +172,4 @@ FILE* createNewFileForOutPut(char* newFileName) {
     return newFilePointer;
 }
 
-
-// Validate if the number of arguments received from the 
-int checkForValidArgs(int argc){
-
-    if( argc < MIN_NUM_OF_ARGS)
-    {
-        printf("Not a valid number of arguments\n");
-        return FALSE;
-    }
-
-    //Remove this log
-    //printf("valid number of arguments\n");
-    return TRUE;
-}
-
-
-
-
-
-// this main should be located in the mainProgramfile
-//int main() {
-////
-//    int validArgs;
-//
-//    char* fileNameToPass;
-//
-////    //validArgs = checkForValidArgs(argc);
-//    fileNameToPass = handleSingleFile("test");
-//
-//    
-//
-//    return 0;
-//}
 

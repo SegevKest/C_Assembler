@@ -18,10 +18,10 @@
 #define MAX_LENGTH_OF_PARAM 12
 #define LENGTH_OF_BIN_NUMBER 16
 
+
 int returnFirstIndexOfChar(char* stringToCheck, char charToFind);
 int returnLastIndexOfChar(char* stringToCheck, char charToFind);
 char* subString(char* sourceString, int strtIndex, int endIndex);
-//int findTheIndexOfTheActionInTable(char* stringToCheck);
 
 char* getTrimmedCodeRow(char* rowFromCode);
 void analyzeCodeRow(symbolList** symbolTable, machineCode** actionsMachineCode, machineCode** dataMachineCode, char* rowFromCode, int instructCounter, int dataCounter, int* validationFlag);
@@ -50,6 +50,7 @@ int returnFirstIndexOfChar(char* stringToCheck, char charToFind) {
 	return index;
 }
 
+
 //get the index of the character in the array of chars
 int returnLastIndexOfChar(char* stringToCheck, char charToFind) {
 
@@ -63,6 +64,7 @@ int returnLastIndexOfChar(char* stringToCheck, char charToFind) {
 	return index;
 }
 
+
 // This function gets a string and 2 indexes - return a new String between the 2 indexes
 char* subString(char *sourceString, int strtIndex, int endIndex) {
 
@@ -70,20 +72,14 @@ char* subString(char *sourceString, int strtIndex, int endIndex) {
 	char endOfString = '\0';
 	char* destString, pPrint;
 
-
-	//destString = (char*)malloc( lengthOfDestString * sizeof(char));
 	destString = (char*)calloc(lengthOfDestString, sizeof(char));
-
 
 	if(destString!=NULL)
 		strncpy(destString, (sourceString + strtIndex), endIndex - strtIndex);
-		//strncpy(destString, originString, lengthOfDestString);
-
-
-	//printf("\nSubstring: %s", destString);
 
 	return destString;
 }
+
 
 // this function check if the string entered contains a digit or not
 // if the isdigit return other than 0 - means that there is a digit number inside the 
@@ -98,7 +94,6 @@ int isString(char* stringToCheck) {
 	}
 
 	return TRUE;
-
 }
 
 
@@ -230,8 +225,7 @@ char* findMatchedMiun(char* argmntFromLine, symbolList* symbolTable) {
 			resultOfMiunChecks = isMiunThree(argmntFromLine); // miun 3
 
 			if (resultOfMiunChecks == FALSE) {
-
-				/*if (resultOfMiunChecks == TRUE)	*/// miun 1 - only if not all miun check were valid
+					/// miun 1 - only if not all miun check were valid
 					return "01\0";
 			}
 			else
@@ -242,9 +236,6 @@ char* findMatchedMiun(char* argmntFromLine, symbolList* symbolTable) {
 	}
 	else
 		return "00\0";
-	
-
-	//return miunMethod;
 
 }
 
@@ -298,15 +289,13 @@ char* getRegisterCode(char* argFromLine) {
 			}
 		}
 
-		/*	free(currRegisterName);
-			free(currRegisterRow);*/
-
 		return regVal;
 	}
 	else
 		return "0000\0";
 
 }
+
 
 // Helper finction to convert an integer to a 16 digit binary data
 char* convertNumberToBinaryString(int numberToConvert) {
@@ -358,9 +347,8 @@ void handleDirectiveRowScenario(char* rowFromCode) {
 
 }
 
-
-//- OPEN 
-//To handle the .entry directive
+// _------- Open
+// //To handle the .entry directive
 // if there is an entry directive - create new symbol with "entry"
 void handleDirectiveEntry() {
 
@@ -368,7 +356,7 @@ void handleDirectiveEntry() {
 
 }
 
-
+// _------- Open
 //To handle the .extern directive
 // if there is an entry directive - create new symbol with "external"
 void handleDirectiveExtern() {
@@ -376,8 +364,6 @@ void handleDirectiveExtern() {
 }
 
 
-
-// _------- Open
 // Handle scenraio of row with symbol 
 void handleSymbolScenario(symbolList** symbolTable, char* symbolName, char* symbolAttributes, int symbolValue) {
 
@@ -397,6 +383,7 @@ void handleSymbolScenario(symbolList** symbolTable, char* symbolName, char* symb
 
 	}
 }
+
 
 //To handle the .data directive
 void handleDirectiveData(machineCode** dataMachineCode,  char** arrayOfArgs, int lengthOfArr, int* pToDataCounter) {
@@ -450,10 +437,7 @@ void handleDirectiveString(machineCode** dataMachineCode, char* stringFromCodeAr
 		*pToDataCounter = (*pToDataCounter) + 1;
 
 		insertNewCodeWordDirectiveValue(dataMachineCode, pToBin, *pToDataCounter);
-
-		
 	}
-
 }
 
 
@@ -467,7 +451,6 @@ void handleActionRowScenario(machineCode** actionsMachineCode, symbolList** symb
 
 	// Check if the Opcode of this actin is exist
 	opCode = getOpcodeAction(arrayOfArgs[0]);
-	//printf("Opcode: %d", opCode);
 
 	// handle the action - first cell of array
 	// apply all validations of the name
@@ -497,10 +480,7 @@ void handleActionRowScenario(machineCode** actionsMachineCode, symbolList** symb
 		// handle the additional rows for each argument
 		insertAdditionalWords(actionsMachineCode, symbolTable, arrayOfArgs, amountOfArgs, pToActionsCounter);
 	}
-
-	//printList(actionsMachineCode);
 }
-
 
 
 
@@ -516,9 +496,7 @@ void analyzeCodeRow(symbolList** symbolTable, machineCode** actionsMachineCode, 
 	int	i, localValidationFlag, lengthOfArr, newValueForSymbol,
 		whiteSpaceLine, commentLine, rowHasSymbol, actionRow, directiveRow, typeOfDirective, commaLocation;
 
-	//int* localActionsCounter = malloc(sizeof(int));
 	printf("\nFULL ROW : Code is:%s\n", rowFromCode);
-	//localActionsCounter = instructCounter;
 
 	whiteSpaceLine = commentLine = rowHasSymbol = actionRow = directiveRow = lengthOfArr = FALSE;
 	newValueForSymbol = 0;
@@ -605,8 +583,6 @@ void analyzeCodeRow(symbolList** symbolTable, machineCode** actionsMachineCode, 
 	// handle an action row
 	if (actionRow) { 		
 
-		//printf("\n\BEfore inserting in analyze code - actionsCounter: %d\n\n", *instructCounter);
-
 		// assign the correct value for the symbol
 		newValueForSymbol = (*instructCounter) + 1;
 
@@ -618,6 +594,5 @@ void analyzeCodeRow(symbolList** symbolTable, machineCode** actionsMachineCode, 
 			handleSymbolScenario(symbolTable, newSymbolName, "code", newValueForSymbol);
 		}
 	}
-	//free(arrayOfArgumentFromCode);
 }
 

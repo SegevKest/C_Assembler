@@ -6,18 +6,19 @@
 
 typedef struct wordInCode machineCode;
 
-void insertNewOpCodeWord(machineCode** machCodeTable, char actionName[], int opCodeToTurnOn, int valueOfAction);
-void insertNewFullCodeWord(machineCode** machCodeTable, symbolList* symbolTable, char** arrayOfArgs, int valueForNewWord, int numOfArgs);
-void displayWord(machineCode* machCode);
-
-int getOpcodeAction(char actionName[]);
 
 
-void insertNewCodeWordDirectiveValue(machineCode** machCodeTable, char* binaryNumber, int valueForNewWord);
-void insertEmptyRowForNewWordsOfSymbol(machineCode** machCodeTable, int valueForNewWord);
-void insertAdditionalWords(machineCode** actionsMachineCode, symbolList** symbolTable, char** argsFromLine, int numOfArgs, int* pToActionsCounter);
+void insertNewOpCodeWord(machineCode** machCodeTable, char actionName[], int opCodeToTurnOn, int valueOfAction);  // this function insert the new first row of the action - OPCODE row
+void insertNewFullCodeWord(machineCode** machCodeTable, symbolList* symbolTable, char** arrayOfArgs, int valueForNewWord, int numOfArgs);	 // this function insert the new second row of the action - FUNCT, origin and destination addresses
+void displayWord(machineCode* machCode);	// This function print the current word of the machineCode
 
-void printList(machineCode* head);
+int getOpcodeAction(char actionName[]);		// get the opcode number of the action
+
+void insertNewCodeWordDirectiveValue(machineCode** machCodeTable, char* binaryNumber, int valueForNewWord);		 // this function insert the row of the directive
+void insertEmptyRowForNewWordsOfSymbol(machineCode** machCodeTable, int valueForNewWord);	// this function insert the new empty rows of the arguments symbol
+void insertAdditionalWords(machineCode** actionsMachineCode, symbolList** symbolTable, char** argsFromLine, int numOfArgs, int* pToActionsCounter);		// insert additional rows for the arguments in the row
+
+void printList(machineCode* head);		// this function will print the all list of machinedCodes
 
 
 #endif //__WORDINCODE_H

@@ -19,7 +19,6 @@ void isSymbolAlreadyExist(symbolList** symbolTable, char symbolName[], symbolLis
 void insertNewSymbolData(symbolList** symbolTable, char symbolNameParam[], int valueOfSymbol, char* attributeParam);
 void insertSymbolToEndOfList(symbolList** symbolTable, symbolList* newSymbolToInsert);
 void printSymList(symbolList* head);
-
 void insertEmptySymbolWithSavedLines(symbolList** symbolTable, char* symbolName, int* savedLinesOfSymbol);
 
 
@@ -30,8 +29,6 @@ typedef struct symbolNode
 	int baseAddress;
 	int offset;
 	int noOfAttributes;
-
-	/*char* attributes[MAX_ATTRIBUTES_VALUE];*/
 
 	int* savedLinesInCode;	// the saved lines in the code
 	char* attributes;	// the attributes of the current symbol
@@ -57,8 +54,6 @@ void isSymbolAlreadyExist(symbolList** symbolTable, char symbolName[], symbolLis
 	symbolList* ptr = *symbolTable;
 	char* p;
 	int namesAreEqual;
-
-	//displaySymbol(ptr);
 
 	if (ptr != NULL) {
 
@@ -107,14 +102,10 @@ void insertSymbolToEndOfList(symbolList** symbolTable, symbolList* newSymbolToIn
 // Then - iterate until end of symbolTable and insert the newSybol at the end 
 void insertNewSymbolData(symbolList** symbolTable, char symbolNameParam[], int valueOfSymbol, char* attributeParam) {
 
-	//printf("\nName of symbol: %s, value:  %d ", symbolNameParam, valueOfSymbol);
-
 	int i, j;
 	int symbolExist = FALSE, newSymbolOffset, newSymbolBaseAdd;
 	symbolList* newSymbol = NULL;
 	symbolList* ret = NULL;
-
-	//symbolList* pToSymbolinTable = symbolTable;
 
 	isSymbolAlreadyExist(symbolTable, symbolNameParam, &ret);
 
@@ -130,10 +121,7 @@ void insertNewSymbolData(symbolList** symbolTable, char symbolNameParam[], int v
 
 		if (newSymbol) {
 
-			//displaySymbol(newSymbol);
 			// insert the name of the symbol
-
-			//(*valueOfSymbol) = (*valueOfSymbol) + 1;
 
 			strcpy(newSymbol->symbolName, symbolNameParam);
 
@@ -149,21 +137,8 @@ void insertNewSymbolData(symbolList** symbolTable, char symbolNameParam[], int v
 			newSymbol->noOfAttributes = 1;
 			newSymbol->nextSymbol = NULL;
 
-			//The part is not working!!
-			//strcpy(newSymbol->attributes[0], attributeParam);
-
+			// insert the new attributes
 			strcpy(newSymbol->attributes, attributeParam);
-			{
-				//The part is not working!!
-				 //INsert to the existing table at the end
-				/*while (pToSymbolinTable != NULL)
-					pToSymbolinTable = pToSymbolinTable->nextSymbol;
-
-				pToSymbolinTable->nextSymbol = newSymbol;
-				pToSymbolinTable = pToSymbolinTable->nextSymbol;
-				pToSymbolinTable->nextSymbol = NULL;*/
-
-			}
 
 			insertSymbolToEndOfList(symbolTable, newSymbol);
 		}
@@ -201,7 +176,6 @@ void insertNewSymbolData(symbolList** symbolTable, char symbolNameParam[], int v
 			}			
 		}
 	}
-	//free(pToSymbolinTable);
 }
 
 
@@ -209,11 +183,10 @@ void insertNewSymbolData(symbolList** symbolTable, char symbolNameParam[], int v
 void printToMachineCode(symbolList* symbolTable) {
 
 }
-// Operations:
-// 1. Add new Symbol - adding symbol name, value, attributes + calculate the Base address and Offset in method
-// 2. Add new attribute to existing symbol
-// 3. Search a symbol in SymbolTable - by char array represent the Symbol Name - return true or false
 
+
+// Operations:
+// 2. Add new attribute to existing symbol
 
 // this function will insert a symbol without any values - only the name of the symbol and the saved lines indexes
 void insertEmptySymbolWithSavedLines(symbolList** symbolTable, char* symbolName, int* savedLinesOfSymbol) {
@@ -227,7 +200,7 @@ void insertEmptySymbolWithSavedLines(symbolList** symbolTable, char* symbolName,
 	if (newEmptySymbol != NULL) {
 		// means that the symbol was found on the list
 
-				// copy the saved Lines to the savedLines
+		// copy the saved Lines to the savedLines
 		for (i = 0; i < noNewLines; i++) {
 			newEmptySymbol->savedLinesInCode[i] = savedLinesOfSymbol[i];
 		}
@@ -249,20 +222,6 @@ void insertEmptySymbolWithSavedLines(symbolList** symbolTable, char* symbolName,
 		// insert the current empty symbol to the symbol table
 		insertSymbolToEndOfList(symbolTable, newEmptySymbol);
 	}
-
-	//newEmptySymbol = createNewSymbol();
-	//// insert the new symbol name
-	//strcpy(newEmptySymbol->symbolName, symbolName);
-
-	//newEmptySymbol->nextSymbol = NULL;
-
-	//// copy the saved Lines to the savedLines
-	//for (i = 0; i < noNewLines; i++) {
-	//	newEmptySymbol->savedLinesInCode[i] = savedLinesOfSymbol[i];
-	//}
-
-	//// insert the current empty symbol to the symbol table
-	//insertSymbolToEndOfList(symbolTable, newEmptySymbol);
 
 }
 
@@ -292,7 +251,7 @@ void displaySymbol(symbolList* symbol) {
 }
 
 
-
+// This function will prin the all symbol list
 void printSymList(symbolList* head) {
 
 	printf("\n The linked list of Symbols is\n");

@@ -43,10 +43,10 @@ void insertNewFullCodeWord(machineCode** machCodeTable, symbolList* symbolTable,
 void insertNewCodeWordDirectiveValue(machineCode** machCodeTable, char* binaryNumber, int valueForNewWord);
 void insertEmptyRowForNewWordsOfSymbol(machineCode** machCodeTable, int valueForNewWord);
 void insertAdditionalWords(machineCode** actionsMachineCode, symbolList** symbolTable, char** argsFromLine, int numOfArgs, int* pToActionsCounter);
-
 void registersAdresses(machineCode* machCode, char directionFlag, char* registerCode, char* adrCode);
-
 void printList(machineCode* head);
+
+
 
 // allocate memory of a new word
 machineCode* createWordInMemory() {
@@ -61,12 +61,7 @@ void initializeCodeWord(machineCode* machCode) {
 	machCode->isCompleted = FALSE;
 	machCode->programWordValue = -1;
 
-	//machCode->nextWord = (machineCode*)malloc(sizeof(machineCode));
-
 	machCode->nextWord = NULL;
-
-	//for (i = 0; i<WORD_LENGTH; i++)
-	//	machCode->wordBinary[i] = 0;
 
 	memset(machCode->wordBinary, 0, WORD_LENGTH);
 }
@@ -75,15 +70,11 @@ void initializeCodeWord(machineCode* machCode) {
 // Initialize the word array with all -1 value- for regular word - with funct, addresses and registers
 void initializeWithNotCompletedCodeWord(machineCode* machCode) {
 
-	//int i;
-
 	machCode->isCompleted = FALSE;
 	machCode->programWordValue = -1;
+	machCode->nextWord = NULL;
 
 	machCode->nextWord = (machineCode*)malloc(sizeof(machineCode));
-
-	/*for (i = 0; i < WORD_LENGTH - 1; i++)
-		machCode->wordBinary[i] = -1;*/
 
 	memset(machCode->wordBinary, (-1), WORD_LENGTH);
 
@@ -91,34 +82,14 @@ void initializeWithNotCompletedCodeWord(machineCode* machCode) {
 	machCode->wordBinary[0] = 0;
 }
 
-
-// ------------Doesnot work!!! 
+ 
 // This method will insert a new Word to the end of the current Machine Code Table - after it was built
 void insertNewWordToEndOfTable(machineCode** machCodeTable, machineCode* newMachineCodeWord) {
-
-	//machineCode* pNewWord = (machineCode*)malloc(sizeof(machineCode));
 
 	machineCode* pWord ;
 
 	if (*machCodeTable == NULL)
 	{
-		//delete the comments below
-		{
-			// Insert the first MachineCode to the table
-		/*	pWord = (machineCode*)malloc(sizeof(machineCode));
-			pWord->programWordValue = newMachineCodeWord->programWordValue;*/
-
-			//pWord->wordBinary = newMachineCodeWord->wordBinary;
-
-			/*pWord->isCompleted = newMachineCodeWord->isCompleted;
-			pWord->nextWord = NULL;
-
-			machCodeTable = pWord;*/
-			//pWord = newMachineCodeWord;
-			//pWord->nextWord = NULL;
-			// 
-			//machCodeTable = (machineCode*)malloc(sizeof(machineCode));
-		}
 
 		*machCodeTable = newMachineCodeWord;		
 		(* machCodeTable)->nextWord = NULL;
@@ -132,21 +103,8 @@ void insertNewWordToEndOfTable(machineCode** machCodeTable, machineCode* newMach
 		
 		pWord->nextWord = newMachineCodeWord;
 
-		//delete the comments below
-		{
-			//pWord->nextWord = (machineCode*)malloc(sizeof(machineCode));
-			//pWord = (machineCode*)malloc(sizeof(machineCode));
-
-			/*pWord->nextWord = NULL;
-			pWord = pWord->nextWord;*/
-			//pNewWord->nextWord = (machineCode*)malloc(sizeof(machineCode));
-			//pWord->nextWord = NULL;
-		}
 	}
 
-	//printf("\nAfter insert inside function: ");
-	//printList(*machCodeTable);
-	//free(pWord);
 }
 
 
@@ -207,8 +165,6 @@ int getOpcodeAction(char actionName[]) {
 
 		currAction = pToActionsOpCode[i];	// get current action from the table
 
-		//lineLength = strlen(currAction);	// Calculate the curr action length in table
-
 		indexOfFirstComma = returnFirstIndexOfChar(currAction, ',');	// Find the first delimeter index from action name to action data
 		indexOfFirstColon = returnFirstIndexOfChar(currAction, ':');	// Find the first colon index, before the opcode value of action
 
@@ -239,7 +195,6 @@ void insertNewOpCodeWord(machineCode** machCodeTable, char actionName[],int opCo
 	if (newWord) {
 		initializeCodeWord(newWord);
 
-		//Test
 		// Turn on Relevant bit in the array in the new word
 		
  		newWord->programWordValue = valueOfAction;
@@ -265,14 +220,8 @@ void insertNewOpCodeWord(machineCode** machCodeTable, char actionName[],int opCo
 
 		newWord->isCompleted = TRUE;
 
-		//displayWord(newWord);
-
 		//Insert to machineCodeTable in the end
 		insertNewWordToEndOfTable(machCodeTable, newWord);
-		
-		
-		//printf("\nAfter insert outside insert function: ");
-		//printList(*machCodeTable);
 
 	}
 	else
@@ -307,8 +256,6 @@ char* getFunctOfAction(char actionName[], int opCodeOfAction) {
 
 			currActionName = subString(currAction, 0, indexOfFirstComma);	// Substring the current action name
 			currFunctOfAction = subString(currAction, indexOfLastColon + 1, lineLength);	// Substring the Funct
-
-			//printf("\nThe Funct value of %s is %s", currActionName, currFunctOfAction);
 
 			// Compare the 2 names of the given action with the current from iteration
 			cmpResult = strcmp(actionName, currActionName);
@@ -411,9 +358,6 @@ void insertNewFullCodeWord(machineCode** machCodeTable, symbolList* symbolTable,
 		// change the isCompleted to true - done inserting this row
 		newWord->isCompleted = TRUE;
 
-		// TEST
-		//displayWord(newWord);
-
 		// insert the new word to the machine code table
 		insertNewWordToEndOfTable(machCodeTable, newWord);
 	}
@@ -444,8 +388,6 @@ void insertNewCodeWordDirectiveValue(machineCode** machCodeTable, char* binaryNu
 
 		newWord->isCompleted = TRUE;
 
-		//displayWord(newWord);
-
 		insertNewWordToEndOfTable(machCodeTable, newWord);
 	}
 	else
@@ -468,12 +410,10 @@ void insertEmptyRowForNewWordsOfSymbol(machineCode** machCodeTable, int valueFor
 
 		// insert the value of the row only!
 		newWord->programWordValue = valueForNewWord;
-		newWord->nextWord = NULL;
 		
 		// insert the new word to end of table
 		insertNewWordToEndOfTable(machCodeTable, newWord);
 
-		//displayWord(newWord);
 	}
 	else
 	{
@@ -484,7 +424,7 @@ void insertEmptyRowForNewWordsOfSymbol(machineCode** machCodeTable, int valueFor
 }
 
 
-//To handle the .entry directive
+// Insert additional rows to machine code, according to the parameters in the roww
 void insertAdditionalWords(machineCode** actionsMachineCode, symbolList** symbolTable, char** argsFromLine, int numOfArgs, int* pToActionsCounter)
 {
 	symbolList* searchedSymbol = NULL;
@@ -657,13 +597,10 @@ void deleteWordFromMemory(machineCode* machCode) {
 }
 
 
-// Operations:
-// Print Current Word - in Hexadecimal format
-
+// Print Current Word
 void displayWord(machineCode* machCode) {
 
 	machineCode* ptr = machCode;
-
 
 	int i = 1,j;
 	if (ptr == NULL)
@@ -688,6 +625,7 @@ void displayWord(machineCode* machCode) {
 }
 
 
+// print the hole list of machine codes
 void printList(machineCode* head) {
 
 	printf("\n The linked list of machine code is\n");
@@ -699,6 +637,4 @@ void printList(machineCode* head) {
 		head = head->nextWord;
 		
 	}
-
-
 }
