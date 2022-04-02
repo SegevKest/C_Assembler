@@ -517,7 +517,7 @@ void analyzeCodeRow(symbolList** symbolTable, machineCode** actionsMachineCode, 
 		whiteSpaceLine, commentLine, rowHasSymbol, actionRow, directiveRow, typeOfDirective, commaLocation;
 
 	//int* localActionsCounter = malloc(sizeof(int));
-	printf("\nFULL ROW : Code is:%s", rowFromCode);
+	printf("\nFULL ROW : Code is:%s\n", rowFromCode);
 	//localActionsCounter = instructCounter;
 
 	whiteSpaceLine = commentLine = rowHasSymbol = actionRow = directiveRow = lengthOfArr = FALSE;
@@ -540,7 +540,7 @@ void analyzeCodeRow(symbolList** symbolTable, machineCode** actionsMachineCode, 
 		commaLocation = returnFirstIndexOfChar(rowFromCode, ':');
 		newSymbolName = getTrimmedCodeRow(subString(rowFromCode, 0, commaLocation));
 		restOfRowFromCode = getTrimmedCodeRow(subString(rowFromCode, commaLocation + 1, strlen(rowFromCode)));
-		printf("\nSymbol Name:%s", newSymbolName);
+		printf("\nSymbol Name:%s\n", newSymbolName);
 	}
 	else
 	{
@@ -555,10 +555,6 @@ void analyzeCodeRow(symbolList** symbolTable, machineCode** actionsMachineCode, 
 	else {
 		directiveRow = TRUE;
 	}
-
-	printf("\nCode is:%s", restOfRowFromCode);
-
-	//printf("\nAction - %d; Directive - %d ;Symbol - %d\n Counters: ic: %d	\t dc:%d\n ", actionRow, directiveRow, rowHasSymbol, instructCounter, dataCounter);
 
 	//Get the array of arguments from the current Row
 	arrayOfArgumentFromCode = buildArrayOfRowParams(restOfRowFromCode, &lengthOfArr);

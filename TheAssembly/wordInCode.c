@@ -444,7 +444,7 @@ void insertNewCodeWordDirectiveValue(machineCode** machCodeTable, char* binaryNu
 
 		newWord->isCompleted = TRUE;
 
-		displayWord(newWord);
+		//displayWord(newWord);
 
 		insertNewWordToEndOfTable(machCodeTable, newWord);
 	}
@@ -473,7 +473,7 @@ void insertEmptyRowForNewWordsOfSymbol(machineCode** machCodeTable, int valueFor
 		// insert the new word to end of table
 		insertNewWordToEndOfTable(machCodeTable, newWord);
 
-		displayWord(newWord);
+		//displayWord(newWord);
 	}
 	else
 	{
@@ -535,7 +535,7 @@ void insertAdditionalWords(machineCode** actionsMachineCode, symbolList** symbol
 			else
 			{
 				// miun 2 - will contain [Reg_No]
-				if (strstr(argsFromLine[1],"[") == TRUE)
+				if (strstr(argsFromLine[1],"[") != NULL)
 					indexOfSymbolName = 1;
 				else
 					indexOfSymbolName = 2;
@@ -670,26 +670,20 @@ void displayWord(machineCode* machCode) {
 		printf("\Word is empty.\n");
 	else
 	{
-		printf("\nSr. No.\t\PrgramWordValue\t\tIsCompleted\t\tLink\n");
-			printf("\n%d.\t \t%d\t \t%d\t \n", i, ptr->programWordValue, ptr->isCompleted);
-			
-			i++;
 
-			printf("\Word Code.\n");
+			printf("\t");
 			
+			//for (j = 0; j < WORD_LENGTH; j++) {
+			//	if (j > 9)
+			//		printf("| %d |", (WORD_LENGTH-j-1));
+			//	else
+			//		printf("| %d|", (WORD_LENGTH - j-1));
+			//}
 			for (j = 0; j < WORD_LENGTH; j++) {
-				if (j > 9)
-					printf("| %d |", (WORD_LENGTH-j-1));
-				else
-					printf("| %d|", (WORD_LENGTH - j-1));
-			}
-			printf("\n");
-			for (j = 0; j < WORD_LENGTH; j++) {
-				printf("| %d |", ptr->wordBinary[j]);
+				printf("|%d|", ptr->wordBinary[j]);
 			}
 
 	}
-	//free(ptr);
 
 }
 
@@ -700,8 +694,8 @@ void printList(machineCode* head) {
 
 	while (head != NULL)
 	{
-		printf(" %d - isCom:%d  ", head->programWordValue, head->isCompleted);
-		//displayWord(head->wordBinary);
+		printf("\nWord %d - isCom:%d  ", head->programWordValue, head->isCompleted);
+		displayWord(head);
 		head = head->nextWord;
 		
 	}

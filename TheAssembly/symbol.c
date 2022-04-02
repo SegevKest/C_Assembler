@@ -221,19 +221,48 @@ void insertEmptySymbolWithSavedLines(symbolList** symbolTable, char* symbolName,
 	symbolList* newEmptySymbol = NULL;
 	int i, noNewLines = 2;
 
-	newEmptySymbol = createNewSymbol();
-	// insert the new symbol name
-	strcpy(newEmptySymbol->symbolName, symbolName);
 
-	newEmptySymbol->nextSymbol = NULL;
+	isSymbolAlreadyExist(symbolTable,symbolName,&newEmptySymbol);
 
-	// copy the saved Lines to the savedLines
-	for (i = 0; i < noNewLines; i++) {
-		newEmptySymbol->savedLinesInCode[i] = savedLinesOfSymbol[i];
+	if (newEmptySymbol != NULL) {
+		// means that the symbol was found on the list
+
+				// copy the saved Lines to the savedLines
+		for (i = 0; i < noNewLines; i++) {
+			newEmptySymbol->savedLinesInCode[i] = savedLinesOfSymbol[i];
+		}
+
+	}
+	else {
+		// there is no such symbol in the list
+
+		newEmptySymbol = createNewSymbol();
+		// insert the new symbol name
+		strcpy(newEmptySymbol->symbolName, symbolName);
+		newEmptySymbol->nextSymbol = NULL;
+
+		// copy the saved Lines to the savedLines
+		for (i = 0; i < noNewLines; i++) {
+			newEmptySymbol->savedLinesInCode[i] = savedLinesOfSymbol[i];
+		}
+
+		// insert the current empty symbol to the symbol table
+		insertSymbolToEndOfList(symbolTable, newEmptySymbol);
 	}
 
-	// insert the current empty symbol to the symbol table
-	insertSymbolToEndOfList(symbolTable, newEmptySymbol);
+	//newEmptySymbol = createNewSymbol();
+	//// insert the new symbol name
+	//strcpy(newEmptySymbol->symbolName, symbolName);
+
+	//newEmptySymbol->nextSymbol = NULL;
+
+	//// copy the saved Lines to the savedLines
+	//for (i = 0; i < noNewLines; i++) {
+	//	newEmptySymbol->savedLinesInCode[i] = savedLinesOfSymbol[i];
+	//}
+
+	//// insert the current empty symbol to the symbol table
+	//insertSymbolToEndOfList(symbolTable, newEmptySymbol);
 
 }
 

@@ -46,7 +46,8 @@ int main(){
 	//printf("hello");
 
 	// Pre Processor - return the new file name to start pass
-	currentFileName = handleSingleFile("test");
+	
+	//currentFileName = handleSingleFile("test");
 
 	// first pass
 	firstPassOnFile(&actionsMachineCode, &dataMachineCode, &symbolTable, "test.am", &validationFlag, &dataCounter, &actionCounter);
