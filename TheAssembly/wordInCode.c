@@ -15,7 +15,7 @@
 #define LENGTH_OF_SAVED_WORDS 2
 #define TRUE 1
 #define FALSE 0
-
+#define LENGTH_OF_BIN_NUMBER 16
 
 
 // This struct will represent a single word in the machine memory
@@ -46,6 +46,9 @@ void insertAdditionalWords(machineCode** actionsMachineCode, symbolList** symbol
 void registersAdresses(machineCode* machCode, char directionFlag, char* registerCode, char* adrCode);
 void printList(machineCode* head);
 
+// Second pass methods
+void findRowOfSymbolInMachineCode(machineCode** actionsMachineCode, int savedLineToReturn, machineCode** wordToEdit);
+void updateEmptyRowForWordsOfSymbol(machineCode** actionsMachineCode, int rowToEdit, int valueToEdit, char typeOfWord);
 
 
 // allocate memory of a new word
@@ -526,21 +529,67 @@ void insertAdditionalWords(machineCode** actionsMachineCode, symbolList** symbol
 
 //------------OPEN - PASS 2
 // this method  will edit the found machine code accordingly to the symbol values
-void updateEmptyRowForNewWordsOfSymbol(machineCode* machCodeTable) {
+void updateEmptyRowForWordsOfSymbol(machineCode** actionsMachineCode, int rowToEdit, int valueToEdit, char typeOfWord) {
+
+	machineCode* theWordToEdit = NULL;
+	char* pToBin;
+	int i, wordIndexToInsert = 4;
+
+	pToBin = malloc(sizeof(char) * LENGTH_OF_BIN_NUMBER);
+
+	// get the pointer of the rowToEdit;
+	findRowOfSymbolInMachineCode(actionsMachineCode, rowToEdit, &theWordToEdit);
+
+	// edit the A,R,E cells in the word itself
+
+	if (typeOfWord == 'O') {
+		// means that this symbol is OTHER than External symbol
+		updateCodeWordARECells(theWordToEdit,'R');
+	}
+	else
+	{
+		// means that this is an EXTERNAL symbol
+		updateCodeWordARECells(theWordToEdit, 'E');
+	}
+
+	if (pToBin != NULL)
+		strcpy(pToBin, convertNumberToBinaryString((int)valueToEdit));
 
 
+	// insert the binary number to the array - in order
+	for (i = 0; i < LENGTH_OF_BIN_NUMBER; i++, wordIndexToInsert++) {
+		theWordToEdit->wordBinary[wordIndexToInsert] = (pToBin[i] - '0');
+	}
+
+	theWordToEdit->isCompleted = TRUE;
 
 }
 
 
-//-----------OPEN - PASS 2
-// this method will search for the relevant row of the current argument in the machine code and return a pointer to it
-machineCode* findRowOfSymbolInMachineCode() {
 
-	machineCode* foundSymbol = NULL;
+// this method will search for in the all machineCodeList the line - by the value - and return the pointer to it
+void findRowOfSymbolInMachineCode(machineCode** actionsMachineCode,  int savedLineToReturn, machineCode** wordToEdit) {
 
+	machineCode* ptr = *actionsMachineCode;
+	int rowNumbersAreEqual;
 
-	return foundSymbol;
+	if (ptr != NULL) {
+
+		while (ptr != NULL && !(*wordToEdit)) {
+
+			rowNumbersAreEqual = strcmp((ptr->programWordValue), savedLineToReturn);
+
+			if (!rowNumbersAreEqual)		// return 0 if equal
+			{
+				*wordToEdit = ptr;
+			}
+			else
+			{
+				ptr = ptr->nextWord;
+			}
+		}
+	}
+
 }
 
 

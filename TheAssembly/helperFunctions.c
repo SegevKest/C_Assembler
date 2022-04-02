@@ -651,7 +651,7 @@ void analyzeCodeRowSecondPass(symbolList** symbolTable, machineCode** actionsMac
 		if (typeOfDirective == 3) {
 			// entry directive - add the entry attribute to the symbol in the list
 			symbolNameToEdit = arrayOfArgumentFromCode[1];
-			handleSymbolScenario(symbolTable, symbolNameToEdit,"entry",-1);
+			handleSymbolScenario(symbolTable, symbolNameToEdit,"entry",-1);	// -1 as value of Symbol - to avoid the edit of the symbol
 		}
 	}
 	if (actionRow) {

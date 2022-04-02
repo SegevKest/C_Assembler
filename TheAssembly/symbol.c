@@ -264,3 +264,48 @@ void printSymList(symbolList* head) {
 }
 
 
+// this method will return the Type of Symbol -if External of other
+char getTheTypeOfSymbol(symbolList** symbolTable, char* symbolName) {
+	
+	symbolList* ret = NULL;
+
+	isSymbolAlreadyExist(symbolTable, symbolName, &ret);
+
+	if (strstr(ret->attributes, "extern") != NULL)
+		return 'E';
+	else
+		return 'O';
+}
+
+// this method will return the baseAddress of the symbol as integer
+int getBaseAddressOfSymbol(symbolList** symbolTable, char* symbolName){
+
+	symbolList* ret = NULL;
+
+	isSymbolAlreadyExist(symbolTable, symbolName, &ret);
+
+	return ret->baseAddress;
+
+}
+
+// this method will return the Offset of the symbol as integer
+int getOffsetOfSymbol(symbolList** symbolTable, char* symbolName) {
+
+	symbolList* ret = NULL;
+
+	isSymbolAlreadyExist(symbolTable, symbolName, &ret);
+
+	return ret->offset;
+
+}
+
+ // this method will return the Saved Lines of the symbol as integer
+int* getSavedRowsOfSymbol(symbolList** symbolTable, char* symbolName) {
+
+	symbolList* ret = NULL;
+
+	isSymbolAlreadyExist(symbolTable, symbolName, &ret);
+
+	return ret->savedLinesInCode;
+
+}
