@@ -49,7 +49,7 @@ void printList(machineCode* head);
 // Second pass methods
 void findRowOfSymbolInMachineCode(machineCode** actionsMachineCode, int savedLineToReturn, machineCode** wordToEdit);
 void updateEmptyRowForWordsOfSymbol(machineCode** actionsMachineCode, int rowToEdit, int valueToEdit, char typeOfWord);
-
+void editEmptyRowsOfSymbol(machineCode** actionsMachineCode, symbolList** symbolTable, char** argsFromLine, int numOfArgs);
 
 // allocate memory of a new word
 machineCode* createWordInMemory() {
@@ -526,6 +526,73 @@ void insertAdditionalWords(machineCode** actionsMachineCode, symbolList** symbol
 }
 
 
+// PASS 2 - this method will be in charge to gather all the logic to edit the empty rows of the symbol
+void editEmptyRowsOfSymbol(machineCode** actionsMachineCode, symbolList** symbolTable, char** argsFromLine, int numOfArgs) {
+
+	char* symbolNameToEdit = NULL;
+	char* resultOfMiunCheck;
+	int i, indexOfSymbolName, indexToCut;
+	int* savedRowsOfSymbol;
+	
+	symbolList* symbolToEditWord = NULL;
+	
+	for (i = 1; i <= numOfArgs; i++) {
+	
+		// get the kind of miun of this argument
+		resultOfMiunCheck = findMatchedMiun(argsFromLine[i], symbolTable);
+	
+		if (strcmp(resultOfMiunCheck, "01\0") == 0 || strcmp(resultOfMiunCheck, "10\0") == 0) {
+
+			if (strcmp(resultOfMiunCheck, "01\0") == 0) {
+				// miun 1 - will be only string
+				if (isString(argsFromLine[1]) == TRUE)
+					indexOfSymbolName = 1;
+				else
+					indexOfSymbolName = 2;
+
+				symbolNameToEdit = malloc(sizeof(char) * SYMBOL_MAX_LENGTH);
+
+				if (symbolNameToEdit != NULL)
+					strcpy(symbolNameToEdit, argsFromLine[indexOfSymbolName]);
+			}
+
+			else if (strcmp(resultOfMiunCheck, "10\0") == 0) {
+				// miun 2 - will contain [Reg_No]
+				if (strstr(argsFromLine[1], "[") != NULL)
+					indexOfSymbolName = 1;
+				else
+					indexOfSymbolName = 2;
+
+				// split the symbol name from the argument
+				indexToCut = returnFirstIndexOfChar(argsFromLine[indexOfSymbolName], '[');
+				symbolNameToEdit = subString(argsFromLine[indexOfSymbolName], 0, indexToCut);
+			}
+
+			// Get the saved rows -
+			savedRowsOfSymbol = getSavedRowsOfSymbol(symbolTable, symbolNameToEdit);
+		
+			if (getTheTypeOfSymbol(symbolTable, symbolNameToEdit) == 'E') {
+				// External
+				// Handle the second Row
+				updateEmptyRowForWordsOfSymbol(actionsMachineCode, *savedRowsOfSymbol, getBaseAddressOfSymbol(symbolTable, symbolNameToEdit) ,'E');
+				updateEmptyRowForWordsOfSymbol(actionsMachineCode, *(savedRowsOfSymbol+1), getOffsetOfSymbol(symbolTable, symbolNameToEdit), 'E');
+			}
+			else {
+				// External
+// Handle the second Row
+				updateEmptyRowForWordsOfSymbol(actionsMachineCode, *savedRowsOfSymbol, getBaseAddressOfSymbol(symbolTable, symbolNameToEdit), 'O');
+				updateEmptyRowForWordsOfSymbol(actionsMachineCode, *(savedRowsOfSymbol + 1), getOffsetOfSymbol(symbolTable, symbolNameToEdit), 'O');
+			}
+			
+		}
+		else
+		{
+			//not relevant miun
+		}
+
+	}
+
+}
 
 //------------OPEN - PASS 2
 // this method  will edit the found machine code accordingly to the symbol values
@@ -566,7 +633,6 @@ void updateEmptyRowForWordsOfSymbol(machineCode** actionsMachineCode, int rowToE
 }
 
 
-
 // this method will search for in the all machineCodeList the line - by the value - and return the pointer to it
 void findRowOfSymbolInMachineCode(machineCode** actionsMachineCode,  int savedLineToReturn, machineCode** wordToEdit) {
 
@@ -577,9 +643,15 @@ void findRowOfSymbolInMachineCode(machineCode** actionsMachineCode,  int savedLi
 
 		while (ptr != NULL && !(*wordToEdit)) {
 
-			rowNumbersAreEqual = strcmp((ptr->programWordValue), savedLineToReturn);
+			if (ptr->programWordValue == savedLineToReturn) {
+				rowNumbersAreEqual = TRUE;
+			}
+			else
+				rowNumbersAreEqual = FALSE;
 
-			if (!rowNumbersAreEqual)		// return 0 if equal
+			//rowNumbersAreEqual = strcmp((ptr->programWordValue), savedLineToReturn);
+
+			if (rowNumbersAreEqual)		// return 0 if equal
 			{
 				*wordToEdit = ptr;
 			}

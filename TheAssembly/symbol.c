@@ -21,6 +21,12 @@ void insertSymbolToEndOfList(symbolList** symbolTable, symbolList* newSymbolToIn
 void printSymList(symbolList* head);
 void insertEmptySymbolWithSavedLines(symbolList** symbolTable, char* symbolName, int* savedLinesOfSymbol);
 
+// SECON PASS
+int* getSavedRowsOfSymbol(symbolList** symbolTable, char* symbolName);
+int getOffsetOfSymbol(symbolList** symbolTable, char* symbolName);
+int getBaseAddressOfSymbol(symbolList** symbolTable, char* symbolName);
+char getTheTypeOfSymbol(symbolList** symbolTable, char* symbolName);
+
 
 typedef struct symbolNode
 {

@@ -20,5 +20,8 @@ void insertAdditionalWords(machineCode** actionsMachineCode, symbolList** symbol
 
 void printList(machineCode* head);		// this function will print the all list of machinedCodes
 
+// Second PASS
+void editEmptyRowsOfSymbol(machineCode** actionsMachineCode, symbolList** symbolTable, char** argsFromLine, int numOfArgs);
+
 
 #endif //__WORDINCODE_H

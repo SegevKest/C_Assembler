@@ -484,6 +484,37 @@ void handleActionRowScenario(machineCode** actionsMachineCode, symbolList** symb
 }
 
 
+// PASS 2
+//this function will handle the completion of the empty rows of symbol
+void handleEmptySymbolRowsSenarios(machineCode** actionsMachineCode, symbolList** symbolTable, char** arrayOfArgs, int lengthOfArr) {
+
+	int i, groupOfAction = -1, opCode, amountOfArgs, isValidArgsNumber;
+
+	// Check if the Opcode of this actin is exist
+	opCode = getOpcodeAction(arrayOfArgs[0]);
+
+	// handle the action - first cell of array
+	// apply all validations of the name
+	if (opCode == -1) {
+		printf("ERROR - Not valid Action Entered");
+		return;
+	}
+
+	//handle the argument validations
+	amountOfArgs = lengthOfArr - 1;
+
+	// check for valid param number for this Action
+	isValidArgsNumber = isValidParamNumber(lengthOfArr - 1, opCode);
+
+
+	if (isValidArgsNumber > 0) {
+		// will be 2 or 1
+		// insert second word for hole row code
+
+		// handle the additional rows for each argument
+		editEmptyRowsOfSymbol(actionsMachineCode, symbolTable, arrayOfArgs, amountOfArgs);
+	}
+}
 
 // OPEN ------ MUST !
 // functin that will get the line from the file and split it to different strings in a new array
@@ -656,5 +687,7 @@ void analyzeCodeRowSecondPass(symbolList** symbolTable, machineCode** actionsMac
 	}
 	if (actionRow) {
 
+		// edit the empty rows
+		handleEmptySymbolRowsSenarios(actionsMachineCode,symbolTable,arrayOfArgumentFromCode,lengthOfArr);
 	}
 }

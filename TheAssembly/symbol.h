@@ -13,4 +13,12 @@ void displaySymbol(symbolList* symbol);		// function to print the symbol
 void insertEmptySymbolWithSavedLines(symbolList** symbolTable, char* symbolName, int* savedLinesOfSymbol);	// function to insert a symbol with empty values - but the saved lines and names
 void printSymList(symbolList* head);	// this functino print the all symbol list
 
+
+// SECON PASS
+int* getSavedRowsOfSymbol(symbolList** symbolTable, char* symbolName);
+int getOffsetOfSymbol(symbolList** symbolTable, char* symbolName);
+int getBaseAddressOfSymbol(symbolList** symbolTable, char* symbolName);
+char getTheTypeOfSymbol(symbolList** symbolTable, char* symbolName);
+
+
 #endif //__SYMBOL_H
