@@ -21,6 +21,8 @@ void insertAdditionalWords(machineCode** actionsMachineCode, symbolList** symbol
 void printList(machineCode* head);		// this function will print the all list of machinedCodes
 
 // Second PASS
+// this function is handling the edit of the empty rows of symbols in the machine code.
+// it will mofidy those words as required, after getting all their new data
 void editEmptyRowsOfSymbol(machineCode** actionsMachineCode, symbolList** symbolTable, char** argsFromLine, int numOfArgs);
 
 

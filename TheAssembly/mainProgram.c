@@ -62,16 +62,19 @@ int main(){
 
 
 		// check the validationFlag - if it is not valid - Finish this run
-		if (validationFlag != FALSE)
-		{
+	if (validationFlag != FALSE)
+	{
 			// validation were valid - continue to second pass and output
 
 			// Second Pass
 			scndPassOnFile(&actionsMachineCode, &dataMachineCode, &symbolTable, "test.am", &validationFlag, &dataCounter, &actionCounter);
+	}
+	if (validationFlag != FALSE)
+	{
+	
+		//Create the output files
+	}
 
-			// Create output files
-
-		}
 
 		printf("\nActions\n");
 

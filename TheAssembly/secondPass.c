@@ -17,7 +17,8 @@
 
 void scndPassOnFile(machineCode** actionsMachineCodeHead, machineCode** dataMachineCodeHead, symbolList** symbolHead, char* filePath, int* validationFlag, int* dataCounter, int* instructCounter);
 
-
+// The main function of the second pass - contains a loop on all the rows and handling each row
+// if contains a empty symbols rows in the list
 void scndPassOnFile(machineCode** actionsMachineCodeHead, machineCode** dataMachineCodeHead, symbolList** symbolHead, char* filePath, int* validationFlag, int* dataCounter, int* instructCounter) {
 
 	FILE* filePointer;
@@ -26,14 +27,16 @@ void scndPassOnFile(machineCode** actionsMachineCodeHead, machineCode** dataMach
 
 	char currLine[LINE_LENGTH];
 
+	if (filePointer == NULL) {
+		printf("\nFile pointer received is an ERROR - PASS 2");
+		*validationFlag = FALSE;
+	}
 
+	// Split the content by a new line delimeter
 	while (fgets(currLine, LINE_LENGTH, filePointer)) {
 
-		//printf("%s", currLine);
-
+		// Analyze the current Row from code
 		analyzeCodeRowSecondPass(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, getTrimmedCodeRow(currLine), instructCounter, dataCounter, validationFlag);
-
-		printf("\nDone with this row!\n");
 
 	}
 }

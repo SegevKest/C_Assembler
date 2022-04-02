@@ -516,8 +516,9 @@ void handleEmptySymbolRowsSenarios(machineCode** actionsMachineCode, symbolList*
 	}
 }
 
-// OPEN ------ MUST !
-// functin that will get the line from the file and split it to different strings in a new array
+
+// A function that will get all the symbol list, actions and data machine code list
+// and the current row from code and will build the machine code
 void analyzeCodeRow(symbolList** symbolTable, machineCode** actionsMachineCode, machineCode** dataMachineCode, char* rowFromCode, int* instructCounter, int* dataCounter, int* validationFlag) {
 
 	char* newSymbolName = NULL;
@@ -626,7 +627,9 @@ void analyzeCodeRow(symbolList** symbolTable, machineCode** actionsMachineCode, 
 }
 
 
-
+// PASS 2
+// A function that will get all the symbol list, actions and data machine code list
+// will iterate on all the machine code and will edit the empty value of the symbols
 void analyzeCodeRowSecondPass(symbolList** symbolTable, machineCode** actionsMachineCode, machineCode** dataMachineCode, char* rowFromCode, int* instructCounter, int* dataCounter, int* validationFlag) {
 
 	char* symbolNameToEdit = NULL;
@@ -635,8 +638,6 @@ void analyzeCodeRowSecondPass(symbolList** symbolTable, machineCode** actionsMac
 	int whiteSpaceLine, lengthOfArr, commentLine, rowHasSymbol, commaLocation, typeOfDirective, actionRow, directiveRow ;
 
 	whiteSpaceLine = commentLine = rowHasSymbol = actionRow = directiveRow = FALSE;
-
-	printf("\nFULL ROW : Code is:%s\n", rowFromCode);
 
 	// raise flag of char accordingly 
 	whiteSpaceLine = isWhiteSpacesLine(rowFromCode);
@@ -653,7 +654,6 @@ void analyzeCodeRowSecondPass(symbolList** symbolTable, machineCode** actionsMac
 	if (rowHasSymbol == TRUE)
 	{
 		commaLocation = returnFirstIndexOfChar(rowFromCode, ':');
-		//newSymbolName = getTrimmedCodeRow(subString(rowFromCode, 0, commaLocation));
 		restOfRowFromCode = getTrimmedCodeRow(subString(rowFromCode, commaLocation + 1, strlen(rowFromCode)));
 	}
 	else
@@ -674,14 +674,15 @@ void analyzeCodeRowSecondPass(symbolList** symbolTable, machineCode** actionsMac
 	//Get the array of arguments from the current Row
 	arrayOfArgumentFromCode = buildArrayOfRowParams(restOfRowFromCode, &lengthOfArr);
 
-
 	if (directiveRow) {
 
 		typeOfDirective = isDirectiveLine(rowFromCode);
 
 		if (typeOfDirective == 3) {
-			// entry directive - add the entry attribute to the symbol in the list
+			// the name of the symbol in an entry line is the second argument in the array
 			symbolNameToEdit = arrayOfArgumentFromCode[1];
+		
+			// entry directive - add the entry attribute to the symbol in the list
 			handleSymbolScenario(symbolTable, symbolNameToEdit,"entry",-1);	// -1 as value of Symbol - to avoid the edit of the symbol
 		}
 	}

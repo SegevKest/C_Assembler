@@ -14,11 +14,11 @@ void insertEmptySymbolWithSavedLines(symbolList** symbolTable, char* symbolName,
 void printSymList(symbolList* head);	// this functino print the all symbol list
 
 
-// SECON PASS
-int* getSavedRowsOfSymbol(symbolList** symbolTable, char* symbolName);
-int getOffsetOfSymbol(symbolList** symbolTable, char* symbolName);
-int getBaseAddressOfSymbol(symbolList** symbolTable, char* symbolName);
-char getTheTypeOfSymbol(symbolList** symbolTable, char* symbolName);
+// SECOND PASS
+int* getSavedRowsOfSymbol(symbolList** symbolTable, char* symbolName);	// this method will return the savedLines indexes of the symbol
+int getOffsetOfSymbol(symbolList** symbolTable, char* symbolName);		// this method will return the Offset of the symbol
+int getBaseAddressOfSymbol(symbolList** symbolTable, char* symbolName); 	// this method will return the Base Address of the symbol
+char getTheTypeOfSymbol(symbolList** symbolTable, char* symbolName);		// this method will return a char indicating if the symbol is external or other 
 
 
 #endif //__SYMBOL_H

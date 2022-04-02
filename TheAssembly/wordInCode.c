@@ -573,13 +573,13 @@ void editEmptyRowsOfSymbol(machineCode** actionsMachineCode, symbolList** symbol
 		
 			if (getTheTypeOfSymbol(symbolTable, symbolNameToEdit) == 'E') {
 				// External
-				// Handle the second Row
+				//  Edit the first and second machine code words
 				updateEmptyRowForWordsOfSymbol(actionsMachineCode, *savedRowsOfSymbol, getBaseAddressOfSymbol(symbolTable, symbolNameToEdit) ,'E');
 				updateEmptyRowForWordsOfSymbol(actionsMachineCode, *(savedRowsOfSymbol+1), getOffsetOfSymbol(symbolTable, symbolNameToEdit), 'E');
 			}
 			else {
-				// External
-// Handle the second Row
+				// Other than external
+				// Edit the first and second machine code words
 				updateEmptyRowForWordsOfSymbol(actionsMachineCode, *savedRowsOfSymbol, getBaseAddressOfSymbol(symbolTable, symbolNameToEdit), 'O');
 				updateEmptyRowForWordsOfSymbol(actionsMachineCode, *(savedRowsOfSymbol + 1), getOffsetOfSymbol(symbolTable, symbolNameToEdit), 'O');
 			}
@@ -589,12 +589,11 @@ void editEmptyRowsOfSymbol(machineCode** actionsMachineCode, symbolList** symbol
 		{
 			//not relevant miun
 		}
-
 	}
 
 }
 
-//------------OPEN - PASS 2
+//- PASS 2
 // this method  will edit the found machine code accordingly to the symbol values
 void updateEmptyRowForWordsOfSymbol(machineCode** actionsMachineCode, int rowToEdit, int valueToEdit, char typeOfWord) {
 
@@ -643,15 +642,14 @@ void findRowOfSymbolInMachineCode(machineCode** actionsMachineCode,  int savedLi
 
 		while (ptr != NULL && !(*wordToEdit)) {
 
+			// check if the curr machine code index is equal to the empty word 
 			if (ptr->programWordValue == savedLineToReturn) {
 				rowNumbersAreEqual = TRUE;
 			}
 			else
 				rowNumbersAreEqual = FALSE;
 
-			//rowNumbersAreEqual = strcmp((ptr->programWordValue), savedLineToReturn);
-
-			if (rowNumbersAreEqual)		// return 0 if equal
+			if (rowNumbersAreEqual)
 			{
 				*wordToEdit = ptr;
 			}

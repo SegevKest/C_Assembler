@@ -190,10 +190,6 @@ void printToMachineCode(symbolList* symbolTable) {
 
 }
 
-
-// Operations:
-// 2. Add new attribute to existing symbol
-
 // this function will insert a symbol without any values - only the name of the symbol and the saved lines indexes
 void insertEmptySymbolWithSavedLines(symbolList** symbolTable, char* symbolName, int* savedLinesOfSymbol) {
 
@@ -228,31 +224,6 @@ void insertEmptySymbolWithSavedLines(symbolList** symbolTable, char* symbolName,
 		// insert the current empty symbol to the symbol table
 		insertSymbolToEndOfList(symbolTable, newEmptySymbol);
 	}
-
-}
-
-
-void displaySymbol(symbolList* symbol) {
-
-	symbolList* ptr = symbol;
-	symbolList** currSymbolAttr;
-
-	int i;
-	if (ptr == NULL)
-		printf("\Symbol list is empty.\n");
-	else
-	{
-		printf("\nSr. No.\t\symbolName\t\tvalue\t\tOffset\t\tBase\t\t\n");
-		printf("\n%d\t\%s\t\t%d\t\t%d\t\t%d\t\t\n", ptr->symbolName,ptr->value, ptr->offset, ptr->baseAddress);
-		currSymbolAttr = ptr->attributes;
-
-		printf("\nAttirbutes:\n");
-
-	/*	for (i = 0; i < ptr->noOfAttributes; i++) {
-			printf("%s", currSymbolAttr[i]);
-		}*/
-	}
-	free(ptr);
 
 }
 
