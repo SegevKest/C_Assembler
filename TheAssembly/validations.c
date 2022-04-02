@@ -191,7 +191,7 @@ int isValidRegister(char* rgstrFromLine) {
 int isValidSeperationBetweenParams(char* paramFromCode) {
 
 	if (strstr(paramFromCode, ",") != NULL) {
-		printf("Found not valid seperation between arguments");
+		printf("\nFound not valid seperation between arguments");
 		return FALSE;
 	}
 
@@ -211,13 +211,13 @@ int isValidSeperationBetweenActionAndParam(char* paramFromCode) {
 	if (strstr(paramFromCode, ",") != NULL || isContainDirective != 0 ) {
 
 		if (isContainDirective == 1 && strlen(paramFromCode) > 6) {
-			printf("The split between the first and second argument was not successfull");
+			printf("\nThe split between the first and second argument was not successfull");
 		}
 		else if ((isContainDirective == 2 || isContainDirective == 4) && strlen(paramFromCode) > 8) {
-			printf("The split between the first and second argument was not successfull");
+			printf("\nThe split between the first and second argument was not successfull");
 		}
 		else if (isContainDirective == 3 && strlen(paramFromCode) > 7) {
-			printf("The split between the first and second argument was not successfull");
+			printf("\nThe split between the first and second argument was not successfull");
 		}
 		else
 		{
@@ -227,7 +227,7 @@ int isValidSeperationBetweenActionAndParam(char* paramFromCode) {
 		return FALSE;
 	}
 	if (strstr(paramFromCode, "\t") != NULL) {
-		printf("The split between the first and second argument was not successfull due TAB ");
+		printf("\nThe split between the first and second argument was not successfull due TAB ");
 		return FALSE;
 	}
 	return TRUE;
@@ -253,7 +253,7 @@ int isValidParamNumber(int amountOfArgs, int opCode) {
 			}
 			else
 			{
-				printf("ERROR: Not valid amount of arguments(%d) for action (OpCode:%d)", amountOfArgs, opCode);
+				printf("\nERROR: Not valid amount of arguments(%d) for action (OpCode:%d)", amountOfArgs, opCode);
 				result = -1;
 			}
 		}
@@ -265,7 +265,7 @@ int isValidParamNumber(int amountOfArgs, int opCode) {
 			}
 			else
 			{
-				printf("ERROR: Not valid amount of arguments(%d) for action (OpCode:%d)", amountOfArgs, opCode);
+				printf("\nERROR: Not valid amount of arguments(%d) for action (OpCode:%d)", amountOfArgs, opCode);
 				result = -1;
 			}
 		}
@@ -274,7 +274,7 @@ int isValidParamNumber(int amountOfArgs, int opCode) {
 	}
 	else
 	{
-		printf("Error while getting the number of arguments ");
+		printf("\nError while getting the number of arguments ");
 		result = -1;
 	}
 
@@ -308,7 +308,7 @@ int validateRowOfCode(char** arrayOfArgumentFromCode, int lengthOfArr) {
 		
 		if (isValidActionName == FALSE)
 		{
-			printf("Not a Valid action Name received");
+			printf("\nNot a Valid action Name received");
 			return FALSE;
 		}
 	}
@@ -316,7 +316,7 @@ int validateRowOfCode(char** arrayOfArgumentFromCode, int lengthOfArr) {
 	{
 		if (!(isDirective >= 1 && isDirective <= 4))
 		{
-			printf("Not a Valid Directive Name received");
+			printf("\nNot a Valid Directive Name received");
 			return FALSE;
 		}
 	}

@@ -16,10 +16,10 @@
 #define FALSE 0
 
 
-int main(){
-//int main(int argc, char* argv[]) {
 
+int main(int argc, char* argv[]) {
 
+	char* currentFileName;
 
 	// Define the machine code for actions
 	machineCode* actionsMachineCode = NULL;
@@ -30,90 +30,67 @@ int main(){
 	// Define the symbol Table
 	symbolList* symbolTable = NULL;
 
-	char* currentFileName;
-
 	int dataCounter = 0;
-	int actionCounter = 99;
+	int actionCounter = 99;	// All the machine code will be inserted from 100 
 	int validationFlag = TRUE; 	// Define the validation Flag to TRUE;
 
 
+
 	// Validation on number of arguments received from the cmd
-	//if (argc < 2) {
-	//	printf("ERROR: got not enough arguments from user");
-	//	return;
-	//}
+	if (argc < 2) {
+		printf("ERROR: got not enough arguments from user");
+		return;
+	}
 
-	//printf("hello");
 
-	// Pre Processor - return the new file name to start pass
-	//currentFileName = handleSingleFile("test");
+	for (char** pToArgv = argv + 1; *pToArgv != argv[argc]; pToArgv++) {
 
-	// first pass
-	firstPassOnFile(&actionsMachineCode, &dataMachineCode, &symbolTable, "test.am", &validationFlag, &dataCounter, &actionCounter);
+		// Pre Processor - return the new file name to start pass
+		currentFileName = handleSingleFile(*pToArgv);
 
-	printf("\nActions\n");
-
-	printList(actionsMachineCode);
-	printf("\nData\n");
-	printList(dataMachineCode);
-
-	printf("\nSymbols\n");
-	printSymList(symbolTable);
-
+		// first pass
+		firstPassOnFile(&actionsMachineCode, &dataMachineCode, &symbolTable, currentFileName, &validationFlag, &dataCounter, &actionCounter);
 
 		// check the validationFlag - if it is not valid - Finish this run
-	if (validationFlag != FALSE)
-	{
-			// validation were valid - continue to second pass and output
+		if (validationFlag != FALSE)
+		{
+			//Print All the Machine code - 
+			{
+				printf("\n\nActions Machine Code: \n");
+				printList(actionsMachineCode);
+				printf("\n\nData Machine Code: \n");
+				printList(dataMachineCode);
+				printf("\n\nSymbols List: \n");
+				printSymList(symbolTable);
+			}
 
 			// Second Pass
-			scndPassOnFile(&actionsMachineCode, &dataMachineCode, &symbolTable, "test.am", &validationFlag, &dataCounter, &actionCounter);
+			scndPassOnFile(&actionsMachineCode, &dataMachineCode, &symbolTable, currentFileName, &validationFlag, &dataCounter, &actionCounter);
+
+			//Print All the Machine code - 
+			{
+				printf("\n\nActions Machine Code: \n");
+				printList(actionsMachineCode);
+				printf("\n\nData Machine Code: \n");
+				printList(dataMachineCode);
+				printf("\n\nSymbols List: \n");
+				printSymList(symbolTable);
+			}
+
+		}
+		if (validationFlag != FALSE)
+		{
+
+			//Create the output files - MISSING!
+		}
+
+		// reset all parameters for next iteration on next file
+		actionsMachineCode = NULL;
+		dataMachineCode = NULL;
+		symbolTable = NULL;
+
+		dataCounter = 0;
+		actionCounter = 99;
+		validationFlag = TRUE;
 	}
-	if (validationFlag != FALSE)
-	{
-	
-		//Create the output files
-	}
-
-
-		printf("\nActions\n");
-
-		printList(actionsMachineCode);
-		printf("\nData\n");
-		printList(dataMachineCode);
-
-		printf("\nSymbols\n");
-		printSymList(symbolTable);
-
-	//for (char** pToArgv = argv + 1; *pToArgv != argv[argc]; pToArgv++) {
-
-	//	// Pre Processor - return the new file name to start pass
-	//	currentFileName = handleSingleFile(*pToArgv);
-
-	//	// First Pass - enter all elements
-	//	firstPassOnFile(actionsMachineCode, dataMachineCode, symbolTable, currentFileName, &validationFlag, &dataCounter, &actionCounter);
-
-
-	//	// check the validationFlag - if it is not valid - Finish this run
-	//	if (validationFlag != FALSE)
-	//	{
-	//		// validation were valid - continue to second pass and output
-
-	//		// Second Pass
-
-
-	//		// Create output files
-
-	//	}
-	//	//else -  End this file and do not move to second pass and Output
-
-
-	//	// reset all parameters for next iteration on next file
-	//	dataCounter = 0;
-	//	actionCounter = 100;
-	//	validationFlag = TRUE;
- //	}
-
-
-	
 }

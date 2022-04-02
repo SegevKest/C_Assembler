@@ -503,19 +503,6 @@ void insertAdditionalWords(machineCode** actionsMachineCode, symbolList** symbol
 			// insert the second argument
 			insertEmptyRowForNewWordsOfSymbol(actionsMachineCode, (*pToActionsCounter));
 
-			{
-				//printList(*actionsMachineCode);
-				//printList(*actionsMachineCode);
-				//indexToCut = returnFirstIndexOfChar(argsFromLine[i], '[');
-				//symbolNameToSearch = subString(argsFromLine[i], 0, indexToCut);
-				//
-				//isSymbolAlreadyExist(symbolTable, symbolNameToSearch, searchedSymbol);
-				//if (searchedSymbol != NULL) {
-				//	// found the symbol
-				//}
-				//else
-				//	printf("Error while searching for symbol in the symbol list");
-			}
 		}
 		else
 		{	// miun 3 - no new words
@@ -728,30 +715,19 @@ void displayWord(machineCode* machCode) {
 	{
 
 			printf("\t");
-			
-			//for (j = 0; j < WORD_LENGTH; j++) {
-			//	if (j > 9)
-			//		printf("| %d |", (WORD_LENGTH-j-1));
-			//	else
-			//		printf("| %d|", (WORD_LENGTH - j-1));
-			//}
 			for (j = 0; j < WORD_LENGTH; j++) {
 				printf("|%d|", ptr->wordBinary[j]);
 			}
-
 	}
-
 }
 
 
 // print the hole list of machine codes
 void printList(machineCode* head) {
 
-	printf("\n The linked list of machine code is\n");
-
 	while (head != NULL)
 	{
-		printf("\nWord %d - isCom:%d  ", head->programWordValue, head->isCompleted);
+		printf("\n 0%d   ", head->programWordValue, head->isCompleted);
 		displayWord(head);
 		head = head->nextWord;
 		

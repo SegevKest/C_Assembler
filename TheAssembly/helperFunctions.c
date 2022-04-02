@@ -256,7 +256,7 @@ char* getRegisterCode(char* argFromLine) {
 	if (isRegsiter(argFromLine) == TRUE) {
 
 		if (isValidRegister(argFromLine) == FALSE) {
-			printf("ERROR - Not valid Register name");
+			printf("\nERROR - Not valid Register name");
 			return;
 		}
 
@@ -376,7 +376,7 @@ void handleSymbolScenario(symbolList** symbolTable, char* symbolName, char* symb
 	isValidName = isValidNameOfSymbol(symbolName);
 
 	if (isValidName == FALSE) {
-		printf("ERROR: The symbol is named as a saved word");
+		printf("\nERROR: The symbol is named as a saved word");
 	}
 	else {
 		// insert the new symbol if all validation are valid
@@ -392,8 +392,6 @@ void handleDirectiveData(machineCode** dataMachineCode,  char** arrayOfArgs, int
 	int i;
 
 	char* pToBin;
-
-	printf(" Words to insert:\n ");
 
 	// iterate on all the array of arguments just for params and enter each in new Machine code word
 	for (i = 1; i < lengthOfArr; i++) {
@@ -456,7 +454,7 @@ void handleActionRowScenario(machineCode** actionsMachineCode, symbolList** symb
 	// handle the action - first cell of array
 	// apply all validations of the name
 	if (opCode == -1) {
-		printf("ERROR - Not valid Action Entered");
+		printf("\nERROR - Not valid Action Entered");
 		return;
 	}
 
@@ -496,7 +494,7 @@ void handleEmptySymbolRowsSenarios(machineCode** actionsMachineCode, symbolList*
 	// handle the action - first cell of array
 	// apply all validations of the name
 	if (opCode == -1) {
-		printf("ERROR - Not valid Action Entered");
+		printf("\nERROR - Not valid Action Entered");
 		return;
 	}
 
@@ -529,7 +527,6 @@ void analyzeCodeRow(symbolList** symbolTable, machineCode** actionsMachineCode, 
 	int	i, localValidationFlag, lengthOfArr, newValueForSymbol,
 		whiteSpaceLine, commentLine, rowHasSymbol, actionRow, directiveRow, typeOfDirective, commaLocation;
 
-	printf("\nFULL ROW : Code is:%s\n", rowFromCode);
 
 	whiteSpaceLine = commentLine = rowHasSymbol = actionRow = directiveRow = lengthOfArr = FALSE;
 	newValueForSymbol = 0;

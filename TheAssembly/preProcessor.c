@@ -26,6 +26,7 @@ char* getFileName(char* filePath);
 FILE* createNewFileForOutPut(char* newFileName);
 
 
+// A method that will handle the entire file and all its necessary operations
 char* handleSingleFile(char* filePath) {
 
     int foundMacro = FALSE, startIndex = 0, indexOfFirstSpace, indexOfLastCharInRow;
