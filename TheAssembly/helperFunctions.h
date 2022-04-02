@@ -27,5 +27,7 @@ int isString(char* stringToCheck);	// this function  checks if the string is an 
 
 // this function will be responsible for analyzing each code of row - from the file
 void analyzeCodeRow(symbolList* symbolTable, machineCode** actionsMachineCode, machineCode* dataMachineCode, char* rowFromCode, int* instructCounter, int* dataCounter, int* validationFlag);
+// This function will be responsible for analyzing each code of row from file in second pass
+void analyzeCodeRowSecondPass(symbolList** symbolTable, machineCode** actionsMachineCode, machineCode** dataMachineCode, char* rowFromCode, int* instructCounter, int* dataCounter, int* validationFlag);
 
 #endif //__helperFunctions_H

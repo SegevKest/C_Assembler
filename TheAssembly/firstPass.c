@@ -34,7 +34,6 @@ void firstPassOnFile(machineCode** actionsMachineCodeHead, machineCode** dataMac
 
 	while (fgets(currLine, LINE_LENGTH, filePointer)) {
 
-		//printf("%s", currLine);
 
 		analyzeCodeRow(symbolHead, actionsMachineCodeHead, dataMachineCodeHead, getTrimmedCodeRow(currLine),  instructCounter, dataCounter , validationFlag);
 	

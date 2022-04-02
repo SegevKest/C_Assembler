@@ -8,6 +8,7 @@
 #include "validations.h"
 #include "helperFunctions.h"
 #include "firstPass.h"
+#include "secondPass.h"
 #include "preProcessor.h"
 
 
@@ -59,6 +60,27 @@ int main(){
 	printf("\nSymbols\n");
 	printSymList(symbolTable);
 
+
+		// check the validationFlag - if it is not valid - Finish this run
+		if (validationFlag != FALSE)
+		{
+			// validation were valid - continue to second pass and output
+
+			// Second Pass
+			scndPassOnFile(&actionsMachineCode, &dataMachineCode, &symbolTable, "test.am", &validationFlag, &dataCounter, &actionCounter);
+
+			// Create output files
+
+		}
+
+		printf("\nActions\n");
+
+		printList(actionsMachineCode);
+		printf("\nData\n");
+		printList(dataMachineCode);
+
+		printf("\nSymbols\n");
+		printSymList(symbolTable);
 
 	//for (char** pToArgv = argv + 1; *pToArgv != argv[argc]; pToArgv++) {
 

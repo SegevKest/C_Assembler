@@ -28,6 +28,7 @@ void analyzeCodeRow(symbolList** symbolTable, machineCode** actionsMachineCode, 
 void handleSymbolScenario(symbolList** symbolTable, char* symbolName, char* symbolAttributes, int symbolValue);
 char** buildArrayOfRowParams(char* rowFromCode, int* lengthOfArr);
 void handleActionRowScenario(machineCode** actionsMachineCode, symbolList* symbolTable, char** arrayOfArgs, int lengthOfArr, int* pToActionsCounter);
+void analyzeCodeRowSecondPass(symbolList** symbolTable, machineCode** actionsMachineCode, machineCode** dataMachineCode, char* rowFromCode, int* instructCounter, int* dataCounter, int* validationFlag);
 
 char* convertNumberToBinaryString(int numberToConvert);
 char* getRegisterCode(char* argFromLine);
@@ -518,7 +519,6 @@ void analyzeCodeRow(symbolList** symbolTable, machineCode** actionsMachineCode, 
 		commaLocation = returnFirstIndexOfChar(rowFromCode, ':');
 		newSymbolName = getTrimmedCodeRow(subString(rowFromCode, 0, commaLocation));
 		restOfRowFromCode = getTrimmedCodeRow(subString(rowFromCode, commaLocation + 1, strlen(rowFromCode)));
-		printf("\nSymbol Name:%s\n", newSymbolName);
 	}
 	else
 	{
@@ -571,11 +571,9 @@ void analyzeCodeRow(symbolList** symbolTable, machineCode** actionsMachineCode, 
 			
 			// Insert a new data machine code words accordingly
 			if (typeOfDirective == 1) {
-				printf("\n Insert data machine code ");
 				handleDirectiveData(dataMachineCode, arrayOfArgumentFromCode, lengthOfArr, dataCounter);
 			}
 			else {
-				printf("\n Insert String machine code ");
 				handleDirectiveString(dataMachineCode, arrayOfArgumentFromCode[1], dataCounter);
 			}
 		}
@@ -596,3 +594,67 @@ void analyzeCodeRow(symbolList** symbolTable, machineCode** actionsMachineCode, 
 	}
 }
 
+
+
+void analyzeCodeRowSecondPass(symbolList** symbolTable, machineCode** actionsMachineCode, machineCode** dataMachineCode, char* rowFromCode, int* instructCounter, int* dataCounter, int* validationFlag) {
+
+	char* symbolNameToEdit = NULL;
+	char** arrayOfArgumentFromCode = NULL;
+	char* restOfRowFromCode = NULL;
+	int whiteSpaceLine, lengthOfArr, commentLine, rowHasSymbol, commaLocation, typeOfDirective, actionRow, directiveRow ;
+
+	whiteSpaceLine = commentLine = rowHasSymbol = actionRow = directiveRow = FALSE;
+
+	printf("\nFULL ROW : Code is:%s\n", rowFromCode);
+
+	// raise flag of char accordingly 
+	whiteSpaceLine = isWhiteSpacesLine(rowFromCode);
+	commentLine = isCommentLine(rowFromCode);
+
+	// Check If the row has symbol 
+	rowHasSymbol = isRowContainSymbol(rowFromCode);
+
+	// if empty row or comment Row - finish this row
+	if (whiteSpaceLine == TRUE || commentLine == TRUE)
+		return;
+
+	// Cut the row if it contains a symbol - and create the rest of the row
+	if (rowHasSymbol == TRUE)
+	{
+		commaLocation = returnFirstIndexOfChar(rowFromCode, ':');
+		//newSymbolName = getTrimmedCodeRow(subString(rowFromCode, 0, commaLocation));
+		restOfRowFromCode = getTrimmedCodeRow(subString(rowFromCode, commaLocation + 1, strlen(rowFromCode)));
+	}
+	else
+	{
+		if (rowHasSymbol == FALSE)
+			restOfRowFromCode = getTrimmedCodeRow(rowFromCode);
+	}
+
+
+	// check type of row
+	if (isActionLine(rowFromCode)) {
+		actionRow = TRUE;
+	}
+	else {
+		directiveRow = TRUE;
+	}
+
+	//Get the array of arguments from the current Row
+	arrayOfArgumentFromCode = buildArrayOfRowParams(restOfRowFromCode, &lengthOfArr);
+
+
+	if (directiveRow) {
+
+		typeOfDirective = isDirectiveLine(rowFromCode);
+
+		if (typeOfDirective == 3) {
+			// entry directive - add the entry attribute to the symbol in the list
+			symbolNameToEdit = arrayOfArgumentFromCode[1];
+			handleSymbolScenario(symbolTable, symbolNameToEdit,"entry",-1);
+		}
+	}
+	if (actionRow) {
+
+	}
+}
